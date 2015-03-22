@@ -8,13 +8,13 @@
 
     <parent>
         <groupId>it.tidalwave.steelblue</groupId>
-        <artifactId>SteelBlue</artifactId>
+        <artifactId>steelblue</artifactId>
         <version>1.0-ALPHA-1-SNAPSHOT</version>
-        <relativePath>..</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.steelblue</groupId>
-    <artifactId>SteelBlue-modules</artifactId>
+    <artifactId>steelblue-modules</artifactId>
     <version>1.0-ALPHA-1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SteelBlue (modules)</name>
