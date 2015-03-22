@@ -31,7 +31,7 @@
 
     <parent>
         <groupId>it.tidalwave.steelblue</groupId>
-        <artifactId>steelblue-modules</artifactId>
+        <artifactId>it-tidalwave-steelblue-modules</artifactId>
         <version>1.0-ALPHA-1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
