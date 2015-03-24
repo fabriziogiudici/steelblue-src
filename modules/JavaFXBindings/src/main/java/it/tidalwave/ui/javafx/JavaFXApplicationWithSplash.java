@@ -59,6 +59,9 @@ public abstract class JavaFXApplicationWithSplash extends Application
     private final Splash splash = new Splash(this);
     
     @Getter @Setter
+    private boolean maximized;
+    
+    @Getter @Setter
     private boolean fullScreen;
     
     @Getter @Setter
@@ -87,10 +90,18 @@ public abstract class JavaFXApplicationWithSplash extends Application
       {
         log.info("start({})", stage);
         final Stage splashStage = new Stage(StageStyle.UNDECORATED);
+        stage.setMaximized(maximized);
+//        splashStage.setMaximized(maximized); FIXME: doesn't work
         configureFullScreen(stage);
-        configureFullScreen(splashStage);
-        splash.show(splashStage);
+//        configureFullScreen(splashStage); FIXME: deadlocks JDK 1.8.0_40
+        
+        if (!maximized && !fullScreen)
+          {
+            splashStage.centerOnScreen();
+          }
 
+        splash.show(splashStage);
+        
         getExecutor().execute(() -> // FIXME: use JavaFX Worker?
           {
             initializeInBackground();

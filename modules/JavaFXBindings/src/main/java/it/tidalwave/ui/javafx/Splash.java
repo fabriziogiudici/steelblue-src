@@ -82,7 +82,6 @@ public class Splash
         this.splashStage = splashStage;
         final Scene splashScene = new Scene(splashPane);
         splashStage.setScene(splashScene);
-        splashStage.centerOnScreen();
         splashStage.show();
       }
 
