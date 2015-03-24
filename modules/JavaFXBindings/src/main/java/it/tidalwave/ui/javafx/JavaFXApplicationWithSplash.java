@@ -80,50 +80,42 @@ public abstract class JavaFXApplicationWithSplash extends Application
         log.info("start({})", stage);
         splash.show();
 
-        getExecutor().execute(new Runnable() // FIXME: use JavaFX Worker?
+        getExecutor().execute(() -> // FIXME: use JavaFX Worker?
           {
-            @Override
-            public void run()
+            initializeInBackground();
+            Platform.runLater(() ->
               {
-                initializeInBackground();
-                Platform.runLater(new Runnable()
+                try
                   {
-                    @Override
-                    public void run()
+                    final Parent application = createParent();
+                    final Scene scene = new Scene(application);
+
+                    if (isOSX())
                       {
-                        try
-                          {
-                            final Parent application = createParent();
-                            final Scene scene = new Scene(application);
-
-                            if (isOSX())
-                              {
-                                setMacOSXLookAndFeel(scene);
-                              }
-
-                            stage.setScene(scene);
-                            onStageCreated(stage);
-                            stage.show();
-
-                            stage.setOnCloseRequest(new EventHandler<WindowEvent>()
-                              {
-                                @Override
-                                public void handle (final @Nonnull WindowEvent event)
-                                  {
-                                    log.info("handle({})", event);
-                                    onClosing();
-                                  }
-                              });
-
-                            splash.dismiss();
-                          }
-                        catch (IOException e)
-                          {
-                            log.error("", e);
-                          }
+                        setMacOSXLookAndFeel(scene);
                       }
-                  });
-              }
+
+                    stage.setScene(scene);
+                    onStageCreated(stage);
+                    stage.show();
+
+                    stage.setOnCloseRequest(new EventHandler<WindowEvent>()
+                      {
+                        @Override
+                        public void handle (final @Nonnull WindowEvent event)
+                          {
+                            log.info("handle({})", event);
+                            onClosing();
+                          }
+                      });
+
+                    splash.dismiss();
+                  }
+                catch (IOException e)
+                  {
+                    log.error("", e);
+                  }
+              });
           });
       }
 
