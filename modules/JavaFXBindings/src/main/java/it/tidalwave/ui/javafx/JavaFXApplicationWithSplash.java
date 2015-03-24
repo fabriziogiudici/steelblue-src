@@ -32,10 +32,8 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Executor;
 import java.io.IOException;
-import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
@@ -109,20 +107,10 @@ public abstract class JavaFXApplicationWithSplash extends Application
                         setMacOSXLookAndFeel(scene);
                       }
 
+                    stage.setOnCloseRequest(event -> onClosing());
                     stage.setScene(scene);
                     onStageCreated(stage);
                     stage.show();
-
-                    stage.setOnCloseRequest(new EventHandler<WindowEvent>()
-                      {
-                        @Override
-                        public void handle (final @Nonnull WindowEvent event)
-                          {
-                            log.info("handle({})", event);
-                            onClosing();
-                          }
-                      });
-
                     splash.dismiss();
                   }
                 catch (IOException e)
