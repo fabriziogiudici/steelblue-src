@@ -41,6 +41,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.application.Platform;
+import it.tidalwave.util.AsException;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
@@ -51,6 +52,7 @@ import it.tidalwave.role.ui.javafx.impl.tableview.TableViewBindings;
 import it.tidalwave.role.ui.javafx.impl.treetable.TreeTableViewBindings;
 import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.role.Displayable.Displayable;
 
 /***********************************************************************************************************************
  *
@@ -128,6 +130,15 @@ public class DefaultJavaFXBinder implements JavaFXBinder
       {
         assertIsFxApplicationThread();
 
+        try
+          {
+            button.setText(action.as(Displayable).getDisplayName());
+          }
+        catch (AsException e)
+          {
+            // ok, no label
+          }
+
 //        button.disableProperty().not().bind(new PropertyAdapter<>(action.enabled())); // FIXME: not
         button.setOnAction(new EventHandler<ActionEvent>()
           {
@@ -149,6 +160,14 @@ public class DefaultJavaFXBinder implements JavaFXBinder
       {
         assertIsFxApplicationThread();
 
+        try
+          {
+            menuItem.setText(action.as(Displayable).getDisplayName());
+          }
+        catch (AsException e)
+          {
+            // ok, no label
+          }
 //        button.disableProperty().not().bind(new PropertyAdapter<>(action.enabled())); // FIXME: not
         menuItem.setOnAction(new EventHandler<ActionEvent>()
           {
