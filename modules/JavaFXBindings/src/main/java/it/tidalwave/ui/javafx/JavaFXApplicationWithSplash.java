@@ -33,15 +33,19 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Executor;
 import java.io.IOException;
 import javafx.event.EventHandler;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import javafx.scene.input.KeyCombination;
 import javafx.application.Application;
 import javafx.application.Platform;
 import com.aquafx_project.AquaFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.Setter;
 
 /***********************************************************************************************************************
  *
@@ -55,6 +59,12 @@ public abstract class JavaFXApplicationWithSplash extends Application
     private final Logger log = LoggerFactory.getLogger(JavaFXApplicationWithSplash.class);
     
     private final Splash splash = new Splash(this);
+    
+    @Getter @Setter
+    private boolean fullScreen;
+    
+    @Getter @Setter
+    private boolean fullScreenLocked;
 
     /*******************************************************************************************************************
      *
@@ -78,7 +88,11 @@ public abstract class JavaFXApplicationWithSplash extends Application
       throws Exception
       {
         log.info("start({})", stage);
-        splash.show();
+        stage.setFullScreen(fullScreen);
+        final Stage splashStage = new Stage(StageStyle.UNDECORATED);
+        configureFullScreen(stage);
+        configureFullScreen(splashStage);
+        splash.show(splashStage);
 
         getExecutor().execute(() -> // FIXME: use JavaFX Worker?
           {
@@ -186,5 +200,20 @@ public abstract class JavaFXApplicationWithSplash extends Application
     public static boolean isOSX()
       {
         return System.getProperty("os.name").contains("OS X");
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     ******************************************************************************************************************/
+    private void configureFullScreen (final @Nonnull Stage stage)
+      {
+        stage.setFullScreen(fullScreen);
+        
+        if (fullScreen && fullScreenLocked)
+          {
+            stage.setFullScreenExitHint("");
+            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+          }
       }
   }

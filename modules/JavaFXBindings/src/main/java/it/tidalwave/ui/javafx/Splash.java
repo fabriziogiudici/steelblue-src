@@ -36,7 +36,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -78,9 +77,9 @@ public class Splash
      *
      *
      ******************************************************************************************************************/
-    public void show()
+    public void show (final @Nonnull Stage splashStage)
       {
-        splashStage = new Stage(StageStyle.UNDECORATED);
+        this.splashStage = splashStage;
         final Scene splashScene = new Scene(splashPane);
         splashStage.setScene(splashScene);
         splashStage.centerOnScreen();
