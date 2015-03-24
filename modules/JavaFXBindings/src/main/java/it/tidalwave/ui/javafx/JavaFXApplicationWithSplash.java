@@ -54,7 +54,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
     // Don't use Slf4j and its static logger - give Main a chance to initialize things
     private final Logger log = LoggerFactory.getLogger(JavaFXApplicationWithSplash.class);
     
-    private Splash splash = new Splash(this);
+    private final Splash splash = new Splash(this);
 
     /*******************************************************************************************************************
      *
