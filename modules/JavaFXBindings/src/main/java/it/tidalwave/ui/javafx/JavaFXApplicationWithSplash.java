@@ -86,7 +86,6 @@ public abstract class JavaFXApplicationWithSplash extends Application
       throws Exception
       {
         log.info("start({})", stage);
-        stage.setFullScreen(fullScreen);
         final Stage splashStage = new Stage(StageStyle.UNDECORATED);
         configureFullScreen(stage);
         configureFullScreen(splashStage);
