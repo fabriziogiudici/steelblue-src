@@ -69,7 +69,7 @@ public class Splash
           }
         catch (IOException e)
           {
-            log.warn("", e);
+            log.warn("No Splash.fxml", e);
           }
       }
 
