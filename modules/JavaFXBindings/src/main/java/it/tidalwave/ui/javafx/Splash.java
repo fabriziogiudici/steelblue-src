@@ -32,8 +32,6 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import javafx.util.Duration;
 import javafx.animation.FadeTransition;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -103,15 +101,7 @@ public class Splash
         final FadeTransition fadeSplash = new FadeTransition(Duration.seconds(0.5), splashPane);
         fadeSplash.setFromValue(1.0);
         fadeSplash.setToValue(0.0);
-        fadeSplash.setOnFinished(new EventHandler<ActionEvent>()
-          {
-            @Override
-            public void handle (final @Nonnull ActionEvent actionEvent)
-              {
-                splashStage.close();
-              }
-          });
-
+        fadeSplash.setOnFinished(event -> splashStage.close());
         fadeSplash.play();
       }
   }
