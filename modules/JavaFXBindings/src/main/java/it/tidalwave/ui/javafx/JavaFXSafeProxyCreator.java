@@ -73,15 +73,21 @@ public class JavaFXSafeProxyCreator
     @Nonnull
     public static <T> NodeAndDelegate createNodeAndDelegate (final @Nonnull Class<?> clazz,
                                                              final @Nonnull String resource)
-      throws IOException
       {
-        final FXMLLoader loader = new FXMLLoader(clazz.getResource(resource));
-        final Node node = (Node)loader.load();
-        final T jfxController = (T)loader.getController();
-        final Class<T> interfaceClass = (Class<T>)jfxController.getClass().getInterfaces()[0]; // FIXME
-        final T safeJfxController = JavaFXSafeProxyCreator.createSafeProxy(jfxController, interfaceClass);
+        try
+          {
+            final FXMLLoader loader = new FXMLLoader(clazz.getResource(resource));
+            final Node node = (Node)loader.load();
+            final T jfxController = (T)loader.getController();
+            final Class<T> interfaceClass = (Class<T>)jfxController.getClass().getInterfaces()[0]; // FIXME
+            final T safeJfxController = JavaFXSafeProxyCreator.createSafeProxy(jfxController, interfaceClass);
 
-        return new NodeAndDelegate(node, safeJfxController);
+            return new NodeAndDelegate(node, safeJfxController);
+          }
+        catch (IOException e)
+          {
+            throw new RuntimeException(e);
+          }
       }
 
     /*******************************************************************************************************************
