@@ -89,7 +89,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
       throws Exception
       {
         log.info("start({})", stage);
-        final Stage splashStage = new Stage(StageStyle.UNDECORATED);
+        final Stage splashStage = new Stage(StageStyle.TRANSPARENT);
         stage.setMaximized(maximized);
 //        splashStage.setMaximized(maximized); FIXME: doesn't work
         configureFullScreen(stage);
@@ -121,6 +121,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
                     stage.setScene(scene);
                     onStageCreated(stage);
                     stage.show();
+                    splashStage.toFront();
                     splash.dismiss();
                   }
                 catch (IOException e)
