@@ -39,7 +39,6 @@ import com.google.common.annotations.VisibleForTesting;
 import it.tidalwave.util.AsException;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.javafx.impl.DelegateSupport;
-import it.tidalwave.role.ui.javafx.impl.list.AsObjectListCell;
 import lombok.extern.slf4j.Slf4j;
 import static javafx.collections.FXCollections.observableArrayList;
 import static it.tidalwave.role.SimpleComposite.SimpleComposite;
@@ -55,14 +54,7 @@ import static it.tidalwave.role.ui.Selectable.Selectable;
 public class ListViewBindings extends DelegateSupport
   {
     private final Callback<ListView<PresentationModel>, ListCell<PresentationModel>> cellFactory = 
-            new Callback<ListView<PresentationModel>, ListCell<PresentationModel>>() 
-      {
-        @Override
-        public ListCell<PresentationModel> call (final @Nonnull ListView<PresentationModel> listView) 
-          {
-            return new AsObjectListCell<>();
-          }
-      };
+            (listView) -> new AsObjectListCell<>();
     
     /*******************************************************************************************************************
      *
@@ -80,29 +72,21 @@ public class ListViewBindings extends DelegateSupport
      *
      ******************************************************************************************************************/
     @VisibleForTesting final ChangeListener<PresentationModel> changeListener =
-            new ChangeListener<PresentationModel>()
+            (final @Nonnull ObservableValue<? extends PresentationModel> ov, 
+             final @Nonnull PresentationModel oldItem, 
+             final @Nonnull PresentationModel item) -> 
       {
-        @Override
-        public void changed (final @Nonnull ObservableValue<? extends PresentationModel> ov,
-                             final @Nonnull PresentationModel oldItem,
-                             final @Nonnull PresentationModel item)
+        executor.execute(() -> 
           {
-            executor.execute(new Runnable()
+            try
               {
-                @Override
-                public void run()
-                  {
-                    try
-                      {
-                        item.as(Selectable).select();
-                      }
-                    catch (AsException e)
-                      {
-                        log.debug("No Selectable role for {}", item); // ok, do nothing
-                      }
-                  }
-              });
-          }
+                item.as(Selectable).select();
+              }
+            catch (AsException e)
+              {
+                log.debug("No Selectable role for {}", item); // ok, do nothing
+              }
+          });
       };
     
     /*******************************************************************************************************************
