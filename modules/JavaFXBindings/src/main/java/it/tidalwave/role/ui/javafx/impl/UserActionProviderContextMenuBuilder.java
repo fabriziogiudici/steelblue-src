@@ -68,14 +68,7 @@ public class UserActionProviderContextMenuBuilder implements ContextMenuBuilder
         @Override
         public void handle (final @Nonnull ActionEvent event)
           {
-            executor.execute(new Runnable()
-              {
-                @Override
-                public void run()
-                  {
-                    action.actionPerformed();
-                  }
-              });
+            executor.execute(() -> action.actionPerformed());
           }
       }
 
