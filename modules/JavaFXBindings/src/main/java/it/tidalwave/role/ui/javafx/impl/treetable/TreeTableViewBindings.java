@@ -104,7 +104,8 @@ public class TreeTableViewBindings extends DelegateSupport
      *
      ******************************************************************************************************************/
     public void bind (final @Nonnull TreeTableView<PresentationModel> treeTableView,
-                      final @Nonnull PresentationModel pm)
+                      final @Nonnull PresentationModel pm,
+                      final @Nonnull Runnable callback)
       {
         assertIsFxApplicationThread();
 
@@ -127,6 +128,7 @@ public class TreeTableViewBindings extends DelegateSupport
                 treeTableView.getSelectionModel().selectedItemProperty();
         selectedItemProperty.removeListener(treeItemChangeListener);
         selectedItemProperty.addListener(treeItemChangeListener);
+        callback.run();
      }
 
     /*******************************************************************************************************************

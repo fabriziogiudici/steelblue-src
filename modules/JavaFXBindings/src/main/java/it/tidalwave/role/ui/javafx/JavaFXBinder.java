@@ -37,13 +37,13 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.Node;
 import javafx.stage.Window;
 import it.tidalwave.util.ui.UserNotificationWithFeedback;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.UserAction;
-import javafx.scene.control.TreeTableView;
 
 /***********************************************************************************************************************
  *
@@ -74,28 +74,80 @@ public interface JavaFXBinder
      *
      *
      ******************************************************************************************************************/
-    public void bind (@Nonnull TableView<PresentationModel> tableView, @Nonnull PresentationModel pm);
+    public void bind (@Nonnull TableView<PresentationModel> tableView, 
+                      @Nonnull PresentationModel pm,
+                      @Nonnull Runnable runnable);
 
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
-    public void bind (@Nonnull TreeView<PresentationModel> treeView, @Nonnull PresentationModel pm);
+    default public void bind (final @Nonnull TableView<PresentationModel> tableView, 
+                              final @Nonnull PresentationModel pm)
+      {
+        bind(tableView, pm, () -> {});
+      }
 
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
-    public void bind (@Nonnull TreeTableView<PresentationModel> treeTableView, @Nonnull PresentationModel pm);
+    public void bind (@Nonnull TreeView<PresentationModel> treeView, 
+                      @Nonnull PresentationModel pm,
+                      @Nonnull Runnable runnable);
 
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
-    public void bind (@Nonnull ListView<PresentationModel> treeView, @Nonnull PresentationModel pm);
+    default public void bind (final @Nonnull TreeView<PresentationModel> treeView, 
+                              final @Nonnull PresentationModel pm)
+      {
+        bind(treeView, pm, () -> {});
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    public void bind (@Nonnull TreeTableView<PresentationModel> treeTableView, 
+                      @Nonnull PresentationModel pm,
+                      @Nonnull Runnable runnable);
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    default public void bind (final @Nonnull TreeTableView<PresentationModel> treeTableView,
+                              final @Nonnull PresentationModel pm)
+      {
+        bind(treeTableView, pm, () -> {});
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    public void bind (@Nonnull ListView<PresentationModel> listView, 
+                      @Nonnull PresentationModel pm,
+                      @Nonnull Runnable callback);
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    default public void bind (final @Nonnull ListView<PresentationModel> listView,
+                              final @Nonnull PresentationModel pm)
+      {
+        bind(listView, pm, () -> {});
+      }
 
     /*******************************************************************************************************************
      *

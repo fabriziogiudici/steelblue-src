@@ -30,7 +30,7 @@ package it.tidalwave.role.ui.javafx.impl.tree;
 
 import it.tidalwave.util.As;
 import it.tidalwave.role.spi.DefaultDisplayable;
-import it.tidalwave.role.ui.javafx.impl.ContextMenuBuilder;
+import it.tidalwave.role.ui.javafx.impl.CellActionBinder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.hamcrest.CoreMatchers.is;
@@ -50,7 +50,7 @@ public class AsObjectTreeCellTest
   {
     private AsObjectTreeCell<As> fixture;
 
-    private ContextMenuBuilder contextMenuBuilder;
+    private CellActionBinder contextMenuBuilder;
 
     /*******************************************************************************************************************
      *
@@ -58,9 +58,9 @@ public class AsObjectTreeCellTest
     @BeforeMethod
     public void setupFixture()
       {
-        contextMenuBuilder = mock(ContextMenuBuilder.class);
+        contextMenuBuilder = mock(CellActionBinder.class);
         fixture = new AsObjectTreeCell<>();
-        fixture.contextMenuBuilder = contextMenuBuilder;
+        fixture.cellActionBinder = contextMenuBuilder;
       }
 
     /*******************************************************************************************************************

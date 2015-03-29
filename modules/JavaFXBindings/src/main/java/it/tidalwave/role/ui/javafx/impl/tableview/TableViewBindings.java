@@ -95,7 +95,8 @@ public class TableViewBindings extends DelegateSupport
      *
      ******************************************************************************************************************/
     public void bind (final @Nonnull TableView<PresentationModel> tableView,
-                      final @Nonnull PresentationModel pm)
+                      final @Nonnull PresentationModel pm,
+                      final @Nonnull Runnable callback)
       {
         assertIsFxApplicationThread();
 
@@ -108,5 +109,7 @@ public class TableViewBindings extends DelegateSupport
             column.setCellValueFactory(new TableAggregateAdapter());
             column.setCellFactory(c -> new AsObjectTableCell<>());
           });
+        
+        callback.run();
       }
   }
