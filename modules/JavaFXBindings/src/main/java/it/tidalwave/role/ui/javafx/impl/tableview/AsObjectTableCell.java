@@ -31,11 +31,13 @@ package it.tidalwave.role.ui.javafx.impl.tableview;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import com.google.common.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
-import it.tidalwave.role.ui.javafx.impl.ContextMenuBuilder;
+import it.tidalwave.role.Displayable;
+import it.tidalwave.role.ui.javafx.impl.CellActionBinder;
 import it.tidalwave.role.ui.javafx.impl.Utils;
 import static it.tidalwave.role.Displayable.*;
 
@@ -52,7 +54,7 @@ import static it.tidalwave.role.Displayable.*;
 public class AsObjectTableCell<T extends As> extends TextFieldTableCell<T, T>
   {
     @Inject @Nonnull
-    @VisibleForTesting ContextMenuBuilder contextMenuBuilder;
+    @VisibleForTesting CellActionBinder cellActionBinder;
 
     @Override
     public void updateItem (final @CheckForNull T item, final boolean empty)
@@ -60,7 +62,7 @@ public class AsObjectTableCell<T extends As> extends TextFieldTableCell<T, T>
         super.updateItem(item, empty); 
         
         setText((item == null) ? "" : item.as(Displayable).getDisplayName());
-        setContextMenu((item == null) ? null : contextMenuBuilder.createContextMenu(item));
+        cellActionBinder.bindActions(this, item);
         Utils.setRoleStyles(getStyleClass(), item);
       }
   }

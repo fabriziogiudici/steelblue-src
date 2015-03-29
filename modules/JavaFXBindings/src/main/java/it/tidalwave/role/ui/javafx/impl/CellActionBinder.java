@@ -28,21 +28,22 @@
  */
 package it.tidalwave.role.ui.javafx.impl;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javafx.scene.control.Cell;
 import javafx.scene.control.ContextMenu;
 import it.tidalwave.util.As;
 
 /***********************************************************************************************************************
  *
- * A service that creates a JavaFX {@link ContextMenu} extracting data from an {@link As}-capable.
+ * A service that binds actions and menu actions in form of a JavaFX {@link ContextMenu} extracting data from an 
+ * {@link As}-capable.
  * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public interface ContextMenuBuilder
+public interface CellActionBinder
   {
-    @CheckForNull
-    public ContextMenu createContextMenu (@Nonnull As asObject);
+    public void bindActions (@Nonnull Cell<?> cell, @Nullable As asObject);
   }

@@ -123,7 +123,8 @@ public class TreeViewBindings extends DelegateSupport
      *
      ******************************************************************************************************************/
     public void bind (final @Nonnull TreeView<PresentationModel> treeView,
-                      final @Nonnull PresentationModel pm)
+                      final @Nonnull PresentationModel pm,
+                      final @Nonnull Runnable callback)
       {
         assertIsFxApplicationThread();
 
@@ -131,6 +132,7 @@ public class TreeViewBindings extends DelegateSupport
         rootProperty.removeListener(presentationModelDisposer);
         rootProperty.addListener(presentationModelDisposer);
         rootProperty.set(createTreeItem(pm));
+        callback.run();
 
         treeView.setCellFactory(treeCellFactory);
         

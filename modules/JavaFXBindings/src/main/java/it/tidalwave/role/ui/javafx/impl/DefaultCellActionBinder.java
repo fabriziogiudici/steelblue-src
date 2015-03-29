@@ -35,29 +35,35 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Cell;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.MenuItemBuilder;
+import javafx.scene.input.MouseEvent;
 import com.google.common.annotations.VisibleForTesting;
 import it.tidalwave.util.As;
 import it.tidalwave.util.AsException;
+import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.Displayable.Displayable;
 import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javax.annotation.Nullable;
 
 /***********************************************************************************************************************
  *
- * An implementation of {@link ContextMenuBuilder} that extracts information from a {@link UserActionProvider}.
+ * An implementation of {@link CellActionBinder} that extracts information from a {@link UserActionProvider}.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class UserActionProviderContextMenuBuilder implements ContextMenuBuilder
+public class DefaultCellActionBinder implements CellActionBinder
   {
     @RequiredArgsConstructor
     class EventHandlerUserActionAdapter implements EventHandler<ActionEvent>
@@ -68,45 +74,78 @@ public class UserActionProviderContextMenuBuilder implements ContextMenuBuilder
         @Override
         public void handle (final @Nonnull ActionEvent event)
           {
-            executor.execute(new Runnable()
-              {
-                @Override
-                public void run()
-                  {
-                    action.actionPerformed();
-                  }
-              });
+            executor.execute(() -> action.actionPerformed());
           }
       }
 
     @Nonnull
     private final Executor executor;
 
-    @Override @CheckForNull
-    public ContextMenu createContextMenu (final @Nonnull As asObject)
+    @Override
+    public void bindActions (final @Nonnull Cell<?> cell, final @Nullable As asObject)
       {
-        final List<MenuItem> menuItems = createMenuItems(asObject);
-        return (menuItems == null) ? null : new ContextMenu(menuItems.toArray(new MenuItem[0]));
+        log.debug("bindActions({}, {})", cell, asObject);
+        
+        if (asObject != null)
+          {
+            try
+              {
+                // FIXME: depends on the first UserActionProvider found
+                final UserAction defaultAction = asObject.as(UserActionProvider).getDefaultAction();
+                
+                // FIXME!!! USE WEAK LISTENERS
+                
+                // FIXME: doesn't work - keyevents are probably handled by ListView
+                cell.setOnKeyPressed((KeyEvent event) -> 
+                  {
+                    log.debug("onKeyPressed: {}", event);
+                    if (event.getCode().equals(KeyCode.SPACE))
+                      {
+                        executor.execute(() -> defaultAction.actionPerformed());
+                      }
+                  });
+                
+                // FIXME: depends on mouse click, won't handle keyboard
+                cell.setOnMouseClicked((MouseEvent event) ->
+                  {
+                    if (event.getClickCount() == 2)
+                      {
+                        executor.execute(() -> defaultAction.actionPerformed());
+                      }
+                  });
+              }
+            catch (AsException | NotFoundException e)
+              {
+                log.debug("No default UserAction for {}: {}", cell, e.getMessage());
+              }
+
+            final List<MenuItem> menuItems = createMenuItems(asObject);
+
+            if (!menuItems.isEmpty())
+              {
+                cell.setContextMenu(new ContextMenu(menuItems.toArray(new MenuItem[0])));
+              }
+          }
       }
 
-    @CheckForNull
+    @Nonnull
     @VisibleForTesting List<MenuItem> createMenuItems (final @Nonnull As asObject)
       {
         try
           {
             final List<MenuItem> menuItems = new ArrayList<>();
 
-            for (final UserActionProvider userActionProvider : asObject.asMany(UserActionProvider))
+            asObject.asMany(UserActionProvider).stream().forEach((userActionProvider) -> 
               {
-                for (final UserAction action : userActionProvider.getActions())
+                userActionProvider.getActions().stream().forEach((action) -> 
                   {
                     menuItems.add(MenuItemBuilder.create().text(action.as(Displayable).getDisplayName())
                                                           .onAction(new EventHandlerUserActionAdapter(action))
                                                           .build());
-                  }
-              }
+                  });
+              });
 
-            return menuItems.isEmpty() ? null : menuItems;
+            return menuItems;
           }
         catch (AsException e)
           {
