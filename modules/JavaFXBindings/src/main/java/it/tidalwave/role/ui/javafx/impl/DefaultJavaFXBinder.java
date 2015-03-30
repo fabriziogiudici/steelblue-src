@@ -29,14 +29,10 @@
 package it.tidalwave.role.ui.javafx.impl;
 
 import javax.annotation.Nonnull;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.concurrent.Executor;
 import javafx.beans.property.Property;
 import javafx.beans.binding.BooleanExpression;
 import javafx.stage.Window;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
@@ -141,16 +137,9 @@ public class DefaultJavaFXBinder implements JavaFXBinder
           }
 
         button.disableProperty().bind(adaptBoolean(action.enabled()).not());                
-        button.setOnAction(new EventHandler<ActionEvent>()
-          {
-            @Override
-            public void handle (final @Nonnull ActionEvent event)
-              {
-                action.actionPerformed();
-              }
-          });
+        button.setOnAction((event) -> action.actionPerformed());
       }
-
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -171,14 +160,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
           }
         
         menuItem.disableProperty().bind(adaptBoolean(action.enabled()).not());                
-        menuItem.setOnAction(new EventHandler<ActionEvent>()
-          {
-            @Override
-            public void handle (final @Nonnull ActionEvent event)
-              {
-                action.actionPerformed();
-              }
-          });
+        menuItem.setOnAction((event) -> action.actionPerformed());
       }
 
     /*******************************************************************************************************************
@@ -210,14 +192,8 @@ public class DefaultJavaFXBinder implements JavaFXBinder
         textField.textProperty().bindBidirectional(new PropertyAdapter<>(executor, textProperty));
 
         // FIXME: weak listener
-        validProperty.addPropertyChangeListener(new PropertyChangeListener()
-          {
-            @Override
-            public void propertyChange (final @Nonnull PropertyChangeEvent event)
-              {
-                textField.setStyle(validProperty.get() ? "" : invalidTextFieldStyle);
-              }
-          });
+        validProperty.addPropertyChangeListener(
+                (event) -> textField.setStyle(validProperty.get() ? "" : invalidTextFieldStyle));
       }
 
     /*******************************************************************************************************************
