@@ -59,11 +59,13 @@ public class PropertyAdapter<T> implements Property<T>
     private final BoundProperty<T> delegate;
 
     // FIXME: WEAK LISTENER!!
-    private final List<ChangeListener<? super T>> listeners = new ArrayList<>();
+    private final List<ChangeListener<? super T>> changeListeners = new ArrayList<>();
+    
+    // FIXME: WEAK LISTENER!!
+    private final List<InvalidationListener> invalidationListeners = new ArrayList<>();
 
     private T boundValue;
 
-    // FIXME: WEAK LISTENER!!
     private final PropertyChangeListener propertyChangeListener = new PropertyChangeListener()
       {
         @Override
@@ -79,7 +81,12 @@ public class PropertyAdapter<T> implements Property<T>
                     @Override
                     public void run()
                       {
-                        for (final ChangeListener<? super T> listener : new ArrayList<>(listeners))
+                        log.debug("listeners: {}", changeListeners);
+                        
+                        new ArrayList<>(invalidationListeners)
+                                .forEach(listener -> listener.invalidated(PropertyAdapter.this));
+                        
+                        for (final ChangeListener<? super T> listener : new ArrayList<>(changeListeners))
                           {
                             log.trace("fire changed({}, {}) to {}", evt.getOldValue(), evt.getNewValue(), listener);
                             listener.changed(PropertyAdapter.this, (T)evt.getOldValue(), (T)evt.getNewValue());
@@ -94,6 +101,7 @@ public class PropertyAdapter<T> implements Property<T>
       {
         this.executor = executor;
         this.delegate = delegate;
+        this.boundValue = delegate.get();
         delegate.addPropertyChangeListener(propertyChangeListener);
       }
 
@@ -106,7 +114,7 @@ public class PropertyAdapter<T> implements Property<T>
     @Override
     public void setValue (final T value)
       {
-        log.trace("setValue({})", value);
+        log.debug("setValue({})", value);
         boundValue = value;
 
         if (!Objects.equals(value, delegate.get()))
@@ -125,25 +133,25 @@ public class PropertyAdapter<T> implements Property<T>
     @Override
     public void addListener (final @Nonnull ChangeListener<? super T> listener)
       {
-        listeners.add(listener);
+        changeListeners.add(listener);
       }
 
     @Override
     public void removeListener (final @Nonnull ChangeListener<? super T> listener)
       {
-        listeners.remove(listener);
+        changeListeners.remove(listener);
       }
 
     @Override
     public void addListener(InvalidationListener listener)
       {
-        log.warn("addListener({})", listener);
+        invalidationListeners.add(listener);
       }
 
     @Override
     public void removeListener(InvalidationListener listener)
       {
-        log.warn("removeListener({})", listener);
+        invalidationListeners.remove(listener);
       }
 
     @Override

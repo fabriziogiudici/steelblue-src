@@ -28,12 +28,12 @@
  */
 package it.tidalwave.role.ui.javafx.impl;
 
-import it.tidalwave.role.ui.javafx.impl.list.ListViewBindings;
 import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.Executor;
 import javafx.beans.property.Property;
+import javafx.beans.binding.BooleanExpression;
 import javafx.stage.Window;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -45,15 +45,15 @@ import it.tidalwave.util.AsException;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
-import it.tidalwave.role.ui.javafx.impl.tree.TreeViewBindings;
 import it.tidalwave.role.ui.javafx.impl.dialog.DialogBindings;
 import it.tidalwave.role.ui.javafx.impl.filechooser.FileChooserBindings;
+import it.tidalwave.role.ui.javafx.impl.list.ListViewBindings;
 import it.tidalwave.role.ui.javafx.impl.tableview.TableViewBindings;
+import it.tidalwave.role.ui.javafx.impl.tree.TreeViewBindings;
 import it.tidalwave.role.ui.javafx.impl.treetable.TreeTableViewBindings;
 import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.Displayable.Displayable;
-import javafx.beans.binding.BooleanExpression;
 
 /***********************************************************************************************************************
  *
@@ -120,7 +120,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
         dialogBindings.setMainWindow(mainWindow);
         fileChooserBindings.setMainWindow(mainWindow);
       }
-
+    
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -140,7 +140,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
             // ok, no label
           }
 
-        button.disableProperty().bind(BooleanExpression.booleanExpression(new PropertyAdapter<>(executor, action.enabled())).not());
+        button.disableProperty().bind(adaptBoolean(action.enabled()).not());                
         button.setOnAction(new EventHandler<ActionEvent>()
           {
             @Override
@@ -169,7 +169,8 @@ public class DefaultJavaFXBinder implements JavaFXBinder
           {
             // ok, no label
           }
-//        button.disableProperty().not().bind(new PropertyAdapter<>(action.enabled())); // FIXME: not
+        
+        menuItem.disableProperty().bind(adaptBoolean(action.enabled()).not());                
         menuItem.setOnAction(new EventHandler<ActionEvent>()
           {
             @Override
@@ -230,5 +231,16 @@ public class DefaultJavaFXBinder implements JavaFXBinder
           {
             throw new AssertionError("Must run in the JavaFX Application Thread");
           }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private BooleanExpression adaptBoolean (BoundProperty<Boolean> property)
+      {
+        return BooleanExpression.booleanExpression(new PropertyAdapter<>(executor, property)); 
       }
   }
