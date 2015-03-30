@@ -40,6 +40,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
+import java.util.ArrayList;
+import java.util.List;
 
 /***********************************************************************************************************************
  *
@@ -54,6 +56,8 @@ public class JavaFXSpringApplication extends JavaFXApplicationWithSplash
             
     private ClassPathXmlApplicationContext applicationContext;
 
+    private final List<String> springConfigLocations = new ArrayList<>();
+    
     /*******************************************************************************************************************
      *
      *
@@ -79,7 +83,27 @@ public class JavaFXSpringApplication extends JavaFXApplicationWithSplash
             logProperties();
             // TODO: workaround for NWRCA-41
             System.setProperty("it.tidalwave.util.spring.ClassScanner.basePackages", "it");
-            applicationContext = new ClassPathXmlApplicationContext("classpath*:/META-INF/*AutoBeans.xml");
+            
+            springConfigLocations.add("classpath*:/META-INF/*AutoBeans.xml");
+            final String osName = System.getProperty("os.name", "").toLowerCase();
+
+            if (osName.contains("os x"))
+              {
+                springConfigLocations.add("classpath*:/META-INF/*AutoMacOSXBeans.xml");
+              }
+            
+            if (osName.contains("linux"))
+              {
+                springConfigLocations.add("classpath*:/META-INF/*AutoLinuxBeans.xml");
+              }
+            
+            if (osName.contains("windows"))
+              {
+                springConfigLocations.add("classpath*:/META-INF/*AutoWindowsBeans.xml");
+              }
+            
+            log.info("Loading Spring configuration from {} ...", springConfigLocations);
+            applicationContext = new ClassPathXmlApplicationContext(springConfigLocations.toArray(new String[0]));
             applicationContext.registerShutdownHook(); // this actually seems not working, onClosing() does
           }
         catch (Throwable t)
