@@ -116,7 +116,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
         dialogBindings.setMainWindow(mainWindow);
         fileChooserBindings.setMainWindow(mainWindow);
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -136,10 +136,11 @@ public class DefaultJavaFXBinder implements JavaFXBinder
             // ok, no label
           }
 
-        button.disableProperty().bind(adaptBoolean(action.enabled()).not());                
+        button.disableProperty().bind(adaptBoolean(action.enabled()).not());
+        // FIXME: go in background
         button.setOnAction((event) -> action.actionPerformed());
       }
-    
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -158,8 +159,9 @@ public class DefaultJavaFXBinder implements JavaFXBinder
           {
             // ok, no label
           }
-        
-        menuItem.disableProperty().bind(adaptBoolean(action.enabled()).not());                
+
+        menuItem.disableProperty().bind(adaptBoolean(action.enabled()).not());
+        // FIXME: go in background
         menuItem.setOnAction((event) -> action.actionPerformed());
       }
 
@@ -208,7 +210,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
             throw new AssertionError("Must run in the JavaFX Application Thread");
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -217,6 +219,6 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     @Nonnull
     private BooleanExpression adaptBoolean (BoundProperty<Boolean> property)
       {
-        return BooleanExpression.booleanExpression(new PropertyAdapter<>(executor, property)); 
+        return BooleanExpression.booleanExpression(new PropertyAdapter<>(executor, property));
       }
   }
