@@ -29,7 +29,6 @@
 package it.tidalwave.role.ui.javafx.impl;
 
 import javax.annotation.Nonnull;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +44,10 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * Adapts a {@link BoundProperty} to a JavaFX {@link Property}. It also takes care of threaring issues, making sure that
+ * the JavaFX {@code Property} is updated in the JavaFX UI thread. Conversely, updates on the JavaFX 
+ * {@code BoundProperty} are executed in a separated thread provided by an {@link Executor}.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -59,41 +62,36 @@ public class PropertyAdapter<T> implements Property<T>
     private final BoundProperty<T> delegate;
 
     // FIXME: WEAK LISTENER!!
-    private final List<ChangeListener<? super T>> listeners = new ArrayList<>();
+    private final List<ChangeListener<? super T>> changeListeners = new ArrayList<>();
+    
+    // FIXME: WEAK LISTENER!!
+    private final List<InvalidationListener> invalidationListeners = new ArrayList<>();
 
     private T boundValue;
 
-    // FIXME: WEAK LISTENER!!
-    private final PropertyChangeListener propertyChangeListener = new PropertyChangeListener()
+    private final PropertyChangeListener propertyChangeListener = (event) -> 
       {
-        @Override
-        public void propertyChange (final @Nonnull PropertyChangeEvent evt)
+        log.trace("propertyChange({}) - bound value: {}", event, boundValue);
+        
+        if (!Objects.equals(boundValue, event.getNewValue()))
           {
-            log.trace("propertyChange({}) - bound value: {}", evt, boundValue);
-
-            if (!Objects.equals(boundValue, evt.getNewValue()))
+            boundValue = (T)event.getNewValue();
+            Platform.runLater(() ->
               {
-                boundValue = (T)evt.getNewValue();
-                Platform.runLater(new Runnable()
-                  {
-                    @Override
-                    public void run()
-                      {
-                        for (final ChangeListener<? super T> listener : new ArrayList<>(listeners))
-                          {
-                            log.trace("fire changed({}, {}) to {}", evt.getOldValue(), evt.getNewValue(), listener);
-                            listener.changed(PropertyAdapter.this, (T)evt.getOldValue(), (T)evt.getNewValue());
-                          }
-                      }
-                  });
-              }
+                new ArrayList<>(invalidationListeners)
+                        .forEach(listener -> listener.invalidated(PropertyAdapter.this));
+                new ArrayList<>(changeListeners)
+                        .forEach(listener -> listener.changed(PropertyAdapter.this,
+                                (T)event.getOldValue(), (T)event.getNewValue()));
+              });
           }
-      };
+    };
 
     public PropertyAdapter (final @Nonnull Executor executor, final @Nonnull BoundProperty<T> delegate)
       {
         this.executor = executor;
         this.delegate = delegate;
+        this.boundValue = delegate.get();
         delegate.addPropertyChangeListener(propertyChangeListener);
       }
 
@@ -106,44 +104,37 @@ public class PropertyAdapter<T> implements Property<T>
     @Override
     public void setValue (final T value)
       {
-        log.trace("setValue({})", value);
+        log.debug("setValue({})", value);
         boundValue = value;
 
         if (!Objects.equals(value, delegate.get()))
           {
-            executor.execute(new Runnable()
-              {
-                @Override
-                public void run()
-                  {
-                    delegate.set(value);
-                  }
-              });
+            executor.execute(() -> delegate.set(value));
           }
       }
 
     @Override
     public void addListener (final @Nonnull ChangeListener<? super T> listener)
       {
-        listeners.add(listener);
+        changeListeners.add(listener);
       }
 
     @Override
     public void removeListener (final @Nonnull ChangeListener<? super T> listener)
       {
-        listeners.remove(listener);
+        changeListeners.remove(listener);
       }
 
     @Override
-    public void addListener(InvalidationListener listener)
+    public void addListener (final @Nonnull InvalidationListener listener)
       {
-        log.warn("addListener({})", listener);
+        invalidationListeners.add(listener);
       }
 
     @Override
-    public void removeListener(InvalidationListener listener)
+    public void removeListener (final @Nonnull InvalidationListener listener)
       {
-        log.warn("removeListener({})", listener);
+        invalidationListeners.remove(listener);
       }
 
     @Override

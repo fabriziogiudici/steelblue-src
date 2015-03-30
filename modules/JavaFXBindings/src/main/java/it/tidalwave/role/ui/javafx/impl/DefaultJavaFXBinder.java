@@ -28,15 +28,11 @@
  */
 package it.tidalwave.role.ui.javafx.impl;
 
-import it.tidalwave.role.ui.javafx.impl.list.ListViewBindings;
 import javax.annotation.Nonnull;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.concurrent.Executor;
 import javafx.beans.property.Property;
+import javafx.beans.binding.BooleanExpression;
 import javafx.stage.Window;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
@@ -45,10 +41,11 @@ import it.tidalwave.util.AsException;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
-import it.tidalwave.role.ui.javafx.impl.tree.TreeViewBindings;
 import it.tidalwave.role.ui.javafx.impl.dialog.DialogBindings;
 import it.tidalwave.role.ui.javafx.impl.filechooser.FileChooserBindings;
+import it.tidalwave.role.ui.javafx.impl.list.ListViewBindings;
 import it.tidalwave.role.ui.javafx.impl.tableview.TableViewBindings;
+import it.tidalwave.role.ui.javafx.impl.tree.TreeViewBindings;
 import it.tidalwave.role.ui.javafx.impl.treetable.TreeTableViewBindings;
 import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
@@ -139,15 +136,9 @@ public class DefaultJavaFXBinder implements JavaFXBinder
             // ok, no label
           }
 
-//        button.disableProperty().not().bind(new PropertyAdapter<>(action.enabled())); // FIXME: not
-        button.setOnAction(new EventHandler<ActionEvent>()
-          {
-            @Override
-            public void handle (final @Nonnull ActionEvent event)
-              {
-                action.actionPerformed();
-              }
-          });
+        button.disableProperty().bind(adaptBoolean(action.enabled()).not());
+        // FIXME: go in background
+        button.setOnAction((event) -> action.actionPerformed());
       }
 
     /*******************************************************************************************************************
@@ -168,15 +159,10 @@ public class DefaultJavaFXBinder implements JavaFXBinder
           {
             // ok, no label
           }
-//        button.disableProperty().not().bind(new PropertyAdapter<>(action.enabled())); // FIXME: not
-        menuItem.setOnAction(new EventHandler<ActionEvent>()
-          {
-            @Override
-            public void handle (final @Nonnull ActionEvent event)
-              {
-                action.actionPerformed();
-              }
-          });
+
+        menuItem.disableProperty().bind(adaptBoolean(action.enabled()).not());
+        // FIXME: go in background
+        menuItem.setOnAction((event) -> action.actionPerformed());
       }
 
     /*******************************************************************************************************************
@@ -208,14 +194,8 @@ public class DefaultJavaFXBinder implements JavaFXBinder
         textField.textProperty().bindBidirectional(new PropertyAdapter<>(executor, textProperty));
 
         // FIXME: weak listener
-        validProperty.addPropertyChangeListener(new PropertyChangeListener()
-          {
-            @Override
-            public void propertyChange (final @Nonnull PropertyChangeEvent event)
-              {
-                textField.setStyle(validProperty.get() ? "" : invalidTextFieldStyle);
-              }
-          });
+        validProperty.addPropertyChangeListener(
+                (event) -> textField.setStyle(validProperty.get() ? "" : invalidTextFieldStyle));
       }
 
     /*******************************************************************************************************************
@@ -229,5 +209,16 @@ public class DefaultJavaFXBinder implements JavaFXBinder
           {
             throw new AssertionError("Must run in the JavaFX Application Thread");
           }
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private BooleanExpression adaptBoolean (BoundProperty<Boolean> property)
+      {
+        return BooleanExpression.booleanExpression(new PropertyAdapter<>(executor, property));
       }
   }
