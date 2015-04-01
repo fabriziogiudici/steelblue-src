@@ -12,7 +12,7 @@
 
     <groupId>it.tidalwave.steelblue</groupId>
     <artifactId>it-tidalwave-steelblue</artifactId>
-    <version>1.0-ALPHA-3-SNAPSHOT</version>
+    <version>1.0-ALPHA-4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SteelBlue (master)</name>
     <description>SteelBlue (master)</description>
@@ -80,7 +80,7 @@
             <dependency>
                 <groupId>it.tidalwave.steelblue</groupId>
                 <artifactId>it-tidalwave-role-ui-javafx</artifactId>
-                <version>1.0-ALPHA-3-SNAPSHOT</version>
+                <version>1.0-ALPHA-4-SNAPSHOT</version>
             </dependency>
 
         </dependencies>
