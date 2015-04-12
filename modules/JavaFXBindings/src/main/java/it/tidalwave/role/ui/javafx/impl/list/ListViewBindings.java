@@ -28,20 +28,17 @@
  */
 package it.tidalwave.role.ui.javafx.impl.list;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.concurrent.Executor;
 import javafx.util.Callback;
 import javafx.collections.ObservableList;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.KeyEvent;
 import javafx.application.Platform;
-import com.google.common.annotations.VisibleForTesting;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.AsException;
 import it.tidalwave.role.ui.PresentationModel;
@@ -52,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.scene.input.KeyCode.*;
 import static it.tidalwave.role.SimpleComposite.SimpleComposite;
-import static it.tidalwave.role.ui.Selectable.Selectable;
+import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 
 /***********************************************************************************************************************
  *
@@ -66,6 +63,8 @@ public class ListViewBindings extends DelegateSupport
     private final Callback<ListView<PresentationModel>, ListCell<PresentationModel>> cellFactory = 
             (listView) -> new AsObjectListCell<>();
     
+    private final ChangeListener<PresentationModel> changeListener = new ChangeListenerSelectableAdapter(executor);
+
     /*******************************************************************************************************************
      *
      *
@@ -76,32 +75,6 @@ public class ListViewBindings extends DelegateSupport
         super(executor);
       }
 
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @VisibleForTesting final ChangeListener<PresentationModel> changeListener =
-            (final @Nonnull ObservableValue<? extends PresentationModel> ov, 
-             final @Nonnull PresentationModel oldItem, 
-             final @CheckForNull PresentationModel item) -> 
-      {
-        if (item != null) // no selection
-          {
-            executor.execute(() -> 
-              {
-                try
-                  {
-                    item.as(Selectable).select();
-                  }
-                catch (AsException e)
-                  {
-                    log.debug("No Selectable role for {}", item); // ok, do nothing
-                  }
-              });
-          }
-      };
-    
     /*******************************************************************************************************************
      *
      *
