@@ -66,7 +66,7 @@ public class ChangeListenerSelectableAdapter implements ChangeListener<Presentat
                   }
                 catch (AsException e)
                   {
-                    log.debug("No Selectable role for {}", item); // ok, do nothing
+                    log.trace("No Selectable role for {}", item); // ok, do nothing
                   }
               });
           }
