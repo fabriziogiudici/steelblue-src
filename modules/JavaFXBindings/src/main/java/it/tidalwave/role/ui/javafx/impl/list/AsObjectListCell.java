@@ -75,7 +75,14 @@ public class AsObjectListCell<T extends As> extends TextFieldListCell<T>
               }
             catch (AsException e)
               {
-                setText((item == null) ? "" : item.as(Displayable).getDisplayName()); // FIXME: use asOptional().orElse()
+                try
+                  {
+                    setText((item == null) ? "" : item.as(Displayable).getDisplayName()); // FIXME: use asOptional().orElse()
+                  }
+                catch (AsException e2)
+                  {
+                    setText(item.toString());
+                  }
               }
           }
       }
