@@ -49,11 +49,11 @@ import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import it.tidalwave.role.ui.javafx.impl.common.AsObjectListCell;
+import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import lombok.extern.slf4j.Slf4j;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.scene.input.KeyCode.*;
 import static it.tidalwave.role.SimpleComposite.SimpleComposite;
-import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 
 /***********************************************************************************************************************
  *
@@ -69,6 +69,25 @@ public class ComboBoxBindings extends DelegateSupport
 
     private final ChangeListener<PresentationModel> changeListener = new ChangeListenerSelectableAdapter(executor);
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    private final EventHandler<ActionEvent> eventHandler = event ->
+      { 
+        try
+          {
+            final ComboBox<PresentationModel> comboBox = (ComboBox<PresentationModel>)event.getSource();
+            final PresentationModel selectedPm = comboBox.getSelectionModel().getSelectedItem();
+            selectedPm.as(UserActionProvider.class).getDefaultAction().actionPerformed();
+          }
+        catch (AsException | NotFoundException e)
+          {
+            // ok no action
+          }
+      };
+        
     /*******************************************************************************************************************
      *
      *
@@ -90,23 +109,7 @@ public class ComboBoxBindings extends DelegateSupport
       {
         comboBox.setCellFactory(cellFactory);
         comboBox.setButtonCell(new AsObjectListCell<PresentationModel>());
-        
-        comboBox.setOnAction(new EventHandler<ActionEvent>() 
-          {
-            @Override
-            public void handle (final @Nonnull ActionEvent event) 
-              {
-                try
-                  {
-                    final PresentationModel selectedPm = comboBox.getSelectionModel().getSelectedItem();
-                    selectedPm.as(UserActionProvider.class).getDefaultAction().actionPerformed();
-                  }
-                catch (AsException | NotFoundException e)
-                  {
-                    // ok no action
-                  }
-              }
-          });
+        comboBox.setOnAction(eventHandler);
         
         // FIXME: WEAK LISTENERS
 
@@ -119,7 +122,6 @@ public class ComboBoxBindings extends DelegateSupport
                 comboBox.show();
               }
           });
-
 
         executor.execute(() -> // TODO: use FXWorker
           {
