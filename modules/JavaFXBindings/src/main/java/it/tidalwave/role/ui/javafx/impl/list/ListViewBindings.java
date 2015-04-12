@@ -41,15 +41,16 @@ import javafx.scene.input.KeyEvent;
 import javafx.application.Platform;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.AsException;
+import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.role.ui.javafx.impl.common.AsObjectListCell;
+import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import lombok.extern.slf4j.Slf4j;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.scene.input.KeyCode.*;
 import static it.tidalwave.role.SimpleComposite.SimpleComposite;
-import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 
 /***********************************************************************************************************************
  *
@@ -113,10 +114,11 @@ public class ListViewBindings extends DelegateSupport
               }
           });
         
-        
         executor.execute(() -> // TODO: use FXWorker
           {
-            final ObservableList items = observableArrayList(pm.as(SimpleComposite).findChildren().results());
+            final SimpleComposite<PresentationModel> composite = pm.as(SimpleComposite);
+            final ObservableList<PresentationModel> items = observableArrayList(composite.findChildren().results());
+            
             Platform.runLater(() ->
               {
                 listView.setItems(items);
