@@ -44,6 +44,7 @@ import it.tidalwave.util.ui.UserNotificationWithFeedback;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.UserAction;
+import javafx.scene.control.ComboBox;
 
 /***********************************************************************************************************************
  *
@@ -147,6 +148,26 @@ public interface JavaFXBinder
                               final @Nonnull PresentationModel pm)
       {
         bind(listView, pm, () -> {});
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    public void bind (@Nonnull ComboBox<PresentationModel> comboBox, 
+                      @Nonnull PresentationModel pm,
+                      @Nonnull Runnable callback);
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    default public void bind (final @Nonnull ComboBox<PresentationModel> comboBox,
+                              final @Nonnull PresentationModel pm)
+      {
+        bind(comboBox, pm, () -> {});
       }
 
     /*******************************************************************************************************************
