@@ -31,6 +31,7 @@ package it.tidalwave.role.ui.javafx.impl;
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +56,7 @@ public class JavaFXSafeProxy<T> implements InvocationHandler
       {
         final AtomicReference<Object> result = new AtomicReference<>();
         final AtomicReference<Throwable> throwable = new AtomicReference<>();
+        final CountDownLatch waitForReturn = new CountDownLatch(1);
 
         JavaFXSafeRunner.runSafely(new Runnable()
           {
@@ -70,9 +72,22 @@ public class JavaFXSafeProxy<T> implements InvocationHandler
                   {
                     throwable.set(t);
                   }
+                finally
+                  {
+                    waitForReturn.countDown();
+                  }
               }
           });
 
+        if (method.getReturnType().equals(Void.class))
+          {
+            return null;
+          }
+        
+        log.trace(">>>> waiting for method completion");
+        waitForReturn.await();
+        
+        // This is probably useless - 
         if (throwable.get() != null)
           {
             throw throwable.get();
@@ -81,3 +96,4 @@ public class JavaFXSafeProxy<T> implements InvocationHandler
         return result.get();
       }
   }
+
