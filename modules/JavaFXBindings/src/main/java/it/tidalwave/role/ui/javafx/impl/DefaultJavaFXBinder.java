@@ -33,7 +33,7 @@ import java.util.concurrent.Executor;
 import javafx.beans.property.Property;
 import javafx.beans.binding.BooleanExpression;
 import javafx.stage.Window;
-import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.application.Platform;
@@ -129,7 +129,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      *
      ******************************************************************************************************************/
     @Override
-    public void bind (final @Nonnull Button button, final @Nonnull UserAction action)
+    public void bind (final @Nonnull ButtonBase button, final @Nonnull UserAction action)
       {
         assertIsFxApplicationThread();
 

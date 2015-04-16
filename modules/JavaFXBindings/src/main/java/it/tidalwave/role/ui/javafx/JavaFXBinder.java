@@ -31,7 +31,8 @@ package it.tidalwave.role.ui.javafx;
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
 import javafx.beans.property.Property;
-import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
@@ -44,7 +45,6 @@ import it.tidalwave.util.ui.UserNotificationWithFeedback;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.UserAction;
-import javafx.scene.control.ComboBox;
 
 /***********************************************************************************************************************
  *
@@ -61,7 +61,7 @@ public interface JavaFXBinder
      *
      *
      ******************************************************************************************************************/
-    public void bind (@Nonnull Button button, @Nonnull UserAction action);
+    public void bind (@Nonnull ButtonBase button, @Nonnull UserAction action);
 
     /*******************************************************************************************************************
      *
