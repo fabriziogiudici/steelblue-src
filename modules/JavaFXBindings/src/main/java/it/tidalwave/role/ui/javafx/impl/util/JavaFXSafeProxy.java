@@ -40,6 +40,14 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * An {@link InvocationHandler} that safely wraps all method calls with {@link #Platform.runLater(Runnable)}. The caller
+ * is not blocked if the method is declared as {@code void}; it is blocked otherwise, so it can immediately retrieve
+ * the result.
+ * 
+ * This behaviour is required by {@link JavaFXSafeProxyCreator.#createNodeAndDelegate()}.
+ * 
+ * TODO: add support for aysnc returning a Future.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -58,28 +66,24 @@ public class JavaFXSafeProxy<T> implements InvocationHandler
         final AtomicReference<Throwable> throwable = new AtomicReference<>();
         final CountDownLatch waitForReturn = new CountDownLatch(1);
 
-        JavaFXSafeRunner.runSafely(new Runnable()
+        JavaFXSafeRunner.runSafely(() -> 
           {
-            @Override
-            public void run()
+            try
               {
-                try
-                  {
-                    log.trace(">>>> safely invoking {}", method);
-                    result.set(method.invoke(delegate, args));
-                  }
-                catch (Throwable t)
-                  {
-                    throwable.set(t);
-                  }
-                finally
-                  {
-                    waitForReturn.countDown();
-                  }
+                log.trace(">>>> safely invoking {}", method);
+                result.set(method.invoke(delegate, args));
+              }
+            catch (Throwable t)
+              {
+                throwable.set(t);
+              }
+            finally
+              {
+                waitForReturn.countDown();
               }
           });
 
-        if (method.getReturnType().equals(Void.class))
+        if (method.getReturnType().equals(void.class))
           {
             return null;
           }
