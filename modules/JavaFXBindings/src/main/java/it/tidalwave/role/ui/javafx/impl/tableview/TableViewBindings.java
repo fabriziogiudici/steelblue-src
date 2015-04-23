@@ -30,12 +30,17 @@ package it.tidalwave.role.ui.javafx.impl.tableview;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;
+import javafx.util.Callback;
 import javafx.collections.ObservableList;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.application.Platform;
 import com.google.common.annotations.VisibleForTesting;
 import it.tidalwave.util.AsException;
+import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +57,9 @@ import static it.tidalwave.role.SimpleComposite.SimpleComposite;
 @Slf4j
 public class TableViewBindings extends DelegateSupport
   {
+    private Callback<TableColumn<PresentationModel, PresentationModel>,
+                     TableCell<PresentationModel, PresentationModel>> cellFactory = c -> new AsObjectTableCell<>();
+    
     /*******************************************************************************************************************
      *
      *
@@ -91,7 +99,6 @@ public class TableViewBindings extends DelegateSupport
 
     /*******************************************************************************************************************
      *
-     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     public void bind (final @Nonnull TableView<PresentationModel> tableView,
@@ -100,17 +107,29 @@ public class TableViewBindings extends DelegateSupport
       {
         assertIsFxApplicationThread();
 
-        // FIXME: do in background
-        tableView.setItems(observableArrayList(pm.as(SimpleComposite).findChildren().results()));
-        tableView.getSelectionModel().selectedItemProperty().addListener(changeListener);
+        final ReadOnlyObjectProperty<PresentationModel> pmProperty = tableView.getSelectionModel().selectedItemProperty();
+        pmProperty.removeListener(changeListener);
         
-        final ObservableList rawColumns = tableView.getColumns(); // FIXME
-        ((ObservableList<TableColumn<PresentationModel, PresentationModel>>)rawColumns).stream().forEach(column -> 
+        executor.execute(() ->
           {
-            column.setCellValueFactory(new TableAggregateAdapter());
-            column.setCellFactory(c -> new AsObjectTableCell<>());
+            final SimpleComposite<PresentationModel> composite = pm.as(SimpleComposite);
+            final ObservableList<PresentationModel> items = observableArrayList(composite.findChildren().results());
+            
+            Platform.runLater(() -> 
+              {
+                tableView.setItems(items);
+                pmProperty.addListener(changeListener);
+                
+                final TableAggregateAdapter tableAggregateAdapter = new TableAggregateAdapter();
+                final ObservableList rawColumns = tableView.getColumns(); // FIXME
+                ((ObservableList<TableColumn<PresentationModel, PresentationModel>>)rawColumns).stream().forEach(column -> 
+                  {
+                    column.setCellValueFactory(tableAggregateAdapter);
+                    column.setCellFactory(cellFactory);
+                  });
+
+                callback.run();
+              });
           });
-        
-        callback.run();
       }
   }
