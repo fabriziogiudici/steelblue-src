@@ -29,24 +29,16 @@
 package it.tidalwave.role.ui.javafx.impl.common;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javafx.scene.control.cell.TextFieldListCell;
-import javafx.scene.control.ListCell;
 import com.google.common.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
-import it.tidalwave.util.AsException;
-import it.tidalwave.role.Displayable;
-import it.tidalwave.role.ui.javafx.impl.CellActionBinder;
-import it.tidalwave.role.ui.javafx.impl.util.Utils;
-import static it.tidalwave.role.Displayable.*;
-import static it.tidalwave.ui.role.javafx.CustomGraphicProvider.CustomGraphicProvider;
+import it.tidalwave.role.ui.javafx.impl.CellBinder;
 
 /***********************************************************************************************************************
  *
- * An implementation of {@link ListCell} that retrieves the display name from {@link Displayable} and creates a
- * contextualised pop-up menu.
+ * A specialisation of {@link TextFieldListCell} which binds to an {@link As}-capable item.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -55,35 +47,13 @@ import static it.tidalwave.ui.role.javafx.CustomGraphicProvider.CustomGraphicPro
 @Configurable
 public class AsObjectListCell<T extends As> extends TextFieldListCell<T>
   {
-    @Inject @Nonnull
-    @VisibleForTesting CellActionBinder contextMenuBuilder;
+    @Inject
+    @VisibleForTesting CellBinder cellBinder;
 
     @Override
     public void updateItem (final @CheckForNull T item, final boolean empty)
       {
         super.updateItem(item, empty);
-
-        if (!empty)
-          {
-            contextMenuBuilder.bindActions(this, item);
-            Utils.setRoleStyles(getStyleClass(), item);
-
-            try
-              {
-                setGraphic(item.as(CustomGraphicProvider).getGraphic());
-                setText("");
-              }
-            catch (AsException e)
-              {
-                try
-                  {
-                    setText((item == null) ? "" : item.as(Displayable).getDisplayName()); // FIXME: use asOptional().orElse()
-                  }
-                catch (AsException e2)
-                  {
-                    setText(item.toString());
-                  }
-              }
-          }
+        cellBinder.bind(this, item, empty);
       }
   }

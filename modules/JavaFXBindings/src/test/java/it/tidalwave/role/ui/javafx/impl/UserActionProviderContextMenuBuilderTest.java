@@ -101,7 +101,7 @@ public class UserActionProviderContextMenuBuilderTest
           }
       }
 
-    private DefaultCellActionBinder fixture;
+    private DefaultCellBinder fixture;
 
     private List<UserAction> actions;
 
@@ -152,7 +152,7 @@ public class UserActionProviderContextMenuBuilderTest
 
         executorService = new TestExecutorService(Executors.newSingleThreadExecutor());
 
-        fixture = new DefaultCellActionBinder(executorService);
+        fixture = new DefaultCellBinder(executorService);
       }
 
     /*******************************************************************************************************************

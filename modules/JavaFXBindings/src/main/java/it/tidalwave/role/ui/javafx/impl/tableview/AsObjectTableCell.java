@@ -29,23 +29,17 @@
 package it.tidalwave.role.ui.javafx.impl.tableview;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import com.google.common.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
-import it.tidalwave.role.Displayable;
-import it.tidalwave.role.ui.javafx.impl.CellActionBinder;
-import it.tidalwave.role.ui.javafx.impl.util.Utils;
-import static it.tidalwave.role.Displayable.*;
+import it.tidalwave.role.ui.javafx.impl.CellBinder;
 
 /***********************************************************************************************************************
  *
- * An implementation of {@link TableCell} that retrieves the display name from {@link Displayable} and creates a
- * contextualised pop-up menu.
- * 
+ * A specialisation of {@link TextFieldTableCell} which binds to an {@link As}-capable item.
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -53,16 +47,13 @@ import static it.tidalwave.role.Displayable.*;
 @Configurable
 public class AsObjectTableCell<T extends As> extends TextFieldTableCell<T, T>
   {
-    @Inject @Nonnull
-    @VisibleForTesting CellActionBinder cellActionBinder;
+    @Inject
+    @VisibleForTesting CellBinder cellBinder;
 
     @Override
     public void updateItem (final @CheckForNull T item, final boolean empty)
       {
-        super.updateItem(item, empty); 
-        
-        setText((item == null) ? "" : item.as(Displayable).getDisplayName());
-        cellActionBinder.bindActions(this, item);
-        Utils.setRoleStyles(getStyleClass(), item);
+        super.updateItem(item, empty);
+        cellBinder.bind(this, item, empty);
       }
   }

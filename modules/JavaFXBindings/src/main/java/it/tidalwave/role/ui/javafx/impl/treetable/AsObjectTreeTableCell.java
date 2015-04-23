@@ -29,34 +29,31 @@
 package it.tidalwave.role.ui.javafx.impl.treetable;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javafx.scene.control.TreeTableCell;
 import com.google.common.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
-import it.tidalwave.role.ui.javafx.impl.CellActionBinder;
-import it.tidalwave.role.ui.javafx.impl.util.Utils;
-import static it.tidalwave.role.Displayable.Displayable;
+import it.tidalwave.role.ui.javafx.impl.CellBinder;
 
 /***********************************************************************************************************************
  *
- * @author  fritz
+ * A specialisation of {@link TreeTableCell} which binds to an {@link As}-capable item.
+ *
+ * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Configurable
-class AsObjectTreeTableCell<T extends As> extends TreeTableCell<T, T> 
+class AsObjectTreeTableCell<T extends As> extends TreeTableCell<T, T>
   {
-    @Inject @Nonnull
-    @VisibleForTesting CellActionBinder cellActionBinder;
+    @Inject
+    @VisibleForTesting CellBinder cellBinder;
 
     @Override
     public void updateItem (final @CheckForNull T item, final boolean empty)
       {
         super.updateItem(item, empty);
-        setText((item == null) ? "" : item.as(Displayable).getDisplayName());
-        cellActionBinder.bindActions(this, item);
-        Utils.setRoleStyles(getStyleClass(), item);
+        cellBinder.bind(this, item, empty);
       }
   }

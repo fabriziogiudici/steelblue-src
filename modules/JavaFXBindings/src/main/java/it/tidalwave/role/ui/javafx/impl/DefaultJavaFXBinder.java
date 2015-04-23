@@ -143,8 +143,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
           }
 
         button.disableProperty().bind(adaptBoolean(action.enabled()).not());
-        // FIXME: go in background
-        button.setOnAction((event) -> action.actionPerformed());
+        button.setOnAction((event) -> executor.execute(() -> action.actionPerformed()));
       }
 
     /*******************************************************************************************************************
@@ -167,8 +166,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
           }
 
         menuItem.disableProperty().bind(adaptBoolean(action.enabled()).not());
-        // FIXME: go in background
-        menuItem.setOnAction((event) -> action.actionPerformed());
+        menuItem.setOnAction((event) -> executor.execute(() -> action.actionPerformed()));
       }
 
     /*******************************************************************************************************************

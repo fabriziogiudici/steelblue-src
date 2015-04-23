@@ -26,40 +26,23 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl.util;
+package it.tidalwave.role.ui.javafx.impl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
-import javafx.collections.ObservableList;
+import javafx.scene.control.Cell;
 import it.tidalwave.util.As;
-import static java.util.stream.Collectors.toList;
-import static it.tidalwave.role.ui.Styleable.Styleable;
 
 /***********************************************************************************************************************
  *
+ * A service that binds text, graphic, default action, context menu and css style to a {@link Cell} extracting data from 
+ * an {@link As}-capable item.
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class Utils 
+public interface CellBinder
   {
-    private static final String ROLE_STYLE_PREFIX = "-rs-";
-    
-    @Nonnull
-    public static void setRoleStyles (final @Nonnull ObservableList<String> styleClasses, 
-                                      final @Nullable As asObject)
-      {
-        final List<String> styles = styleClasses.stream().filter(s -> !s.startsWith(ROLE_STYLE_PREFIX))
-                                                         .collect(toList());
-        
-        if (asObject != null)
-          {
-            styles.addAll(asObject.asMany(Styleable).stream().flatMap(styleable -> styleable.getStyles().stream())
-                                                             .map(s -> ROLE_STYLE_PREFIX + s)
-                                                             .collect(toList()));
-          }
-        
-        styleClasses.setAll(styles);
-      }
+    public void bind (@Nonnull Cell<?> cell, @Nullable As item, final boolean empty);
   }

@@ -40,10 +40,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.KeyEvent;
 import javafx.application.Platform;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.AsException;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
-import it.tidalwave.role.ui.UserActionProvider;
+import it.tidalwave.role.ui.javafx.impl.DefaultCellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.AsObjectListCell;
 import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
@@ -104,9 +103,9 @@ public class ListViewBindings extends DelegateSupport
                   {
                     try
                       {
-                        selectedPm.as(UserActionProvider.class).getDefaultAction().actionPerformed();
+                        DefaultCellBinder.findDefaultUserAction(selectedPm).actionPerformed();
                       }
-                    catch (AsException | NotFoundException e)
+                    catch (NotFoundException e)
                       {
                         // ok no action  
                       }
@@ -114,6 +113,9 @@ public class ListViewBindings extends DelegateSupport
               }
           });
         
+        final ReadOnlyObjectProperty<PresentationModel> pmProperty = listView.getSelectionModel().selectedItemProperty();
+        pmProperty.removeListener(changeListener);
+        listView.setItems(observableArrayList()); // quick clear in case of long operations FIXME doesn't work
         executor.execute(() -> // TODO: use FXWorker
           {
             final SimpleComposite<PresentationModel> composite = pm.as(SimpleComposite);
@@ -122,8 +124,6 @@ public class ListViewBindings extends DelegateSupport
             Platform.runLater(() ->
               {
                 listView.setItems(items);
-                final ReadOnlyObjectProperty<PresentationModel> pmProperty = listView.getSelectionModel().selectedItemProperty();
-                pmProperty.removeListener(changeListener);
                 pmProperty.addListener(changeListener);
                 callback.run();
               });

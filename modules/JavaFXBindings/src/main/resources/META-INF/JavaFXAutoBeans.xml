@@ -77,7 +77,7 @@
 
     <bean class="it.tidalwave.role.ui.javafx.StackPaneSelector" />
 
-    <bean class="it.tidalwave.role.ui.javafx.impl.DefaultCellActionBinder" >
+    <bean class="it.tidalwave.role.ui.javafx.impl.DefaultCellBinder" >
         <constructor-arg ref="javafxBinderExecutor" />
     </bean>
 
