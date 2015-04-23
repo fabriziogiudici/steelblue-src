@@ -100,6 +100,7 @@ public class TableViewBindings extends DelegateSupport
       {
         assertIsFxApplicationThread();
 
+        // FIXME: do in background
         tableView.setItems(observableArrayList(pm.as(SimpleComposite).findChildren().results()));
         tableView.getSelectionModel().selectedItemProperty().addListener(changeListener);
         
