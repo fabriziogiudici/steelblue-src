@@ -76,26 +76,19 @@ public class TreeTableViewBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener =
-            new ChangeListener<TreeItem<PresentationModel>>()
+    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener = (ov,  oldItem, item) -> 
       {
-        @Override
-        public void changed (final @Nonnull ObservableValue<? extends TreeItem<PresentationModel>> ov,
-                             final @Nonnull TreeItem<PresentationModel> oldItem,
-                             final @Nonnull TreeItem<PresentationModel> item)
+        executor.execute(() ->
           {
-            executor.execute(() -> 
+            try
               {
-                try
-                  {
-                    item.getValue().as(Selectable).select();
-                  }
-                catch (AsException e)
-                  {
-                    log.debug("No Selectable role for {}", item); // ok, do nothing
-                  }
-              });
-          }
+                item.getValue().as(Selectable).select();
+              }
+            catch (AsException e)
+              {
+                log.debug("No Selectable role for {}", item); // ok, do nothing
+              }
+          });
       };
 
     /*******************************************************************************************************************
