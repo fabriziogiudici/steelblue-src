@@ -30,13 +30,11 @@ package it.tidalwave.role.ui.javafx.impl.tree;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javafx.util.Callback;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -77,44 +75,26 @@ public class TreeViewBindings extends DelegateSupport
      *
      ******************************************************************************************************************/
     @VisibleForTesting final Callback<TreeView<PresentationModel>, TreeCell<PresentationModel>> treeCellFactory =
-            new Callback<TreeView<PresentationModel>, TreeCell<PresentationModel>>()
-      {
-        @Override @Nonnull
-        public TreeCell<PresentationModel> call (final @Nonnull TreeView<PresentationModel> treeView)
-          {
-            return new AsObjectTreeCell<>();
-          }
-      };
+            treeView -> new AsObjectTreeCell<>();
 
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
-    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener =
-            new ChangeListener<TreeItem<PresentationModel>>()
+    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener = (ov, oldItem, item) -> 
       {
-        @Override
-        public void changed (final @Nonnull ObservableValue<? extends TreeItem<PresentationModel>> ov,
-                             final @Nonnull TreeItem<PresentationModel> oldItem,
-                             final @Nonnull TreeItem<PresentationModel> item)
+        executor.execute(() ->
           {
-            executor.execute(new Runnable()
+            try
               {
-                @Override
-                public void run()
-                  {
-                    try
-                      {
-                        item.getValue().as(Selectable).select();
-                      }
-                    catch (AsException e)
-                      {
-                        log.debug("No Selectable role for {}", item); // ok, do nothing
-                      }
-                  }
-              });
-          }
+                item.getValue().as(Selectable).select();
+              }
+            catch (AsException e)
+              {
+                log.debug("No Selectable role for {}", item); // ok, do nothing
+              }
+          });
       };
 
     /*******************************************************************************************************************
@@ -136,10 +116,10 @@ public class TreeViewBindings extends DelegateSupport
 
         treeView.setCellFactory(treeCellFactory);
         
-        final ReadOnlyObjectProperty<TreeItem<PresentationModel>> selectedItemProperty =
+        final ReadOnlyObjectProperty<TreeItem<PresentationModel>> pmProperty =
                 treeView.getSelectionModel().selectedItemProperty();
-        selectedItemProperty.removeListener(treeItemChangeListener);
-        selectedItemProperty.addListener(treeItemChangeListener);
+        pmProperty.removeListener(treeItemChangeListener);
+        pmProperty.addListener(treeItemChangeListener);
      }
 
     /*******************************************************************************************************************
@@ -152,22 +132,14 @@ public class TreeViewBindings extends DelegateSupport
       {
         final TreeItem<PresentationModel> item = new TreeItem<>(pm);
 
-        final PropertyChangeListener recreateChildrenOnUpdateListener = new PropertyChangeListener()
+        final PropertyChangeListener recreateChildrenOnUpdateListener = event ->
           {
-            @Override
-            public void propertyChange (final @Nonnull PropertyChangeEvent event)
+            Platform.runLater(() -> 
               {
-                Platform.runLater(new Runnable()
-                  {
-                    @Override
-                    public void run()
-                      {
-                        item.getChildren().clear(); // FIXME: should update it incrementally
-                        createChildren(item, pm);
-                        item.setExpanded(true);
-                      }
-                  });
-              }
+                item.getChildren().clear(); // FIXME: should update it incrementally
+                createChildren(item, pm);
+                item.setExpanded(true);
+              });
           };
 
         pm.addPropertyChangeListener(PresentationModel.PROPERTY_CHILDREN, recreateChildrenOnUpdateListener);
