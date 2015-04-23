@@ -108,7 +108,7 @@ public class ComboBoxBindings extends DelegateSupport
                       final @Nonnull Runnable callback)
       {
         comboBox.setCellFactory(cellFactory);
-        comboBox.setButtonCell(new AsObjectListCell<PresentationModel>());
+        comboBox.setButtonCell(new AsObjectListCell<>());
         comboBox.setOnAction(eventHandler);
         
         // FIXME: WEAK LISTENERS
@@ -123,6 +123,8 @@ public class ComboBoxBindings extends DelegateSupport
               }
           });
 
+        final ReadOnlyObjectProperty<PresentationModel> pmProperty = comboBox.getSelectionModel().selectedItemProperty();
+        pmProperty.removeListener(changeListener);
         executor.execute(() -> // TODO: use FXWorker
           {
             final SimpleComposite<PresentationModel> composite = pm.as(SimpleComposite);
@@ -136,8 +138,6 @@ public class ComboBoxBindings extends DelegateSupport
                     comboBox.getSelectionModel().select(items.get(0));
                   }
                 
-                final ReadOnlyObjectProperty<PresentationModel> pmProperty = comboBox.getSelectionModel().selectedItemProperty();
-                pmProperty.removeListener(changeListener);
                 pmProperty.addListener(changeListener);
                 callback.run();
               });
