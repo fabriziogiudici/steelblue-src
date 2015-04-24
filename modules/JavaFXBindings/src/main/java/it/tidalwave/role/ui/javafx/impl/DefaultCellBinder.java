@@ -42,8 +42,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.MenuItemBuilder;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import com.google.common.annotations.VisibleForTesting;
 import it.tidalwave.util.As;
 import it.tidalwave.util.AsException;
@@ -165,10 +163,8 @@ public class DefaultCellBinder implements CellBinder
           {
             final UserAction defaultAction = findDefaultUserAction(item);
             
-            // FIXME!!! USE WEAK LISTENERS
-            
             // FIXME: doesn't work - keyevents are probably handled by ListView
-            cell.setOnKeyPressed((KeyEvent event) ->
+            cell.setOnKeyPressed(event ->
               {
                 log.debug("onKeyPressed: {}", event);
                 if (event.getCode().equals(KeyCode.SPACE))
@@ -178,7 +174,7 @@ public class DefaultCellBinder implements CellBinder
               });
             
             // FIXME: depends on mouse click, won't handle keyboard
-            cell.setOnMouseClicked((MouseEvent event) ->
+            cell.setOnMouseClicked(event ->
               {
                 if (event.getClickCount() == 2)
                   {
@@ -188,6 +184,8 @@ public class DefaultCellBinder implements CellBinder
           }
         catch (NotFoundException e)
           {
+            cell.setOnKeyPressed(null);
+            cell.setOnMouseClicked(null);
             log.debug("No default UserAction for {}: {}", cell, e.getMessage());
           }
       }
@@ -200,11 +198,7 @@ public class DefaultCellBinder implements CellBinder
     private void bindContextMenu (final @Nonnull Cell<?> cell, final @Nonnull As item) 
       {
         final List<MenuItem> menuItems = createMenuItems(item);
-        
-        if (!menuItems.isEmpty())
-          {
-            cell.setContextMenu(new ContextMenu(menuItems.toArray(new MenuItem[0])));
-          }
+        cell.setContextMenu(menuItems.isEmpty() ? null : new ContextMenu(menuItems.toArray(new MenuItem[0])));
       }
 
     /*******************************************************************************************************************
@@ -219,9 +213,10 @@ public class DefaultCellBinder implements CellBinder
           {
             final List<MenuItem> menuItems = new ArrayList<>();
 
-            asObject.asMany(UserActionProvider).stream().forEach((userActionProvider) -> 
+            // FIXME: use flatMap() & collector
+            asObject.asMany(UserActionProvider).stream().forEach(userActionProvider -> 
               {
-                userActionProvider.getActions().stream().forEach((action) -> 
+                userActionProvider.getActions().stream().forEach(action -> 
                   {
                     menuItems.add(MenuItemBuilder.create().text(action.as(Displayable).getDisplayName())
                                                           .onAction(new EventHandlerUserActionAdapter(action))
@@ -247,6 +242,7 @@ public class DefaultCellBinder implements CellBinder
       {
         final List<String> styles = styleClasses.stream().filter(s -> !s.startsWith(ROLE_STYLE_PREFIX))
                                                          .collect(toList());
+        // FIXME: shouldn't reset them? In case of cell reuse, they get accumulated
         styles.addAll(item.asMany(Styleable).stream().flatMap(styleable -> styleable.getStyles().stream())
                                                          .map(s -> ROLE_STYLE_PREFIX + s)
                                                          .collect(toList()));
