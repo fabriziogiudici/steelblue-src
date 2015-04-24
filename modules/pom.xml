@@ -7,13 +7,13 @@
     <parent>
         <groupId>it.tidalwave.steelblue</groupId>
         <artifactId>it-tidalwave-steelblue</artifactId>
-        <version>1.0-ALPHA-7-SNAPSHOT</version>
+        <version>1.0-ALPHA-8-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.steelblue</groupId>
     <artifactId>it-tidalwave-steelblue-modules</artifactId>
-    <version>1.0-ALPHA-7-SNAPSHOT</version>
+    <version>1.0-ALPHA-8-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SteelBlue (modules)</name>
     <description>SteelBlue (modules)</description>
