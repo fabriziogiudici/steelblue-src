@@ -50,7 +50,7 @@ public class AsObjectTreeCellTest
   {
     private AsObjectTreeCell<As> underTest;
 
-    private CellBinder contextMenuBuilder;
+    private CellBinder cellBinder;
 
     /*******************************************************************************************************************
      *
@@ -58,9 +58,9 @@ public class AsObjectTreeCellTest
     @BeforeMethod
     public void setupFixture()
       {
-        contextMenuBuilder = mock(CellBinder.class);
+        cellBinder = mock(CellBinder.class);
         underTest = new AsObjectTreeCell<>();
-        underTest.cellBinder = contextMenuBuilder;
+        underTest.cellBinder = cellBinder;
       }
 
     /*******************************************************************************************************************
