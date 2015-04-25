@@ -149,11 +149,7 @@ public class DefaultCellBinder implements CellBinder
       {
         final Optional<CustomGraphicProvider> cgp = roles.get(CustomGraphicProvider);
         cell.setGraphic(cgp.map(role -> role.getGraphic()).orElse(null));
-        
-        if (!cgp.isPresent())
-          {
-            cell.setText(roles.get(Displayable).map(role -> role.getDisplayName()).orElse(""));
-          }
+        cell.setText(cgp.map(c -> "").orElse(roles.get(Displayable).map(role -> role.getDisplayName()).orElse("")));
       }
 
     /*******************************************************************************************************************
