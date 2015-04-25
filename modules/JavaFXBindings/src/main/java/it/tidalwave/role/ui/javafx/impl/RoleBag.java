@@ -31,7 +31,6 @@ package it.tidalwave.role.ui.javafx.impl;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +38,7 @@ import java.util.Optional;
 import it.tidalwave.util.As;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import static java.util.Collections.*;
 
 /***********************************************************************************************************************
  *
@@ -58,7 +58,7 @@ public class RoleBag
     
     public <ROLE_TYPE> void put (final @Nonnull Class<ROLE_TYPE> roleClass, final @Nonnull ROLE_TYPE role)
       {
-        putMany(roleClass, Collections.singletonList(role));
+        putMany(roleClass, singletonList(role));
       }
     
     public <ROLE_TYPE> void putMany (final @Nonnull Class<ROLE_TYPE> roleClass,
@@ -76,7 +76,7 @@ public class RoleBag
     @Nonnull
     public <ROLE_TYPE> List<ROLE_TYPE> getMany (final @Nonnull Class<ROLE_TYPE> roleClass)
       {
-        return Collections.unmodifiableList((List<ROLE_TYPE>)map.get(roleClass));
+        return unmodifiableList((List<ROLE_TYPE>)map.getOrDefault(roleClass, emptyList()));
       }
     
     private <ROLE_TYPE> void copyRoles (final @Nonnull As item, final @Nonnull Class<ROLE_TYPE> roleClass)
