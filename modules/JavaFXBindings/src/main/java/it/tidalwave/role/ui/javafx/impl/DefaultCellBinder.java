@@ -54,7 +54,9 @@ import static java.util.stream.Collectors.toList;
 import static it.tidalwave.role.Displayable.Displayable;
 import static it.tidalwave.role.ui.Styleable.Styleable;
 import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
+import it.tidalwave.ui.role.javafx.CustomGraphicProvider;
 import static it.tidalwave.ui.role.javafx.CustomGraphicProvider.CustomGraphicProvider;
+import java.util.Optional;
 
 /***********************************************************************************************************************
  *
@@ -100,17 +102,30 @@ public class DefaultCellBinder implements CellBinder
       {
         log.debug("bind({}, {}, {})", cell, item, empty);
 
-        if (empty || (item == null))
+        clearBindings(cell);
+            
+        if (!empty && (item != null))
           {
-            clearBindings(cell);
+            final RoleMap roleMap = new RoleMap(); // FIXME
+            preLoadRoles(item, roleMap);
+            bindTextAndGraphic(cell, roleMap);
+            bindDefaultAction(cell, roleMap);
+            bindContextMenu(cell, roleMap);
+            bindStyles(cell.getStyleClass(), roleMap);
           }
-        else
-          {
-            bindTextAndGraphic(cell, item);
-            bindDefaultAction(cell, item);
-            bindContextMenu(cell, item);
-            bindStyles(cell.getStyleClass(), item);
-          }
+      }
+    
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    private void preLoadRoles (final @Nonnull As item, final @Nonnull RoleMap roleMap)
+      {
+        roleMap.putMany(CustomGraphicProvider, item.asMany(CustomGraphicProvider));
+        roleMap.putMany(Displayable, item.asMany(Displayable));
+        roleMap.putMany(UserActionProvider, item.asMany(UserActionProvider));
+        roleMap.putMany(Styleable, item.asMany(Styleable));
       }
 
     /*******************************************************************************************************************
@@ -132,23 +147,14 @@ public class DefaultCellBinder implements CellBinder
      *
      *
      ******************************************************************************************************************/
-    private void bindTextAndGraphic (final @Nonnull Cell<?> cell, final @Nonnull As item) 
+    private void bindTextAndGraphic (final @Nonnull Cell<?> cell, final @Nonnull RoleMap roleMap) 
       {
-        try
+        final Optional<CustomGraphicProvider> cgp = roleMap.get(CustomGraphicProvider);
+        cell.setGraphic(cgp.map(role -> role.getGraphic()).orElse(null));
+        
+        if (!cgp.isPresent())
           {
-            cell.setGraphic(item.as(CustomGraphicProvider).getGraphic());
-            cell.setText("");
-          }
-        catch (AsException e)
-          {
-            try
-              {
-                cell.setText(item.as(Displayable).getDisplayName());
-              }
-            catch (AsException e2)
-              {
-                cell.setText(item.toString());
-              }
+            cell.setText(roleMap.get(Displayable).map(role -> role.getDisplayName()).orElse(""));
           }
       }
 
@@ -157,11 +163,11 @@ public class DefaultCellBinder implements CellBinder
      *
      *
      ******************************************************************************************************************/
-    private void bindDefaultAction (final @Nonnull Cell<?> cell, final @Nonnull As item) 
+    private void bindDefaultAction (final @Nonnull Cell<?> cell, final @Nonnull RoleMap roleMap) 
       {
         try
           {
-            final UserAction defaultAction = findDefaultUserAction(item);
+            final UserAction defaultAction = findDefaultUserAction(roleMap);
             
             // FIXME: doesn't work - keyevents are probably handled by ListView
             cell.setOnKeyPressed(event ->
@@ -184,8 +190,6 @@ public class DefaultCellBinder implements CellBinder
           }
         catch (NotFoundException e)
           {
-            cell.setOnKeyPressed(null);
-            cell.setOnMouseClicked(null);
             log.debug("No default UserAction for {}: {}", cell, e.getMessage());
           }
       }
@@ -195,9 +199,9 @@ public class DefaultCellBinder implements CellBinder
      *
      *
      ******************************************************************************************************************/
-    private void bindContextMenu (final @Nonnull Cell<?> cell, final @Nonnull As item) 
+    private void bindContextMenu (final @Nonnull Cell<?> cell, final @Nonnull RoleMap roleMap) 
       {
-        final List<MenuItem> menuItems = createMenuItems(item);
+        final List<MenuItem> menuItems = createMenuItems(roleMap);
         cell.setContextMenu(menuItems.isEmpty() ? null : new ContextMenu(menuItems.toArray(new MenuItem[0])));
       }
 
@@ -207,14 +211,14 @@ public class DefaultCellBinder implements CellBinder
      *
      ******************************************************************************************************************/
     @Nonnull
-    @VisibleForTesting List<MenuItem> createMenuItems (final @Nonnull As asObject)
+    @VisibleForTesting List<MenuItem> createMenuItems (final @Nonnull RoleMap roleMap)
       {
         try
           {
             final List<MenuItem> menuItems = new ArrayList<>();
 
             // FIXME: use flatMap() & collector
-            asObject.asMany(UserActionProvider).stream().forEach(userActionProvider -> 
+            roleMap.getMany(UserActionProvider).stream().forEach(userActionProvider -> 
               {
                 userActionProvider.getActions().stream().forEach(action -> 
                   {
@@ -238,12 +242,12 @@ public class DefaultCellBinder implements CellBinder
      *
      ******************************************************************************************************************/
     @Nonnull
-    public void bindStyles (final @Nonnull ObservableList<String> styleClasses, final @Nonnull As item)
+    public void bindStyles (final @Nonnull ObservableList<String> styleClasses, final @Nonnull RoleMap roleMap)
       {
         final List<String> styles = styleClasses.stream().filter(s -> !s.startsWith(ROLE_STYLE_PREFIX))
                                                          .collect(toList());
         // FIXME: shouldn't reset them? In case of cell reuse, they get accumulated
-        styles.addAll(item.asMany(Styleable).stream().flatMap(styleable -> styleable.getStyles().stream())
+        styles.addAll(roleMap.getMany(Styleable).stream().flatMap(styleable -> styleable.getStyles().stream())
                                                          .map(s -> ROLE_STYLE_PREFIX + s)
                                                          .collect(toList()));
         styleClasses.setAll(styles);
@@ -255,11 +259,11 @@ public class DefaultCellBinder implements CellBinder
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static UserAction findDefaultUserAction (final @Nonnull As asObject)
-      throws AsException, NotFoundException
+    public static UserAction findDefaultUserAction (final @Nonnull RoleMap roleMap)
+      throws NotFoundException
       {
-        final Collection<UserActionProvider> userActionProviders = asObject.asMany(UserActionProvider);
-        log.debug(">>>> userActionProviders: {}", userActionProviders);
+        final Collection<UserActionProvider> userActionProviders = roleMap.getMany(UserActionProvider);
+        log.trace(">>>> userActionProviders: {}", userActionProviders);
         
         for (final UserActionProvider userActionProvider : userActionProviders)
           {

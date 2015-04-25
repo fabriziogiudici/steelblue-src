@@ -43,6 +43,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.javafx.impl.DefaultCellBinder;
+import it.tidalwave.role.ui.javafx.impl.RoleMap;
 import it.tidalwave.role.ui.javafx.impl.common.AsObjectListCell;
 import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
@@ -50,6 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.scene.input.KeyCode.*;
 import static it.tidalwave.role.SimpleComposite.SimpleComposite;
+import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
 
 /***********************************************************************************************************************
  *
@@ -103,7 +105,10 @@ public class ListViewBindings extends DelegateSupport
                   {
                     try
                       {
-                        DefaultCellBinder.findDefaultUserAction(selectedPm).actionPerformed();
+                        // FIXME: it would be nicer to retrieve the cell and its associated RoleMap?
+                        final RoleMap roleMap = new RoleMap();
+                        roleMap.putMany(UserActionProvider, selectedPm.asMany(UserActionProvider));
+                        DefaultCellBinder.findDefaultUserAction(roleMap).actionPerformed();
                       }
                     catch (NotFoundException e)
                       {

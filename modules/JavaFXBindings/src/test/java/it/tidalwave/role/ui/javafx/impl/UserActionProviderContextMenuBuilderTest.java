@@ -105,9 +105,9 @@ public class UserActionProviderContextMenuBuilderTest
 
     private List<UserAction> actions;
 
-    private As asObjectWithoutUserActionProvider;
+    private RoleMap roleMapWithoutUserActionProvider;
 
-    private As asObjectWithUserActionProvider;
+    private RoleMap roleMapWithUserActionProvider;
 
     private TestExecutorService executorService;
 
@@ -142,13 +142,9 @@ public class UserActionProviderContextMenuBuilderTest
               }
           };
 
-        // FIXME: use MockAs
-        asObjectWithoutUserActionProvider = mock(As.class);
-        asObjectWithUserActionProvider = mock(As.class);
-        when(asObjectWithoutUserActionProvider.as(eq(UserActionProvider.class))).thenThrow(new AsException(UserActionProvider.class));
-        when(asObjectWithoutUserActionProvider.asMany(eq(UserActionProvider.class))).thenReturn(new ArrayList<UserActionProvider>());
-        when(asObjectWithUserActionProvider.as(eq(UserActionProvider.class))).thenReturn(userActionProvider);
-        when(asObjectWithUserActionProvider.asMany(eq(UserActionProvider.class))).thenReturn(Arrays.asList(userActionProvider));
+        roleMapWithoutUserActionProvider = new RoleMap();
+        roleMapWithUserActionProvider = new RoleMap();
+        roleMapWithUserActionProvider.put(UserActionProvider.class, userActionProvider);
 
         executorService = new TestExecutorService(Executors.newSingleThreadExecutor());
 
@@ -161,7 +157,7 @@ public class UserActionProviderContextMenuBuilderTest
     @Test
     public void must_return_null_when_UserActionProvider_is_not_present()
       {
-        final List<MenuItem> menuItems = fixture.createMenuItems(asObjectWithoutUserActionProvider);
+        final List<MenuItem> menuItems = fixture.createMenuItems(roleMapWithoutUserActionProvider);
 
         assertThat(menuItems, is(nullValue()));
       }
@@ -173,7 +169,7 @@ public class UserActionProviderContextMenuBuilderTest
     public void must_set_the_MenuItem_text_from_UserAction_Displayable()
       throws InterruptedException
       {
-        final List<MenuItem> menuItems = fixture.createMenuItems(asObjectWithUserActionProvider);
+        final List<MenuItem> menuItems = fixture.createMenuItems(roleMapWithUserActionProvider);
 
         assertThat(menuItems, is(not(nullValue())));
         assertThat(menuItems.size(), is(actions.size()));
@@ -193,7 +189,7 @@ public class UserActionProviderContextMenuBuilderTest
     public void must_invoke_callbacks_in_a_non_FX_thread()
       throws InterruptedException
       {
-        final List<MenuItem> menuItems = fixture.createMenuItems(asObjectWithUserActionProvider);
+        final List<MenuItem> menuItems = fixture.createMenuItems(roleMapWithUserActionProvider);
 
         assertThat(menuItems, is(not(nullValue())));
         assertThat(menuItems.size(), is(actions.size()));
