@@ -33,6 +33,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
@@ -59,7 +60,6 @@ import static it.tidalwave.role.Displayable.Displayable;
 import static it.tidalwave.role.ui.Styleable.Styleable;
 import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
 import static it.tidalwave.ui.role.javafx.CustomGraphicProvider.CustomGraphicProvider;
-import java.util.Collections;
 
 /***********************************************************************************************************************
  *
@@ -74,9 +74,9 @@ public class DefaultCellBinder implements CellBinder
   {
     private static final List<Class<?>> PRELOADING_ROLE_TYPES = Arrays.asList(
             Displayable, UserActionProvider, Styleable, CustomGraphicProvider);
-    
+
     private static final String ROLE_STYLE_PREFIX = "-rs-";
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -109,13 +109,13 @@ public class DefaultCellBinder implements CellBinder
         log.trace("bind({}, {}, {})", cell, item, empty);
 
         clearBindings(cell);
-            
+
         if (!empty && (item != null))
           {
-            executor.execute(() -> 
+            executor.execute(() ->
               {
                 final RoleBag roles = new RoleBag(item, PRELOADING_ROLE_TYPES);
-                
+
                 Platform.runLater(() ->
                   {
                     bindTextAndGraphic(cell, roles);
@@ -126,13 +126,13 @@ public class DefaultCellBinder implements CellBinder
               });
           }
       }
-    
+
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
-    private void clearBindings (final @Nonnull Cell<?> cell) 
+    private void clearBindings (final @Nonnull Cell<?> cell)
       {
         cell.setText("");
         cell.setGraphic(null);
@@ -140,13 +140,13 @@ public class DefaultCellBinder implements CellBinder
         cell.setOnKeyPressed(null);
         cell.setOnMouseClicked(null);
       }
-    
+
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
-    private void bindTextAndGraphic (final @Nonnull Cell<?> cell, final @Nonnull RoleBag roles) 
+    private void bindTextAndGraphic (final @Nonnull Cell<?> cell, final @Nonnull RoleBag roles)
       {
         final Optional<CustomGraphicProvider> cgp = roles.get(CustomGraphicProvider);
         cell.setGraphic(cgp.map(role -> role.getGraphic()).orElse(null));
@@ -158,12 +158,12 @@ public class DefaultCellBinder implements CellBinder
      *
      *
      ******************************************************************************************************************/
-    private void bindDefaultAction (final @Nonnull Cell<?> cell, final @Nonnull RoleBag roles) 
+    private void bindDefaultAction (final @Nonnull Cell<?> cell, final @Nonnull RoleBag roles)
       {
         try
           {
             final UserAction defaultAction = findDefaultUserAction(roles);
-            
+
             // FIXME: doesn't work - keyevents are probably handled by ListView
             cell.setOnKeyPressed(event ->
               {
@@ -173,7 +173,7 @@ public class DefaultCellBinder implements CellBinder
                     executor.execute(() -> defaultAction.actionPerformed());
                   }
               });
-            
+
             // FIXME: depends on mouse click, won't handle keyboard
             cell.setOnMouseClicked(event ->
               {
@@ -194,7 +194,7 @@ public class DefaultCellBinder implements CellBinder
      *
      *
      ******************************************************************************************************************/
-    private void bindContextMenu (final @Nonnull Cell<?> cell, final @Nonnull RoleBag roles) 
+    private void bindContextMenu (final @Nonnull Cell<?> cell, final @Nonnull RoleBag roles)
       {
         final List<MenuItem> menuItems = createMenuItems(roles);
         cell.setContextMenu(menuItems.isEmpty() ? null : new ContextMenu(menuItems.toArray(new MenuItem[0])));
@@ -212,13 +212,21 @@ public class DefaultCellBinder implements CellBinder
           {
             final List<MenuItem> menuItems = new ArrayList<>();
 
-            // FIXME: use flatMap() & collector
-            roles.getMany(UserActionProvider).stream().forEach(userActionProvider -> 
+            // FIXME: use flatMap() & collector as below - but doesn't work, I think it throws an uncaught Exception
+//            return roles.getMany(UserActionProvider).stream()
+//                                             .flatMap(uap -> uap.getActions().stream())
+//                                             .map(action -> MenuItemBuilder.create()
+//                                                                    .text(action.as(Displayable).getDisplayName())
+//                                                                    .onAction(new EventHandlerUserActionAdapter(action))
+//                                                                    .build())
+//                                             .collect(toList());
+
+            roles.getMany(UserActionProvider).stream().forEach(userActionProvider ->
               {
-                userActionProvider.getActions().stream().forEach(action -> 
+                userActionProvider.getActions().stream().forEach(action ->
                   {
                     menuItems.add(MenuItemBuilder.create().text(action.as(Displayable).getDisplayName())
-                                                          .onAction(new EventHandlerUserActionAdapter(action))
+                                                                    .onAction(new EventHandlerUserActionAdapter(action))
                                                           .build());
                   });
               });
@@ -229,8 +237,13 @@ public class DefaultCellBinder implements CellBinder
           {
             return Collections.emptyList(); // ok, no context actions
           }
+        catch (Exception e)
+          {
+            log.error("createMenuItems()", e);
+            return Collections.emptyList();
+          }
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -247,7 +260,7 @@ public class DefaultCellBinder implements CellBinder
                                                          .collect(toList()));
         styleClasses.setAll(styles);
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -259,7 +272,7 @@ public class DefaultCellBinder implements CellBinder
       {
         final Collection<UserActionProvider> userActionProviders = roles.getMany(UserActionProvider);
         log.trace(">>>> userActionProviders: {}", userActionProviders);
-        
+
         for (final UserActionProvider userActionProvider : userActionProviders)
           {
            try
@@ -271,7 +284,7 @@ public class DefaultCellBinder implements CellBinder
                // ok go on
              }
           }
-        
+
         throw new NotFoundException();
       }
   }
