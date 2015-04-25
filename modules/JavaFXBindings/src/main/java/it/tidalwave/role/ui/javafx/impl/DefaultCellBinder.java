@@ -59,6 +59,7 @@ import static it.tidalwave.role.Displayable.Displayable;
 import static it.tidalwave.role.ui.Styleable.Styleable;
 import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
 import static it.tidalwave.ui.role.javafx.CustomGraphicProvider.CustomGraphicProvider;
+import java.util.Collections;
 
 /***********************************************************************************************************************
  *
@@ -226,7 +227,7 @@ public class DefaultCellBinder implements CellBinder
           }
         catch (AsException e)
           {
-            return null; // ok, no context actions
+            return Collections.emptyList(); // ok, no context actions
           }
       }
     

@@ -152,11 +152,12 @@ public class UserActionProviderContextMenuBuilderTest
      *
      ******************************************************************************************************************/
     @Test
-    public void must_return_null_when_UserActionProvider_is_not_present()
+    public void must_return_empty_list_when_UserActionProvider_is_not_present()
       {
         final List<MenuItem> menuItems = fixture.createMenuItems(roleMapWithoutUserActionProvider);
 
-        assertThat(menuItems, is(nullValue()));
+        assertThat(menuItems, is(notNullValue()));
+        assertThat(menuItems.isEmpty(), is(true));
       }
 
     /*******************************************************************************************************************
