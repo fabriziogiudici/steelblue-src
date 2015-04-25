@@ -36,6 +36,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import it.tidalwave.util.As;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -43,9 +46,15 @@ import java.util.Optional;
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class RoleMap 
+@NoArgsConstructor @ToString
+public class RoleBag 
   {
     private final Map<Class<?>, List<Object>> map = new HashMap<>();
+    
+    public RoleBag (final @Nonnull As source, final @Nonnull List<Class<?>> roleTypes)
+      {
+        roleTypes.forEach(roleType -> copyRoles(source, roleType));
+      }
     
     public <ROLE_TYPE> void put (final @Nonnull Class<ROLE_TYPE> roleClass, final @Nonnull ROLE_TYPE role)
       {
@@ -68,5 +77,10 @@ public class RoleMap
     public <ROLE_TYPE> List<ROLE_TYPE> getMany (final @Nonnull Class<ROLE_TYPE> roleClass)
       {
         return Collections.unmodifiableList((List<ROLE_TYPE>)map.get(roleClass));
+      }
+    
+    private <ROLE_TYPE> void copyRoles (final @Nonnull As item, final @Nonnull Class<ROLE_TYPE> roleClass)
+      {
+        putMany(roleClass, item.asMany(roleClass));
       }
   }

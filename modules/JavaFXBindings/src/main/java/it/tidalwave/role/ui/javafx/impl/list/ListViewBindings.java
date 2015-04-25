@@ -37,13 +37,12 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.input.KeyEvent;
 import javafx.application.Platform;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.javafx.impl.DefaultCellBinder;
-import it.tidalwave.role.ui.javafx.impl.RoleMap;
+import it.tidalwave.role.ui.javafx.impl.RoleBag;
 import it.tidalwave.role.ui.javafx.impl.common.AsObjectListCell;
 import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
@@ -92,7 +91,7 @@ public class ListViewBindings extends DelegateSupport
 
         // FIXME: this won't work with any external navigation system, such as CEC menus
         // TODO: try by having CEC selection emulating RETURN and optionally accepting RETURN here
-        listView.setOnKeyPressed((KeyEvent event) -> 
+        listView.setOnKeyPressed(event -> 
           {
             if (Arrays.asList(SPACE, ENTER).contains(event.getCode()))
               {
@@ -105,9 +104,8 @@ public class ListViewBindings extends DelegateSupport
                   {
                     try
                       {
-                        // FIXME: it would be nicer to retrieve the cell and its associated RoleMap?
-                        final RoleMap roleMap = new RoleMap();
-                        roleMap.putMany(UserActionProvider, selectedPm.asMany(UserActionProvider));
+                        // FIXME: it would be nicer to retrieve the cell and its associated RoleBag?
+                        final RoleBag roleMap = new RoleBag(selectedPm, Arrays.asList(UserActionProvider));
                         DefaultCellBinder.findDefaultUserAction(roleMap).actionPerformed();
                       }
                     catch (NotFoundException e)

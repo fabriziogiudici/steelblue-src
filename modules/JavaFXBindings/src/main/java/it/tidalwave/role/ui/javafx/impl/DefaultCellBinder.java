@@ -31,9 +31,12 @@ package it.tidalwave.role.ui.javafx.impl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executor;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -48,16 +51,14 @@ import it.tidalwave.util.AsException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
+import it.tidalwave.ui.role.javafx.CustomGraphicProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.toList;
 import static it.tidalwave.role.Displayable.Displayable;
 import static it.tidalwave.role.ui.Styleable.Styleable;
 import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
-import it.tidalwave.ui.role.javafx.CustomGraphicProvider;
 import static it.tidalwave.ui.role.javafx.CustomGraphicProvider.CustomGraphicProvider;
-import java.util.Optional;
-import javafx.application.Platform;
 
 /***********************************************************************************************************************
  *
@@ -70,6 +71,9 @@ import javafx.application.Platform;
 @RequiredArgsConstructor @Slf4j
 public class DefaultCellBinder implements CellBinder
   {
+    private static final List<Class<?>> PRELOADING_ROLE_TYPES = Arrays.asList(
+            Displayable, UserActionProvider, Styleable, CustomGraphicProvider);
+    
     private static final String ROLE_STYLE_PREFIX = "-rs-";
     
     /*******************************************************************************************************************
@@ -109,33 +113,19 @@ public class DefaultCellBinder implements CellBinder
           {
             executor.execute(() -> 
               {
-                final RoleMap roleMap = new RoleMap(); // FIXME
-                preLoadRoles(item, roleMap);
+                final RoleBag roles = new RoleBag(item, PRELOADING_ROLE_TYPES);
                 
                 Platform.runLater(() ->
                   {
-                    bindTextAndGraphic(cell, roleMap);
-                    bindDefaultAction(cell, roleMap);
-                    bindContextMenu(cell, roleMap);
-                    bindStyles(cell.getStyleClass(), roleMap);
+                    bindTextAndGraphic(cell, roles);
+                    bindDefaultAction(cell, roles);
+                    bindContextMenu(cell, roles);
+                    bindStyles(cell.getStyleClass(), roles);
                   });
               });
           }
       }
     
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    private void preLoadRoles (final @Nonnull As item, final @Nonnull RoleMap roleMap)
-      {
-        roleMap.putMany(CustomGraphicProvider, item.asMany(CustomGraphicProvider));
-        roleMap.putMany(Displayable, item.asMany(Displayable));
-        roleMap.putMany(UserActionProvider, item.asMany(UserActionProvider));
-        roleMap.putMany(Styleable, item.asMany(Styleable));
-      }
-
     /*******************************************************************************************************************
      *
      *
@@ -155,14 +145,14 @@ public class DefaultCellBinder implements CellBinder
      *
      *
      ******************************************************************************************************************/
-    private void bindTextAndGraphic (final @Nonnull Cell<?> cell, final @Nonnull RoleMap roleMap) 
+    private void bindTextAndGraphic (final @Nonnull Cell<?> cell, final @Nonnull RoleBag roles) 
       {
-        final Optional<CustomGraphicProvider> cgp = roleMap.get(CustomGraphicProvider);
+        final Optional<CustomGraphicProvider> cgp = roles.get(CustomGraphicProvider);
         cell.setGraphic(cgp.map(role -> role.getGraphic()).orElse(null));
         
         if (!cgp.isPresent())
           {
-            cell.setText(roleMap.get(Displayable).map(role -> role.getDisplayName()).orElse(""));
+            cell.setText(roles.get(Displayable).map(role -> role.getDisplayName()).orElse(""));
           }
       }
 
@@ -171,11 +161,11 @@ public class DefaultCellBinder implements CellBinder
      *
      *
      ******************************************************************************************************************/
-    private void bindDefaultAction (final @Nonnull Cell<?> cell, final @Nonnull RoleMap roleMap) 
+    private void bindDefaultAction (final @Nonnull Cell<?> cell, final @Nonnull RoleBag roles) 
       {
         try
           {
-            final UserAction defaultAction = findDefaultUserAction(roleMap);
+            final UserAction defaultAction = findDefaultUserAction(roles);
             
             // FIXME: doesn't work - keyevents are probably handled by ListView
             cell.setOnKeyPressed(event ->
@@ -207,9 +197,9 @@ public class DefaultCellBinder implements CellBinder
      *
      *
      ******************************************************************************************************************/
-    private void bindContextMenu (final @Nonnull Cell<?> cell, final @Nonnull RoleMap roleMap) 
+    private void bindContextMenu (final @Nonnull Cell<?> cell, final @Nonnull RoleBag roles) 
       {
-        final List<MenuItem> menuItems = createMenuItems(roleMap);
+        final List<MenuItem> menuItems = createMenuItems(roles);
         cell.setContextMenu(menuItems.isEmpty() ? null : new ContextMenu(menuItems.toArray(new MenuItem[0])));
       }
 
@@ -219,14 +209,14 @@ public class DefaultCellBinder implements CellBinder
      *
      ******************************************************************************************************************/
     @Nonnull
-    @VisibleForTesting List<MenuItem> createMenuItems (final @Nonnull RoleMap roleMap)
+    @VisibleForTesting List<MenuItem> createMenuItems (final @Nonnull RoleBag roles)
       {
         try
           {
             final List<MenuItem> menuItems = new ArrayList<>();
 
             // FIXME: use flatMap() & collector
-            roleMap.getMany(UserActionProvider).stream().forEach(userActionProvider -> 
+            roles.getMany(UserActionProvider).stream().forEach(userActionProvider -> 
               {
                 userActionProvider.getActions().stream().forEach(action -> 
                   {
@@ -250,12 +240,12 @@ public class DefaultCellBinder implements CellBinder
      *
      ******************************************************************************************************************/
     @Nonnull
-    public void bindStyles (final @Nonnull ObservableList<String> styleClasses, final @Nonnull RoleMap roleMap)
+    public void bindStyles (final @Nonnull ObservableList<String> styleClasses, final @Nonnull RoleBag roles)
       {
         final List<String> styles = styleClasses.stream().filter(s -> !s.startsWith(ROLE_STYLE_PREFIX))
                                                          .collect(toList());
         // FIXME: shouldn't reset them? In case of cell reuse, they get accumulated
-        styles.addAll(roleMap.getMany(Styleable).stream().flatMap(styleable -> styleable.getStyles().stream())
+        styles.addAll(roles.getMany(Styleable).stream().flatMap(styleable -> styleable.getStyles().stream())
                                                          .map(s -> ROLE_STYLE_PREFIX + s)
                                                          .collect(toList()));
         styleClasses.setAll(styles);
@@ -267,10 +257,10 @@ public class DefaultCellBinder implements CellBinder
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static UserAction findDefaultUserAction (final @Nonnull RoleMap roleMap)
+    public static UserAction findDefaultUserAction (final @Nonnull RoleBag roles)
       throws NotFoundException
       {
-        final Collection<UserActionProvider> userActionProviders = roleMap.getMany(UserActionProvider);
+        final Collection<UserActionProvider> userActionProviders = roles.getMany(UserActionProvider);
         log.trace(">>>> userActionProviders: {}", userActionProviders);
         
         for (final UserActionProvider userActionProvider : userActionProviders)

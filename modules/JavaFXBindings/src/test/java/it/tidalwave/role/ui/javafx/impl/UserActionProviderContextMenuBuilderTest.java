@@ -30,7 +30,6 @@ package it.tidalwave.role.ui.javafx.impl;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -40,7 +39,6 @@ import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.MenuItem;
-import it.tidalwave.util.As;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.role.spi.DefaultDisplayable;
@@ -48,7 +46,6 @@ import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.role.ui.spi.DefaultUserActionProvider;
 import it.tidalwave.role.ui.spi.UserActionSupport;
-import it.tidalwave.util.AsException;
 import it.tidalwave.util.spi.AsDelegateProvider;
 import it.tidalwave.util.spi.EmptyAsDelegateProvider;
 import lombok.Delegate;
@@ -105,9 +102,9 @@ public class UserActionProviderContextMenuBuilderTest
 
     private List<UserAction> actions;
 
-    private RoleMap roleMapWithoutUserActionProvider;
+    private RoleBag roleMapWithoutUserActionProvider;
 
-    private RoleMap roleMapWithUserActionProvider;
+    private RoleBag roleMapWithUserActionProvider;
 
     private TestExecutorService executorService;
 
@@ -142,8 +139,8 @@ public class UserActionProviderContextMenuBuilderTest
               }
           };
 
-        roleMapWithoutUserActionProvider = new RoleMap();
-        roleMapWithUserActionProvider = new RoleMap();
+        roleMapWithoutUserActionProvider = new RoleBag();
+        roleMapWithUserActionProvider = new RoleBag();
         roleMapWithUserActionProvider.put(UserActionProvider.class, userActionProvider);
 
         executorService = new TestExecutorService(Executors.newSingleThreadExecutor());
