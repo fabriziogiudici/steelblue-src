@@ -106,7 +106,7 @@ public class DefaultCellBinder implements CellBinder
     @Override
     public void bind (final @Nonnull Cell<?> cell, final @Nullable As item, final boolean empty)
       {
-        log.debug("bind({}, {}, {})", cell, item, empty);
+        log.trace("bind({}, {}, {})", cell, item, empty);
 
         clearBindings(cell);
             
@@ -185,7 +185,7 @@ public class DefaultCellBinder implements CellBinder
           }
         catch (NotFoundException e)
           {
-            log.debug("No default UserAction for {}: {}", cell, e.getMessage());
+            log.trace("No default UserAction for {}", cell);
           }
       }
 
