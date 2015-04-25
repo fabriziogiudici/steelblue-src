@@ -48,7 +48,7 @@ import static it.tidalwave.role.Displayable.Displayable;
  **********************************************************************************************************************/
 public class AsObjectTreeCellTest
   {
-    private AsObjectTreeCell<As> fixture;
+    private AsObjectTreeCell<As> underTest;
 
     private CellBinder contextMenuBuilder;
 
@@ -59,8 +59,8 @@ public class AsObjectTreeCellTest
     public void setupFixture()
       {
         contextMenuBuilder = mock(CellBinder.class);
-        fixture = new AsObjectTreeCell<>();
-        fixture.cellBinder = contextMenuBuilder;
+        underTest = new AsObjectTreeCell<>();
+        underTest.cellBinder = contextMenuBuilder;
       }
 
     /*******************************************************************************************************************
@@ -72,9 +72,9 @@ public class AsObjectTreeCellTest
         final As asObject = mock(As.class);
         when(asObject.as(eq(Displayable))).thenReturn(new DefaultDisplayable("foo"));
 
-        fixture.updateItem(asObject, false);
+        underTest.updateItem(asObject, false);
 
-        assertThat(fixture.getText(), is("foo"));
+        assertThat(underTest.getText(), is("foo"));
       }
 
     /*******************************************************************************************************************
@@ -86,9 +86,9 @@ public class AsObjectTreeCellTest
         final As asObject = mock(As.class);
         when(asObject.as(eq(Displayable))).thenReturn(new DefaultDisplayable("foo"));
 
-        fixture.updateItem(asObject, true);
+        underTest.updateItem(asObject, true);
 
-        assertThat(fixture.getText(), is(""));
+        assertThat(underTest.getText(), is(""));
       }
 
     // TODO: test setting of ContextMenu
