@@ -202,7 +202,7 @@ public class DefaultCellBinder implements CellBinder
 
     /*******************************************************************************************************************
      *
-     *
+     * Don't directly return a ContextMenu otherwise it will be untestable.
      *
      ******************************************************************************************************************/
     @Nonnull
