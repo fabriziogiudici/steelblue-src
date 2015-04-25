@@ -57,6 +57,7 @@ import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
 import it.tidalwave.ui.role.javafx.CustomGraphicProvider;
 import static it.tidalwave.ui.role.javafx.CustomGraphicProvider.CustomGraphicProvider;
 import java.util.Optional;
+import javafx.application.Platform;
 
 /***********************************************************************************************************************
  *
@@ -106,12 +107,19 @@ public class DefaultCellBinder implements CellBinder
             
         if (!empty && (item != null))
           {
-            final RoleMap roleMap = new RoleMap(); // FIXME
-            preLoadRoles(item, roleMap);
-            bindTextAndGraphic(cell, roleMap);
-            bindDefaultAction(cell, roleMap);
-            bindContextMenu(cell, roleMap);
-            bindStyles(cell.getStyleClass(), roleMap);
+            executor.execute(() -> 
+              {
+                final RoleMap roleMap = new RoleMap(); // FIXME
+                preLoadRoles(item, roleMap);
+                
+                Platform.runLater(() ->
+                  {
+                    bindTextAndGraphic(cell, roleMap);
+                    bindDefaultAction(cell, roleMap);
+                    bindContextMenu(cell, roleMap);
+                    bindStyles(cell.getStyleClass(), roleMap);
+                  });
+              });
           }
       }
     
