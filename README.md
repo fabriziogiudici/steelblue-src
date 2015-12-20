@@ -1,7 +1,7 @@
 SteelBlue
 ================================
 
-[![Build Status](https://drone.io/bitbucket.org/tidalwave/bluehour-src/status.png)](https://drone.io/bitbucket.org/tidalwave/bluehour-src/latest)
+[![Build Status](https://drone.io/bitbucket.org/tidalwave/steelblue-src/status.png)](https://drone.io/bitbucket.org/tidalwave/steelblue-src/latest)
 
 SteelBlue contains the JavaFX implementation of a set of UI-related DCI roles defined in the project
 TheseFoolishThings. It allows to design rich client applications in a fashion that is mostly independent of the
@@ -26,7 +26,7 @@ More information can be found on the [homepage](http://steelblue.tidalwave.it) o
 
 Where can I get the latest release?
 -----------------------------------
-You can download source and binaries from our [download page](https://bitbucket.org/tidalwave/steelblue-src/src).
+You can download source and binaries from the [download page](https://bitbucket.org/tidalwave/steelblue-src/src).
 
 Alternatively you can pull it from the central Maven repositories:
 
@@ -45,6 +45,7 @@ Contributing
 We accept pull requests via BitBucket or GitHub.
 
 There are some guidelines which will make applying pull requests easier for us:
+
 * No tabs! Please use spaces for indentation.
 * Respect the code style.
 * Create minimal diffs - disable on save actions like reformat source code or organize imports. If you feel the source
