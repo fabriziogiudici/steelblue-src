@@ -14,8 +14,12 @@
     <artifactId>steelblue</artifactId>
     <version>1.0-ALPHA-11-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>SteelBlue (master)</name>
-    <description>SteelBlue (master)</description>
+    <name>SteelBlue</name>
+    <description>
+        SteelBlue contains the JavaFX implementation of a set of UI-related DCI roles defined in the project
+        TheseFoolishThings. It allows to design rich client applications in a fashion that is independent of the UI
+        technology and segregate the effective implementation in a confined portion of the code.
+    </description>
 
     <properties>
         <tft.scm>git</tft.scm>
@@ -30,6 +34,8 @@
         <netbeans.hint.jdkPlatform>JDK_1.8.0</netbeans.hint.jdkPlatform>
         <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
         <netbeans.compile.on.save>none</netbeans.compile.on.save>
+
+        <tidalwave.issues>STB</tidalwave.issues>
         <!--
         <tft.test.listeners>it.tidalwave.util.test.TestLogger</tft.test.listeners>
 
@@ -43,21 +49,8 @@
         <tft.jacoco-maven-plugin.version>0.7.5.201505241946</tft.jacoco-maven-plugin.version>
     </properties>
 
-    <url>http://steelBlue.bitbucket.org</url>
+    <url>http://steelblue.tidalwave.it</url>
     <inceptionYear>2015</inceptionYear>
-
-    <mailingLists>
-        <mailingList>
-            <name>Continuous Integration</name>
-            <post>ci@steelblue.java.net</post>
-            <archive>http://bitbucket.org/projects/SteelBlue/lists/ci/archive</archive>
-        </mailingList>
-        <mailingList>
-            <name>Developers</name>
-            <post>dev@steelblue.java.net</post>
-            <archive>http://bitbucket.org/projects/SteelBlue/lists/dev/archive</archive>
-        </mailingList>
-    </mailingLists>
 
     <repositories>
         <repository>
@@ -94,8 +87,8 @@
         <connection>scm:git:${scm.repo.readonly.url}</connection>
         <developerConnection>scm:git:${scm.repo.effective.url}</developerConnection>
         <url>${scm.repo.browse.url}</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <build>
         <plugins>
@@ -133,4 +126,29 @@
     <modules>
         <module>modules</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>it.tidalwave-generate-readme-md</id>
+            <build>
+                <defaultGoal>resources:copy-resources</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>tmp</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <outputDirectory>.</outputDirectory>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
