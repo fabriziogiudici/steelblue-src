@@ -1,8 +1,7 @@
 SteelBlue
 ================================
 
-[![Build Status](https://drone.io/bitbucket.org/tidalwave/bluehour-src/status.png)]
-(https://drone.io/bitbucket.org/tidalwave/bluehour-src/latest)
+[![Build Status](https://drone.io/bitbucket.org/tidalwave/bluehour-src/status.png)](https://drone.io/bitbucket.org/tidalwave/bluehour-src/latest)
 
 SteelBlue contains the JavaFX implementation of a set of UI-related DCI roles defined in the project
 TheseFoolishThings. It allows to design rich client applications in a fashion that is mostly independent of the
