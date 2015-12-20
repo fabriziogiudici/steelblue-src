@@ -6,7 +6,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>2.16</version>
+        <version>3.0</version>
         <relativePath />
     </parent>
 
@@ -16,9 +16,11 @@
     <packaging>pom</packaging>
     <name>SteelBlue</name>
     <description>
-        SteelBlue contains the JavaFX implementation of a set of UI-related DCI roles defined in the project
-        TheseFoolishThings. It allows to design rich client applications in a fashion that is independent of the UI
-        technology and segregate the effective implementation in a confined portion of the code.
+[![Build Status](https://drone.io/bitbucket.org/tidalwave/steelblue-src/status.png)](https://drone.io/bitbucket.org/tidalwave/steelblue-src/latest)
+
+SteelBlue contains the JavaFX implementation of a set of UI-related DCI roles defined in the project
+TheseFoolishThings. It allows to design rich client applications in a fashion that is mostly independent of the
+UI technology so the code depending on it is segregated in a confined section.
     </description>
 
     <properties>
@@ -36,28 +38,14 @@
         <netbeans.compile.on.save>none</netbeans.compile.on.save>
 
         <tidalwave.issues>STB</tidalwave.issues>
-        <!--
-        <tft.test.listeners>it.tidalwave.util.test.TestLogger</tft.test.listeners>
-
-                <tft.UmlGraphDoc.version>5.4</tft.UmlGraphDoc.version>
-                <tft.UmlGraphDoc.additionalParam>-views -attributes -operations -types -postfixpackage -nodefontpackagesize 6 -nodefontclasssize 8 -nodefontsize 7 -edgefontsize 7 -nodesep 0.05 -ranksep 0.1 -visibility -inferdep -inferrel -inferdepinpackage -hide java.*|javax.*|android.*</tft.UmlGraphDoc.additionalParam>
-        -->
 
         <tft.clirr.skip>true</tft.clirr.skip> <!-- FIXME Clirr makes the build fail -->
-        <!-- disables javancss since it's broken with JDK 1.7 -->
-        <tft.profile.metrics.defaultGoal>install findbugs:findbugs pmd:cpd pmd:pmd checkstyle:checkstyle clirr:clirr dependency:analyze</tft.profile.metrics.defaultGoal>
-        <tft.jacoco-maven-plugin.version>0.7.5.201505241946</tft.jacoco-maven-plugin.version>
     </properties>
 
     <url>http://steelblue.tidalwave.it</url>
     <inceptionYear>2015</inceptionYear>
 
     <repositories>
-        <repository>
-            <id>releases-oss.sonatype.org</id>
-            <name>Sonatype Releases Repository</name>
-            <url>http://oss.sonatype.org/content/repositories/releases/</url>
-        </repository>
         <repository>
             <id>snapshots-oss.sonatype.org</id>
             <name>Sonatype Snapshots Repository</name>
@@ -78,7 +66,6 @@
                 <artifactId>it-tidalwave-role-ui-javafx</artifactId>
                 <version>1.0-ALPHA-11-SNAPSHOT</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -90,65 +77,8 @@
         <tag>HEAD</tag>
     </scm>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>${tft.test.listeners}</value>
-                        </property>
-                    </properties>
-                </configuration>
-            </plugin>
-
-            <!-- Needed for setting that inherited = false -->
-            <plugin>
-                <groupId>com.mycila.maven-license-plugin</groupId>
-                <artifactId>maven-license-plugin</artifactId>
-                <inherited>false</inherited>
-                <configuration>
-                    <excludes>
-                        <exclude>LICENSE.txt</exclude>
-                        <exclude>**/*.mf</exclude>
-                        <exclude>**/.revision</exclude>
-                        <exclude>.hgtags</exclude>
-                        <exclude>.hgignore</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
     <modules>
         <module>modules</module>
     </modules>
-
-    <profiles>
-        <profile>
-            <id>it.tidalwave-generate-readme-md</id>
-            <build>
-                <defaultGoal>resources:copy-resources</defaultGoal>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>tmp</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                            <outputDirectory>.</outputDirectory>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>
