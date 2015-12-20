@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>it.tidalwave.steelblue</groupId>
-    <artifactId>it-tidalwave-steelblue</artifactId>
+    <artifactId>steelblue</artifactId>
     <version>1.0-ALPHA-11-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SteelBlue (master)</name>
@@ -23,7 +23,7 @@
         <scm.repo.readonly.url>https://bitbucket.org/tidalwave/steelblue-src.git</scm.repo.readonly.url>
         <scm.repo.browse.url>https://bitbucket.org/tidalwave/steelblue-src/src</scm.repo.browse.url>
 
-        <tft.maven.requiredJdk>[1.8.0-40,1.8.0-99)</tft.maven.requiredJdk>
+        <tft.maven.requiredJdk>[1.8.0-0,1.8.0-99)</tft.maven.requiredJdk>
         <tft.javac.source>1.8</tft.javac.source>
         <tft.javac.target>1.8</tft.javac.target>
 

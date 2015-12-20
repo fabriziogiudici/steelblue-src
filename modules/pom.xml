@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>it.tidalwave.steelblue</groupId>
-        <artifactId>it-tidalwave-steelblue</artifactId>
+        <artifactId>steelblue</artifactId>
         <version>1.0-ALPHA-11-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
