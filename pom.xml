@@ -31,8 +31,6 @@
         <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
         <netbeans.compile.on.save>none</netbeans.compile.on.save>
         <!--
-        <tft.mockito.version>1.8.5</tft.mockito.version>
-        <tft.test.maxMemory>1024M</tft.test.maxMemory>
         <tft.test.listeners>it.tidalwave.util.test.TestLogger</tft.test.listeners>
 
                 <tft.UmlGraphDoc.version>5.4</tft.UmlGraphDoc.version>
