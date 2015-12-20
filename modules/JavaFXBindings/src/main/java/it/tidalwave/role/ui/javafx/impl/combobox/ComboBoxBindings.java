@@ -3,7 +3,7 @@
  * *********************************************************************************************************************
  *
  * SteelBlue
- * http://steelblue.tidalwave.it - hg clone https://bitbucket.org/tidalwave/steelblue-src
+ * http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
  * %%
  * Copyright (C) 2015 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
