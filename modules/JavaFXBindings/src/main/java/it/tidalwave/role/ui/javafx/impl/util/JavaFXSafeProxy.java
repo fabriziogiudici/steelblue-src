@@ -43,11 +43,11 @@ import lombok.extern.slf4j.Slf4j;
  * An {@link InvocationHandler} that safely wraps all method calls with {@link #Platform.runLater(Runnable)}. The caller
  * is not blocked if the method is declared as {@code void}; it is blocked otherwise, so it can immediately retrieve
  * the result.
- * 
+ *
  * This behaviour is required by {@link JavaFXSafeProxyCreator.#createNodeAndDelegate()}.
- * 
+ *
  * TODO: add support for aysnc returning a Future.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
@@ -66,7 +66,7 @@ public class JavaFXSafeProxy<T> implements InvocationHandler
         final AtomicReference<Throwable> throwable = new AtomicReference<>();
         final CountDownLatch waitForReturn = new CountDownLatch(1);
 
-        JavaFXSafeRunner.runSafely(() -> 
+        JavaFXSafeRunner.runSafely(() ->
           {
             try
               {
@@ -76,6 +76,7 @@ public class JavaFXSafeProxy<T> implements InvocationHandler
             catch (Throwable t)
               {
                 throwable.set(t);
+                log.warn("Exception while calling JavaFX", t);
               }
             finally
               {
@@ -87,11 +88,11 @@ public class JavaFXSafeProxy<T> implements InvocationHandler
           {
             return null;
           }
-        
+
         log.trace(">>>> waiting for method completion");
         waitForReturn.await();
-        
-        // This is probably useless - 
+
+        // This is probably useless - void methods return asynchronously
         if (throwable.get() != null)
           {
             throw throwable.get();
