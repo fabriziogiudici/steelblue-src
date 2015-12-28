@@ -6,7 +6,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>3.0</version>
+        <version>3.3</version>
         <relativePath />
     </parent>
 
@@ -16,15 +16,12 @@
     <packaging>pom</packaging>
     <name>SteelBlue</name>
     <description>
-[![Build Status](https://drone.io/bitbucket.org/tidalwave/steelblue-src/status.png)](https://drone.io/bitbucket.org/tidalwave/steelblue-src/latest)
-
 SteelBlue contains the JavaFX implementation of a set of UI-related DCI roles defined in the project
 TheseFoolishThings. It allows to design rich client applications in a fashion that is mostly independent of the
 UI technology so the code depending on it is segregated in a confined section.
     </description>
 
     <properties>
-        <tft.scm>git</tft.scm>
         <scm.repo.url>git@bitbucket.org:tidalwave/steelblue-src.git</scm.repo.url>
         <scm.repo.readonly.url>https://bitbucket.org/tidalwave/steelblue-src.git</scm.repo.readonly.url>
         <scm.repo.browse.url>https://bitbucket.org/tidalwave/steelblue-src/src</scm.repo.browse.url>
@@ -33,6 +30,7 @@ UI technology so the code depending on it is segregated in a confined section.
         <tft.javac.source>1.8</tft.javac.source>
         <tft.javac.target>1.8</tft.javac.target>
 
+        <tidalwave.ci.view>SteelBlue</tidalwave.ci.view>
         <netbeans.hint.jdkPlatform>JDK_1.8.0</netbeans.hint.jdkPlatform>
         <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
         <netbeans.compile.on.save>none</netbeans.compile.on.save>

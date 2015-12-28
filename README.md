@@ -1,7 +1,10 @@
+![Maven Central](https://img.shields.io/maven-central/v/it.tidalwave.steelblue/steelblue.svg)
+[![Build Status](https://img.shields.io/jenkins/s/http/services.tidalwave.it/ci/SteelBlue_Build_from_Scratch.svg)](http://services.tidalwave.it/ci/view/SteelBlue)
+[![Test Status](https://img.shields.io/jenkins/t/http/services.tidalwave.it/ci/SteelBlue.svg)](http://services.tidalwave.it/ci/view/SteelBlue)
+[![Coverage](https://img.shields.io/jenkins/c/http/services.tidalwave.it/ci/SteelBlue.svg)](http://services.tidalwave.it/ci/view/SteelBlue)
+
 SteelBlue
 ================================
-
-[![Build Status](https://drone.io/bitbucket.org/tidalwave/steelblue-src/status.png)](https://drone.io/bitbucket.org/tidalwave/steelblue-src/latest)
 
 SteelBlue contains the JavaFX implementation of a set of UI-related DCI roles defined in the project
 TheseFoolishThings. It allows to design rich client applications in a fashion that is mostly independent of the
@@ -42,7 +45,7 @@ Alternatively you can pull it from the central Maven repositories:
 Contributing
 ------------
 
-We accept pull requests via BitBucket or GitHub.
+We accept pull requests via Bitbucket or GitHub.
 
 There are some guidelines which will make applying pull requests easier for us:
 
@@ -67,4 +70,4 @@ Additional Resources
 
 * [Tidalwave Homepage](http://tidalwave.it)
 * [Project Issue Tracker (Jira)](http://services.tidalwave.it/jira/browse/STB)
-* [Project Continuous Integration (hudson)](http://ci.tidalwave.it/ci/view/)
+* [Project Continuous Integration (Jenkins)](http://services.tidalwave.it/ci/view/SteelBlue)
