@@ -8,7 +8,7 @@
   %%
   Copyright (C) 2015 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
   %%
- 
+
   *********************************************************************************************************************
 
   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
@@ -66,9 +66,10 @@
         <!-- FIXME use properties -->
         <property name="waitForTasksToCompleteOnShutdown" value="false"/>
         <property name="threadNamePrefix" value="javafxBinder-" />
-        <property name="corePoolSize" value="10" />
-        <property name="maxPoolSize" value="10" />
-        <property name="queueCapacity" value="10" />
+        <!-- Fix for STB-26 -->
+        <property name="corePoolSize" value="1" />
+        <property name="maxPoolSize" value="1" />
+        <property name="queueCapacity" value="10000" />
     </bean>
 
     <bean class="it.tidalwave.role.ui.javafx.impl.DefaultJavaFXBinder">
