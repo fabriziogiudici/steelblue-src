@@ -12,7 +12,7 @@
 
     <groupId>it.tidalwave.steelblue</groupId>
     <artifactId>steelblue</artifactId>
-    <version>1.0-ALPHA-11-SNAPSHOT</version>
+    <version>1.0-ALPHA-12-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SteelBlue</name>
     <description>
@@ -62,7 +62,7 @@ UI technology so the code depending on it is segregated in a confined section.
             <dependency>
                 <groupId>it.tidalwave.steelblue</groupId>
                 <artifactId>it-tidalwave-role-ui-javafx</artifactId>
-                <version>1.0-ALPHA-11-SNAPSHOT</version>
+                <version>1.0-ALPHA-12-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
