@@ -193,9 +193,12 @@ public interface JavaFXBinder
 
     /*******************************************************************************************************************
      *
+     * Deprecated. Merge to bindToggleButtons, passing some arguments for choosing toggle or normal buttons.
      *
+     * @deprecated
      *
      ******************************************************************************************************************/
+    @Deprecated
     public void bindButtonsInPane (@Nonnull GridPane gridPane, @Nonnull Collection<UserAction> actions);
 
     /*******************************************************************************************************************
