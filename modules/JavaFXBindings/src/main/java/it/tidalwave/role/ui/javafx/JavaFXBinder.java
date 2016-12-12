@@ -29,6 +29,7 @@
 package it.tidalwave.role.ui.javafx;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
 import java.nio.file.Path;
 import javafx.beans.property.Property;
 import javafx.scene.control.ButtonBase;
@@ -40,11 +41,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.Node;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Window;
 import it.tidalwave.util.ui.UserNotificationWithFeedback;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.UserAction;
+import javafx.scene.control.ToggleButton;
 
 /***********************************************************************************************************************
  *
@@ -75,7 +79,7 @@ public interface JavaFXBinder
      *
      *
      ******************************************************************************************************************/
-    public void bind (@Nonnull TableView<PresentationModel> tableView, 
+    public void bind (@Nonnull TableView<PresentationModel> tableView,
                       @Nonnull PresentationModel pm,
                       @Nonnull Runnable runnable);
 
@@ -84,7 +88,7 @@ public interface JavaFXBinder
      *
      *
      ******************************************************************************************************************/
-    default public void bind (final @Nonnull TableView<PresentationModel> tableView, 
+    default public void bind (final @Nonnull TableView<PresentationModel> tableView,
                               final @Nonnull PresentationModel pm)
       {
         bind(tableView, pm, () -> {});
@@ -95,7 +99,7 @@ public interface JavaFXBinder
      *
      *
      ******************************************************************************************************************/
-    public void bind (@Nonnull TreeView<PresentationModel> treeView, 
+    public void bind (@Nonnull TreeView<PresentationModel> treeView,
                       @Nonnull PresentationModel pm,
                       @Nonnull Runnable runnable);
 
@@ -104,7 +108,7 @@ public interface JavaFXBinder
      *
      *
      ******************************************************************************************************************/
-    default public void bind (final @Nonnull TreeView<PresentationModel> treeView, 
+    default public void bind (final @Nonnull TreeView<PresentationModel> treeView,
                               final @Nonnull PresentationModel pm)
       {
         bind(treeView, pm, () -> {});
@@ -115,7 +119,7 @@ public interface JavaFXBinder
      *
      *
      ******************************************************************************************************************/
-    public void bind (@Nonnull TreeTableView<PresentationModel> treeTableView, 
+    public void bind (@Nonnull TreeTableView<PresentationModel> treeTableView,
                       @Nonnull PresentationModel pm,
                       @Nonnull Runnable runnable);
 
@@ -135,7 +139,7 @@ public interface JavaFXBinder
      *
      *
      ******************************************************************************************************************/
-    public void bind (@Nonnull ListView<PresentationModel> listView, 
+    public void bind (@Nonnull ListView<PresentationModel> listView,
                       @Nonnull PresentationModel pm,
                       @Nonnull Runnable callback);
 
@@ -155,7 +159,7 @@ public interface JavaFXBinder
      *
      *
      ******************************************************************************************************************/
-    public void bind (@Nonnull ComboBox<PresentationModel> comboBox, 
+    public void bind (@Nonnull ComboBox<PresentationModel> comboBox,
                       @Nonnull PresentationModel pm,
                       @Nonnull Runnable callback);
 
@@ -169,6 +173,33 @@ public interface JavaFXBinder
       {
         bind(comboBox, pm, () -> {});
       }
+
+    /*******************************************************************************************************************
+     *
+     * Given a {@link PresentationModel} that contains a {@link Composite}, populate the pane with
+     * {@link ToggleButton}s associated to the elements of the {@link Composite}. Each element is searched for the
+     * following roles:
+     *
+     * <ul>
+     * <li>{@link UserActionProvider} (mandatory) to provide a callback for the button</li>
+     * <li>{@link Displayable} to provide a text for the button</li>
+     * <li>{@link Styleable} to provide a CSS style for the button</li>
+     * </ul>
+     *
+     * The pane must be pre-populated with at least one button, which will be queried for the CSS style.
+     *
+     ******************************************************************************************************************/
+    public void bindToggleButtons (@Nonnull Pane pane, @Nonnull PresentationModel pm);
+
+    /*******************************************************************************************************************
+     *
+     * Deprecated. Merge to bindToggleButtons, passing some arguments for choosing toggle or normal buttons.
+     *
+     * @deprecated
+     *
+     ******************************************************************************************************************/
+    @Deprecated
+    public void bindButtonsInPane (@Nonnull GridPane gridPane, @Nonnull Collection<UserAction> actions);
 
     /*******************************************************************************************************************
      *
