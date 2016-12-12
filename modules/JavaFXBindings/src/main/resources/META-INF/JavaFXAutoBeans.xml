@@ -60,23 +60,10 @@
 
     <aop:aspectj-autoproxy/>
 
-    <bean id="javafxBinderExecutor"
-          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
-          autowire-candidate="false">
-        <!-- FIXME use properties -->
-        <property name="waitForTasksToCompleteOnShutdown" value="false"/>
-        <property name="threadNamePrefix" value="javafxBinder-" />
-        <!-- Fix for STB-26 -->
-        <property name="corePoolSize" value="1" />
-        <property name="maxPoolSize" value="1" />
-        <property name="queueCapacity" value="10000" />
-    </bean>
-
-    <bean class="it.tidalwave.role.ui.javafx.impl.DefaultJavaFXBinder">
-        <constructor-arg ref="javafxBinderExecutor" />
-    </bean>
-
     <bean class="it.tidalwave.role.ui.javafx.StackPaneSelector" />
+
+    <bean id="javafxBinderExecutor" class="it.tidalwave.ui.javafx.JavaFXSafeProxyCreator"
+                                    factory-method="getExecutor" />
 
     <bean class="it.tidalwave.role.ui.javafx.impl.DefaultCellBinder" >
         <constructor-arg ref="javafxBinderExecutor" />
