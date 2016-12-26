@@ -91,7 +91,7 @@ public class DefaultCellBinder implements CellBinder
         @Override
         public void handle (final @Nonnull ActionEvent event)
           {
-            executor.execute(() -> action.actionPerformed());
+            executor.execute(action::actionPerformed);
           }
       }
 
@@ -170,7 +170,7 @@ public class DefaultCellBinder implements CellBinder
                 log.debug("onKeyPressed: {}", event);
                 if (event.getCode().equals(KeyCode.SPACE))
                   {
-                    executor.execute(() -> defaultAction.actionPerformed());
+                    executor.execute(defaultAction::actionPerformed);
                   }
               });
 
@@ -179,7 +179,7 @@ public class DefaultCellBinder implements CellBinder
               {
                 if (event.getClickCount() == 2)
                   {
-                    executor.execute(() -> defaultAction.actionPerformed());
+                    executor.execute(defaultAction::actionPerformed);
                   }
               });
           }

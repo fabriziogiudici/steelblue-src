@@ -276,7 +276,6 @@ public class JavaFXSafeProxyCreator
       {
         for (final Field field : object.getClass().getDeclaredFields())
           {
-              System.err.println(">>>> considering to inject " + field);
             if (field.getAnnotation(Inject.class) != null)
               {
                 field.setAccessible(true);

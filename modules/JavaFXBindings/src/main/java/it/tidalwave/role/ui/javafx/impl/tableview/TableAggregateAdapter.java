@@ -46,14 +46,14 @@ import it.tidalwave.role.ui.javafx.impl.treetable.PresentationModelAsDelegateDec
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class TableAggregateAdapter implements Callback<TableColumn.CellDataFeatures<PresentationModel, PresentationModel>, 
+public class TableAggregateAdapter implements Callback<TableColumn.CellDataFeatures<PresentationModel, PresentationModel>,
                                          ObservableValue<PresentationModel>>
   {
     private final static PresentationModel EMPTY = new DefaultPresentationModel(new DefaultDisplayable("???"));
-    
+
     @Override @Nonnull
-    public ObservableValue<PresentationModel> call 
-        (final @Nonnull TableColumn.CellDataFeatures<PresentationModel, PresentationModel> cell) 
+    public ObservableValue<PresentationModel> call
+        (final @Nonnull TableColumn.CellDataFeatures<PresentationModel, PresentationModel> cell)
       {
         return new ObservableValueBase<PresentationModel>() // FIXME: use a concrete specialization?
           {
@@ -67,7 +67,6 @@ public class TableAggregateAdapter implements Callback<TableColumn.CellDataFeatu
                     // FIXME: uses the column header names, should be an internal id instead
                     final PresentationModel columnPm = aggregate.getByName(cell.getTableColumn().getText());
                     return new PresentationModelAsDelegateDecorator(columnPm, rowPm);
-                    
                   }
                 catch (NotFoundException e)
                   {

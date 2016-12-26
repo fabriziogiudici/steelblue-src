@@ -30,6 +30,7 @@ package it.tidalwave.role.ui.javafx.impl.list;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import javafx.util.Callback;
 import javafx.collections.ObservableList;
@@ -61,9 +62,9 @@ import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
 @Slf4j
 public class ListViewBindings extends DelegateSupport
   {
-    private final Callback<ListView<PresentationModel>, ListCell<PresentationModel>> cellFactory = 
+    private final Callback<ListView<PresentationModel>, ListCell<PresentationModel>> cellFactory =
             (listView) -> new AsObjectListCell<>();
-    
+
     private final ChangeListener<PresentationModel> changeListener = new ChangeListenerSelectableAdapter(executor);
 
     /*******************************************************************************************************************
@@ -78,20 +79,20 @@ public class ListViewBindings extends DelegateSupport
 
     /*******************************************************************************************************************
      *
-     *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void bind (final @Nonnull ListView<PresentationModel> listView, 
+    public void bind (final @Nonnull ListView<PresentationModel> listView,
                       final @Nonnull PresentationModel pm,
-                      final @Nonnull Runnable callback)
+                      final @Nonnull Optional<Runnable> callback)
       {
         listView.setCellFactory(cellFactory);
-    
+
         // FIXME: WEAK LISTENERS
 
         // FIXME: this won't work with any external navigation system, such as CEC menus
         // TODO: try by having CEC selection emulating RETURN and optionally accepting RETURN here
-        listView.setOnKeyPressed(event -> 
+        listView.setOnKeyPressed(event ->
           {
             if (Arrays.asList(SPACE, ENTER).contains(event.getCode()))
               {
@@ -100,7 +101,7 @@ public class ListViewBindings extends DelegateSupport
                 // Otherwise emulate mouse double click on the cell
                 log.debug("ListView onKeyPressed: {}", selectedPm);
 
-                executor.execute(() -> 
+                executor.execute(() ->
                   {
                     try
                       {
@@ -110,12 +111,12 @@ public class ListViewBindings extends DelegateSupport
                       }
                     catch (NotFoundException e)
                       {
-                        // ok no action  
+                        // ok no action
                       }
                   });
               }
           });
-        
+
         final ReadOnlyObjectProperty<PresentationModel> pmProperty = listView.getSelectionModel().selectedItemProperty();
         pmProperty.removeListener(changeListener);
         listView.setItems(observableArrayList()); // quick clear in case of long operations FIXME doesn't work
@@ -123,12 +124,12 @@ public class ListViewBindings extends DelegateSupport
           {
             final SimpleComposite<PresentationModel> composite = pm.as(SimpleComposite);
             final ObservableList<PresentationModel> items = observableArrayList(composite.findChildren().results());
-            
+
             Platform.runLater(() ->
               {
                 listView.setItems(items);
                 pmProperty.addListener(changeListener);
-                callback.run();
+                callback.ifPresent(Runnable::run);
               });
           });
       }

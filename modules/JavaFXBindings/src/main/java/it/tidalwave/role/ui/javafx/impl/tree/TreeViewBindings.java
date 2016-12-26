@@ -29,6 +29,7 @@
 package it.tidalwave.role.ui.javafx.impl.tree;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.beans.PropertyChangeListener;
 import javafx.util.Callback;
@@ -82,7 +83,7 @@ public class TreeViewBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener = (ov, oldItem, item) -> 
+    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener = (ov, oldItem, item) ->
       {
         executor.execute(() ->
           {
@@ -104,7 +105,7 @@ public class TreeViewBindings extends DelegateSupport
      ******************************************************************************************************************/
     public void bind (final @Nonnull TreeView<PresentationModel> treeView,
                       final @Nonnull PresentationModel pm,
-                      final @Nonnull Runnable callback)
+                      final @Nonnull Optional<Runnable> callback)
       {
         assertIsFxApplicationThread();
 
@@ -112,10 +113,10 @@ public class TreeViewBindings extends DelegateSupport
         rootProperty.removeListener(presentationModelDisposer);
         rootProperty.addListener(presentationModelDisposer);
         rootProperty.set(createTreeItem(pm));
-        callback.run();
+        callback.ifPresent(Runnable::run);
 
         treeView.setCellFactory(treeCellFactory);
-        
+
         final ReadOnlyObjectProperty<TreeItem<PresentationModel>> pmProperty =
                 treeView.getSelectionModel().selectedItemProperty();
         pmProperty.removeListener(treeItemChangeListener);
@@ -134,7 +135,7 @@ public class TreeViewBindings extends DelegateSupport
 
         final PropertyChangeListener recreateChildrenOnUpdateListener = event ->
           {
-            Platform.runLater(() -> 
+            Platform.runLater(() ->
               {
                 item.getChildren().clear(); // FIXME: should update it incrementally
                 createChildren(item, pm);

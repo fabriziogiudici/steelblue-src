@@ -29,12 +29,12 @@
 package it.tidalwave.role.ui.javafx.impl.treetable;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.beans.PropertyChangeListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
@@ -60,7 +60,7 @@ import static it.tidalwave.role.ui.Selectable.Selectable;
 public class TreeTableViewBindings extends DelegateSupport
   {
     private final ObsoletePresentationModelDisposer presentationModelDisposer = new ObsoletePresentationModelDisposer();
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -76,7 +76,7 @@ public class TreeTableViewBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener = (ov,  oldItem, item) -> 
+    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener = (ov,  oldItem, item) ->
       {
         executor.execute(() ->
           {
@@ -98,7 +98,7 @@ public class TreeTableViewBindings extends DelegateSupport
      ******************************************************************************************************************/
     public void bind (final @Nonnull TreeTableView<PresentationModel> treeTableView,
                       final @Nonnull PresentationModel pm,
-                      final @Nonnull Runnable callback)
+                      final @Nonnull Optional<Runnable> callback)
       {
         assertIsFxApplicationThread();
 
@@ -110,7 +110,7 @@ public class TreeTableViewBindings extends DelegateSupport
         final ObservableList rawColumns = treeTableView.getColumns(); // FIXME
         final ObservableList<TreeTableColumn<PresentationModel, PresentationModel>> columns =
                 (ObservableList<TreeTableColumn<PresentationModel, PresentationModel>>)rawColumns;
-        
+
         for (final TreeTableColumn<PresentationModel, PresentationModel> column : columns)
           {
             column.setCellValueFactory(new TreeTableAggregateAdapter());
@@ -121,7 +121,7 @@ public class TreeTableViewBindings extends DelegateSupport
                 treeTableView.getSelectionModel().selectedItemProperty();
         selectedItemProperty.removeListener(treeItemChangeListener);
         selectedItemProperty.addListener(treeItemChangeListener);
-        callback.run();
+        callback.ifPresent(Runnable::run);
      }
 
     /*******************************************************************************************************************
@@ -134,7 +134,7 @@ public class TreeTableViewBindings extends DelegateSupport
       {
         final TreeItem<PresentationModel> item = new TreeItem<>(pm);
 
-        final PropertyChangeListener recreateChildrenOnUpdateListener = event -> 
+        final PropertyChangeListener recreateChildrenOnUpdateListener = event ->
           {
             Platform.runLater(() ->
               {
@@ -167,7 +167,7 @@ public class TreeTableViewBindings extends DelegateSupport
           }
         catch (AsException e)
           {
-            // ok, no Composite  
+            // ok, no Composite
           }
       }
   }

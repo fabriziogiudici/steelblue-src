@@ -69,6 +69,8 @@ import static it.tidalwave.role.SimpleComposite.SimpleComposite;
 import static it.tidalwave.role.ui.Styleable.Styleable;
 import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
 import java.util.Collection;
+import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -155,6 +157,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     @Override
     public void bind (final @Nonnull ButtonBase button, final @Nonnull UserAction action)
       {
+        Objects.requireNonNull(button, "button");
         assertIsFxApplicationThread();
 
         try
@@ -190,7 +193,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
           }
 
         menuItem.disableProperty().bind(adaptBoolean(action.enabled()).not());
-        menuItem.setOnAction((event) -> executor.execute(() -> action.actionPerformed()));
+        menuItem.setOnAction(event -> executor.execute(action::actionPerformed));
       }
 
     /*******************************************************************************************************************
@@ -218,6 +221,9 @@ public class DefaultJavaFXBinder implements JavaFXBinder
                                          final @Nonnull BoundProperty<Boolean> validProperty)
       {
         assertIsFxApplicationThread();
+        requireNonNull(textField, "textField");
+        requireNonNull(textProperty, "textProperty");
+        requireNonNull(validProperty, "validProperty");
 
         textField.textProperty().bindBidirectional(new PropertyAdapter<>(executor, textProperty));
 
@@ -311,7 +317,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
         button.setText(asOptional(pm, Displayable).map(d -> d.getDisplayName()).orElse(""));
         button.getStyleClass().addAll(baseStyleClass);
         button.getStyleClass().addAll(asOptional(pm, Styleable).map(s -> s.getStyles()).orElse(emptyList()));
-        
+
         try
           {
             bind(button, pm.as(UserActionProvider).getDefaultAction());
@@ -370,7 +376,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      *
      ******************************************************************************************************************/
     @Nonnull
-    private BooleanExpression adaptBoolean (BoundProperty<Boolean> property)
+    private BooleanExpression adaptBoolean (final @Nonnull BoundProperty<Boolean> property)
       {
         return BooleanExpression.booleanExpression(new PropertyAdapter<>(executor, property));
       }
