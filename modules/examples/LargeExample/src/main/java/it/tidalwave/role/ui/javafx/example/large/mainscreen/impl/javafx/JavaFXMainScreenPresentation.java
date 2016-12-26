@@ -52,9 +52,7 @@ public class JavaFXMainScreenPresentation implements MainScreenPresentation
         public void showUp();
       }
 
-    private static final String FXML_URL = "/it/tidalwave/role/ui/javafx/example/large/mainscreen/impl/javafx/MainScreen.fxml";
-
-    private final NodeAndDelegate nad = createNodeAndDelegate(getClass(), FXML_URL);
+    private final NodeAndDelegate nad = createNodeAndDelegate(getClass());
 
     // Typically almost all the methods are delegated, with the exception of the one that brings the presentation into
     // view.

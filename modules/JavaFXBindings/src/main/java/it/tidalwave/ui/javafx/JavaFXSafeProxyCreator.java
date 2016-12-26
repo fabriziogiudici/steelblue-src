@@ -189,14 +189,39 @@ public class JavaFXSafeProxyCreator
 
     /*******************************************************************************************************************
      *
+     * Creates a {@link NodeAndDelegate} for the given presentation class. The FXML resource name is inferred by
+     * default, For instance, is the class is named {@code JavaFXFooBarPresentation}, the resource name is
+     * {@code FooBar.fxml} and searched in the same packages as the class.
      *
+     * @see #createNodeAndDelegate(java.lang.Class, java.lang.String)
+     *
+     * @since 1.0-ALPHA-13
+     *
+     * @param   presentationClass   the class of the presentation for which the resources must be created.
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static <T> NodeAndDelegate createNodeAndDelegate (final @Nonnull Class<?> clazz,
-                                                             final @Nonnull String resource)
+    public static <T> NodeAndDelegate createNodeAndDelegate (final @Nonnull Class<?> presentationClass)
       {
-        log.debug("createNodeAndDelegate({}, {})", clazz, resource);
+        final String resource = presentationClass.getSimpleName().replaceAll("^JavaFX", "")
+                                                                 .replaceAll("Presentation$", "")
+                                                                 + ".fxml";
+        return createNodeAndDelegate(presentationClass, resource);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Creates a {@link NodeAndDelegate} for the given presentation class.
+     *
+     * @param   presentationClass   the class of the presentation for which the resources must be created.
+     * @param   fxmlResourcePath    the path of the FXML resource
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public static <T> NodeAndDelegate createNodeAndDelegate (final @Nonnull Class<?> presentationClass,
+                                                             final @Nonnull String fxmlResourcePath)
+      {
+        log.debug("createNodeAndDelegate({}, {})", presentationClass, fxmlResourcePath);
 
         final CountDownLatch latch = new CountDownLatch(1);
         final AtomicReference<NodeAndDelegate> nad = new AtomicReference<>();
@@ -206,7 +231,7 @@ public class JavaFXSafeProxyCreator
           {
             try
               {
-                return new NodeAndDelegate(clazz, resource);
+                return new NodeAndDelegate(presentationClass, fxmlResourcePath);
               }
             catch (IOException e)
               {
@@ -218,7 +243,7 @@ public class JavaFXSafeProxyCreator
           {
             try
               {
-                nad.set(new NodeAndDelegate(clazz, resource));
+                nad.set(new NodeAndDelegate(presentationClass, fxmlResourcePath));
               }
             catch (RuntimeException e)
               {
