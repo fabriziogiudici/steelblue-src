@@ -36,7 +36,8 @@ import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentati
 
 /***********************************************************************************************************************
  *
- * The main class initializes the logging facility and starts the JavaFX application.
+ * The main class extends {@link JavaFXSpringApplication} and invokes a starting method on a controller that boots
+ * the application.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
@@ -44,6 +45,19 @@ import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentati
  **********************************************************************************************************************/
 public class Main extends JavaFXSpringApplication
   {
+    /*******************************************************************************************************************
+     *
+     * Usually {@code main()} does nothing more than a typical {@code main()} of a typical JavaFX application.
+     * JavaFX and Spring are automatically booted with an implicit configuration:
+     *
+     * <ul>
+     * <li>The FXML resource for the main UI is loaded from the same package as this class, and the name's
+     *     {@code Application.fxml}</li>
+     * <li>A splash screen is created from a FXML resource in the same package as this class and name
+     *     {@code Splash.fxml}, It is rendered on the screen while the system is initialised in background.</li>
+     * </ul>
+     *
+     ******************************************************************************************************************/
     public static void main (final @Nonnull String ... args)
       {
         try
@@ -59,6 +73,13 @@ public class Main extends JavaFXSpringApplication
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     * This method retrieves a reference to the main controller and boots it.
+     *
+     ******************************************************************************************************************/
     @Override
     protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
       {
