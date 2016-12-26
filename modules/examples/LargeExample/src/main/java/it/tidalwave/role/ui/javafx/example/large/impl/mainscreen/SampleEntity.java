@@ -41,11 +41,21 @@ import it.tidalwave.util.spi.AsSupport;
  **********************************************************************************************************************/
 public class SampleEntity implements As
   {
+    @Nonnull
+    private final String id;
+
     @Delegate
     private final AsSupport asDelegate;
 
-    public SampleEntity (final @Nonnull Object ... rolesOrFactories)
+    public SampleEntity (final @Nonnull String id, final @Nonnull Object ... rolesOrFactories)
       {
+        this.id = id;
         asDelegate = new AsSupport(this, rolesOrFactories);
+      }
+
+    @Override @Nonnull
+    public String toString()
+      {
+        return String.format("SampleEntity(%s)", id);
       }
   }

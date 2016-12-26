@@ -28,21 +28,25 @@
  */
 package it.tidalwave.role.ui.javafx.example.large.impl.mainscreen;
 
+import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.spi.ArrayListSimpleComposite;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import it.tidalwave.role.spi.DefaultDisplayable;
-import it.tidalwave.role.ui.ActionProvider;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.spi.UserActionSupport;
 import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.Selectable;
 import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.role.ui.spi.DefaultPresentationModel;
-import it.tidalwave.role.ui.spi.DefaultUserActionProvider;
 import it.tidalwave.util.NotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import static java.util.stream.Collectors.toList;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +65,8 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
 
     private PresentationModel listPm;
 
+    private PresentationModel arrayPm;
+
     private final UserAction action = new UserActionSupport(new DefaultDisplayable("Press me")) // FIXME: refactor with UserAction8
       {
         @Override
@@ -74,7 +80,7 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     private void initialize()
       {
         createData();
-        presentation.bind(action, listPm);
+        presentation.bind(action, listPm, arrayPm);
       }
 
     @Override
@@ -85,21 +91,69 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
 
     private void createData()
       {
-        final SimpleComposite<Object> composite = new ArrayListSimpleComposite<>(
-                Arrays.asList("1", "2", "3").stream().map(name ->
-                        pmFor(new SampleEntity(new DefaultDisplayable(name)))).collect(toList()));
-        listPm = new DefaultPresentationModel(null, composite);
+        final SimpleComposite<PresentationModel> composite = new ArrayListSimpleComposite<>(
+                Arrays.asList("1", "2", "3").stream()
+                        .map(name -> pmFor(sampleEntity(name)))
+                        .collect(toList()));
+        listPm = new DefaultPresentationModel(composite);
+
+        final List<PresentationModel> pmRows = new ArrayList<>();
+
+        for (int row = 0; row < 10; row++)
+          {
+            final Map<String, PresentationModel> map = new HashMap<>();
+
+            for (int column = 1; column <= 2; column++)
+              {
+                final SampleEntity entity = sampleEntity(String.format("(%d ; %d)", row, column));
+                map.put("C" + column, new DefaultPresentationModel(entity, entity));
+              }
+
+            final Aggregate<PresentationModel> aRow = new Aggregate<PresentationModel>()
+              {
+                @Override
+                public PresentationModel getByName(String name) throws NotFoundException
+                  {
+                    if (!map.containsKey(name))
+                      {
+                        throw new NotFoundException("column: " + name);
+                      }
+
+                    return map.get(name);
+                  }
+              };
+
+            pmRows.add(new DefaultPresentationModel(aRow));
+          }
+
+        final SimpleComposite<PresentationModel> c2 = new ArrayListSimpleComposite<>(pmRows);
+        arrayPm = new DefaultPresentationModel(c2);
+      }
+
+    @Nonnull
+    private static SampleEntity sampleEntity (final @Nonnull String name)
+      {
+        return new SampleEntity(name, new DefaultDisplayable(name));
       }
 
     @Nonnull
     private static PresentationModel pmFor (final @Nonnull Object owner)
       {
+        final Selectable selectable = new Selectable()
+          {
+            @Override
+            public void select()
+              {
+                log.info("SELECTED {}", owner);
+              }
+          };
+
         final UserAction selectionAction = new UserActionSupport(new DefaultDisplayable("Default action")) // FIXME: refactor with UserAction8
           {
             @Override
             public void actionPerformed()
               {
-                log.info("SELECTED " + owner);
+                log.info("DEFAULT ACTION {}", owner);
               }
           };
 
@@ -108,7 +162,7 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
             @Override
             public void actionPerformed()
               {
-                log.info("CONTEXT ACTION 1 " + owner );
+                log.info("CONTEXT ACTION 1 {}", owner);
               }
           };
 
@@ -117,11 +171,11 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
             @Override
             public void actionPerformed()
               {
-                log.info("CONTEXT ACTION 2" + owner);
+                log.info("CONTEXT ACTION 2 {}", owner);
               }
           };
 
-        return new DefaultPresentationModel(owner, actionProvider(selectionAction, contextAction1, contextAction2));
+        return new DefaultPresentationModel(owner, selectable, actionProvider(selectionAction, contextAction1, contextAction2));
       }
 
     @Nonnull

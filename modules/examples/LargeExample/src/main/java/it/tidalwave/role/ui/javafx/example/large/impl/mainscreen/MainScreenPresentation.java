@@ -41,7 +41,8 @@ import it.tidalwave.role.ui.UserAction;
 public interface MainScreenPresentation
   {
     public void bind (@Nonnull UserAction action,
-                      @Nonnull PresentationModel listPm);
+                      @Nonnull PresentationModel listPm,
+                      @Nonnull PresentationModel arrayPm);
 
     public void showUp();
   }

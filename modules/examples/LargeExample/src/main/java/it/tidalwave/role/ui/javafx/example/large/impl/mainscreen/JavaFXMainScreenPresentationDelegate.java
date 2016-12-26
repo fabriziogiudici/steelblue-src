@@ -74,11 +74,14 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
 
     @Override
     public void bind (final @Nonnull UserAction action,
-                      final @Nonnull PresentationModel listPm)
+                      final @Nonnull PresentationModel listPm,
+                      final @Nonnull PresentationModel arrayPm)
       {
         binder.bind(btButton, action);
-        binder.bind(lvListView, listPm, () -> log.info("Changed selection on lvListView"));
-        binder.bind(cbComboBox, listPm, () -> log.info("Changed selection on cbComboBox"));
+        binder.bind(lvListView, listPm, () -> log.info("Finished setup of lvListView"));
+        binder.bind(cbComboBox, listPm, () -> log.info("Finished setup of cbComboBox"));
+        binder.bind(tvTableView, arrayPm, () -> log.info("Finished setup of tvTableView"));
+//        binder.bind(ttvTreeTableView, arrayPm, () -> log.info("Finished setup of ttvTreeTableView"));
       }
 
     @Override
