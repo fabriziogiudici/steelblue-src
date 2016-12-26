@@ -37,7 +37,9 @@ import static it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.createNodeAndDelegat
 /***********************************************************************************************************************
  *
  * The default implementation of the presentation, which is instantiated by Spring, is not the JavaFX controller, but
- * a virtual proxy/dacorator of it. It instantiate it and then delegate most of the behaviour.
+ * a virtual proxy/decorator of it. It instantiates it and then delegate most of the behaviour.
+ *
+ * This object can be invoked by any thread.
  *
  * @stereotype  Presentation
  *
@@ -52,7 +54,8 @@ public class JavaFXMainScreenPresentation implements MainScreenPresentation
         public void showUp();
       }
 
-    // NoteAndDelegate contains both the JavaFX {@code Node} and its controller (delegate).
+    // NoteAndDelegate contains both the JavaFX {@code Node} and its controller (delegate). The delegate is wrapped
+    // by a decorator that makes sure that all methods are invoked in the JavaFX thread.
     private final NodeAndDelegate nad = createNodeAndDelegate(getClass());
 
     // Typically almost all the methods are delegated, with the exception of the one that brings the presentation into

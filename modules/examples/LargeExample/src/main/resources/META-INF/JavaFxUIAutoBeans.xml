@@ -65,9 +65,7 @@
 
     <bean id="contextManager" class="it.tidalwave.role.spi.DefaultContextManager" />
 
-
-    <!-- -->
-
+    <!-- Beans in the example. -->
     <bean class="it.tidalwave.role.ui.javafx.example.large.data.impl.DefautDao" />
 
     <bean class="it.tidalwave.role.ui.javafx.example.large.mainscreen.impl.DefaultMainScreenPresentationControl" />
