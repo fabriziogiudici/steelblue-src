@@ -30,7 +30,6 @@ package it.tidalwave.role.ui.javafx.impl.filechooser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.io.File;
 import java.nio.file.Path;
@@ -77,14 +76,7 @@ public class FileChooserBindings extends DelegateSupport
         fileChooser.setInitialDirectory(selectedFile.get().toFile());
 
         // It seems we need to take care of modality: https://javafx-jira.kenai.com/browse/RT-13949
-        final File file = runWhileDisabling(mainWindow, new Callable<File>()
-          {
-            @Override
-            public File call()
-              {
-                return fileChooser.showOpenDialog(mainWindow);
-              }
-          });
+        final File file = runWhileDisabling(mainWindow, () -> fileChooser.showOpenDialog(mainWindow));
 
         notifyFile(file, notification, selectedFile);
       }
@@ -105,14 +97,7 @@ public class FileChooserBindings extends DelegateSupport
         directoryChooser.setInitialDirectory(selectedFolder.get().toFile());
 
         // It seems we need to take care of modality: https://javafx-jira.kenai.com/browse/RT-13949
-        final File file = runWhileDisabling(mainWindow, new Callable<File>()
-          {
-            @Override
-            public File call()
-              {
-                return directoryChooser.showDialog(mainWindow);
-              }
-          });
+        final File file = runWhileDisabling(mainWindow, () -> directoryChooser.showDialog(mainWindow));
 
         notifyFile(file, notification, selectedFolder);
       }
