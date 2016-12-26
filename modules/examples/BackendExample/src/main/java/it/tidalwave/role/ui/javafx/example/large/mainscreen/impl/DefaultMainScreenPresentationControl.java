@@ -56,6 +56,8 @@ import static it.tidalwave.role.ui.spi.PresentationModelCollectors.toCompositePr
 
 /***********************************************************************************************************************
  *
+ * @stereotype  Control
+ *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
  * @version $Id: $
  *
@@ -64,16 +66,17 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
   {
     private static final Path USER_HOME = Paths.get(System.getProperty("user.home"));
 
+    // The presentation is injected by the infrastructure in form of its interface.
     @Inject
     private MainScreenPresentation presentation;
 
+    // As usual, also other required objects can be injected.
     @Inject
     private Dao dao;
 
     private final FormFields fields = new FormFields();
 
-    private int status = 1;
-
+    // For each button on the presentation that can do something, a UserAction is provided.
     private final UserAction buttonAction = new UserActionLambda(new DefaultDisplayable("Press me"),
                                                                  () -> onButtonPressed());
 
@@ -89,6 +92,14 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     private final UserAction actionPickDirectory = new UserActionLambda(new DefaultDisplayable("Pick directory"),
                                                                  () -> onButtonPickDirectoryPressed());
 
+    // Then there can be a set of variables that represent the internal state of the control.
+    private int status = 1;
+
+    /*******************************************************************************************************************
+     *
+     * At {@link PostConstruct} time the control just peforms the binding to the presentation.
+     *
+     ******************************************************************************************************************/
     @PostConstruct
     private void initialize()
       {
@@ -100,6 +111,17 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
                           fields);
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     * This method demonstrates the typical idiom for populating data:
+     *
+     * 1. A dao is called to provide raw data - let's say in form of collections;
+     * 2. Objects in the collection are transformed into PresentationModels.
+     * 3. The PresentationModels are then passed to the presentation.
+     *
+     ******************************************************************************************************************/
     @Override
     public void start()
       {
@@ -111,6 +133,15 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
         presentation.populate(pm1, pm2);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Factory method for the PresentationModel of SimpleEntity instances.
+     *
+     * It aggregates a few extra roles into the PresentationModel that are used by the control, such as callbacks
+     * for action associated to the context menu. Also a Displayable role is usually injected to control the rendering
+     * of entities.
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private PresentationModel pmFor (final @Nonnull SimpleEntity entity)
       {
@@ -119,11 +150,16 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
         final UserAction action2 = new UserActionLambda(new DefaultDisplayable("Action 2"), () -> action2(entity));
         final UserAction action3 = new UserActionLambda(new DefaultDisplayable("Action 3"), () -> action3(entity));
         return new DefaultPresentationModel(entity,
-                                            new DefaultDisplayable(entity.getName()),
+                                            new DefaultDisplayable("Item #" + entity.getName()),
                                             selectable,
                                             UserActionProviderSupplement.of(action1, action2, action3));
       }
 
+    /*******************************************************************************************************************
+     *
+     * Factory method for the PresentationModel of SimpleDciEntity instances.
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private PresentationModel pmFor (final @Nonnull SimpleDciEntity entity)
       {
@@ -137,12 +173,18 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
         final UserAction action1 = new UserActionLambda(new DefaultDisplayable("Action 1"), () -> action1(entity));
         final UserAction action2 = new UserActionLambda(new DefaultDisplayable("Action 2"), () -> action2(entity));
         final UserAction action3 = new UserActionLambda(new DefaultDisplayable("Action 3"), () -> action3(entity));
+        // No explicit Displayable here, as the one inside SimpleDciEntity is used.
         return new DefaultPresentationModel(entity,
                                             aggregate,
                                             selectable,
                                             UserActionProviderSupplement.of(action1, action2, action3));
       }
 
+    // Below simple business methonds, as usual business.
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private void onButtonPressed()
       {
         presentation.notify("Button pressed");
@@ -150,6 +192,9 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
         fields.textProperty.set(Integer.toString(status));
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private void onButtonDialogOkPressed()
       {
         presentation.notify(notificationWithFeedback()
@@ -158,6 +203,9 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
                 .withFeedback(feedback().withOnConfirm(() -> presentation.notify("Pressed ok"))));
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private void onButtonDialogOkCancelPressed()
       {
         presentation.notify(notificationWithFeedback()
@@ -167,6 +215,11 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
                                         .withOnCancel(() -> presentation.notify("Pressed cancel"))));
       }
 
+    /*******************************************************************************************************************
+     *
+     * This method demonstrates how to pick a file name by using the proper UI dialog.
+     *
+     ******************************************************************************************************************/
     private void onButtonPickFilePressed()
       {
         final BoundProperty<Path> selectedFile = new BoundProperty<>(USER_HOME);
@@ -177,6 +230,11 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
                                         .withOnCancel(() -> presentation.notify("Selection cancelled"))));
       }
 
+    /*******************************************************************************************************************
+     *
+     * This method demonstrates how to pick a directory name by using the proper UI dialog.
+     *
+     ******************************************************************************************************************/
     private void onButtonPickDirectoryPressed()
       {
         final BoundProperty<Path> selectedFolder = new BoundProperty<>(USER_HOME);
@@ -187,21 +245,33 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
                                         .withOnCancel(() -> presentation.notify("Selection cancelled"))));
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private void onSelected (final @Nonnull Object object)
       {
         presentation.notify("Selected " + object);
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private void action1 (final @Nonnull Object object)
       {
         presentation.notify("Action 1 on " + object);
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private void action2 (final @Nonnull Object object)
       {
         presentation.notify("Action 2 on " + object);
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     private void action3 (final @Nonnull Object object)
       {
         presentation.notify("Action 3 on " + object);

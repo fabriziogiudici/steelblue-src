@@ -28,6 +28,7 @@
  */
 package it.tidalwave.role.ui.javafx.example.large.data;
 
+import it.tidalwave.role.Displayable;
 import javax.annotation.Nonnull;
 import it.tidalwave.util.As;
 import it.tidalwave.util.spi.AsSupport;
@@ -37,6 +38,10 @@ import lombok.Getter;
 import lombok.ToString;
 
 /***********************************************************************************************************************
+ *
+ * A simple datum class with a DCI role: {@link Displayable}, which contains the entity display name,
+ *
+ * @stereotype  Datum
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
  * @version $Id: $

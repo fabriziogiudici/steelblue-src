@@ -30,11 +30,16 @@ package it.tidalwave.role.ui.javafx.example.large.mainscreen.impl.javafx;
 
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation;
 import it.tidalwave.role.ui.javafx.example.large.impl.javafx.FlowController;
-import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator;
+import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.NodeAndDelegate;
 import lombok.Delegate;
 import static it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.createNodeAndDelegate;
 
 /***********************************************************************************************************************
+ *
+ * The default implementation of the presentation, which is instantiated by Spring, is not the JavaFX controller, but
+ * a virtual proxy/dacorator of it. It instantiate it and then delegate most of the behaviour.
+ *
+ * @stereotype  Presentation
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
  * @version $Id: $
@@ -49,8 +54,10 @@ public class JavaFXMainScreenPresentation implements MainScreenPresentation
 
     private static final String FXML_URL = "/it/tidalwave/role/ui/javafx/example/large/mainscreen/impl/javafx/MainScreen.fxml";
 
-    private final JavaFXSafeProxyCreator.NodeAndDelegate nad = createNodeAndDelegate(getClass(), FXML_URL);
+    private final NodeAndDelegate nad = createNodeAndDelegate(getClass(), FXML_URL);
 
+    // Typically almost all the methods are delegated, with the exception of the one that brings the presentation into
+    // view.
     @Delegate(excludes = Exclusions.class)
     private final MainScreenPresentation delegate = nad.getDelegate();
 

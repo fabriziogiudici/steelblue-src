@@ -34,6 +34,10 @@ import lombok.Getter;
 
 /***********************************************************************************************************************
  *
+ * A simple datum class without DCI roles.
+ *
+ * @stereotype  Datum
+ *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
  * @version $Id: $
  *

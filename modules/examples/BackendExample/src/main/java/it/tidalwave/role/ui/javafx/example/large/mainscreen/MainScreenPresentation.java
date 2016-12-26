@@ -37,18 +37,35 @@ import it.tidalwave.role.ui.UserAction;
 
 /***********************************************************************************************************************
  *
+ * This interface describes all the interactions with the presentation object.
+ *
+ * @stereotype  Presentation
+ *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
  * @version $Id: $
  *
  **********************************************************************************************************************/
 public interface MainScreenPresentation
   {
+    /*******************************************************************************************************************
+     *
+     * If the presentation contains form fields, it's a good practice to group them together within a single class
+     * which exposes {@link BoundProperty} instances.
+     *
+     ******************************************************************************************************************/
     static class FormFields
       {
         public final BoundProperty<String> textProperty = new BoundProperty<>("1");
+
         public final BoundProperty<Boolean> booleanProperty = new BoundProperty<>(true);
       }
 
+    /*******************************************************************************************************************
+     *
+     * A presentation always exposes a {@code bind()} method which is invoked by the control and binds callbacks
+     * and form fields. There is no requirement on the name and signature of the method.
+     *
+     ******************************************************************************************************************/
     public void bind (@Nonnull UserAction action,
                       @Nonnull UserAction actionDialogOk,
                       @Nonnull UserAction actionDialogCancelOk,
@@ -56,17 +73,53 @@ public interface MainScreenPresentation
                       @Nonnull UserAction actionPickDirectory,
                       @Nonnull FormFields fields);
 
+    /*******************************************************************************************************************
+     *
+     * A presentation typically exposes a {@code showUp()} method which brings the object into a visible state.
+     * There is no requirement on the name and signature of the method.
+     *
+     ******************************************************************************************************************/
     public void showUp();
 
+    /*******************************************************************************************************************
+     *
+     * A presentation also exposes some {@link populateXYZ()} methods which are used to fill various parts of the UI
+     * with data. Data structures are modelled by {@link PresentationModel}s. There is no requirement on the name of the
+     * method.
+     *
+     ******************************************************************************************************************/
     public void populate (@Nonnull PresentationModel pm1, @Nonnull PresentationModel pm2);
 
+    /*******************************************************************************************************************
+     *
+     * When the control requires an interaction with the user in form of a dialog box with feedback (such as Ok/Cancel)
+     * a method must be exposed which accepts a {@link UserNotificationWithFeedback}. There is no requirement on the
+     * name of the method.
+     *
+     ******************************************************************************************************************/
     public void notify (@Nonnull UserNotificationWithFeedback notification);
 
+    /*******************************************************************************************************************
+     *
+     * Simple message notifications that appear in the presentation (for instance in a {@link Label} can be passed as
+     * simple strings of specific methods.
+     *
+     ******************************************************************************************************************/
     public void notify (@Nonnull String message);
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     public void pickFile (@Nonnull BoundProperty<Path> selectedFile,
                           @Nonnull UserNotificationWithFeedback notification);
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     public void pickDirectory (@Nonnull BoundProperty<Path> selectedFolder,
                                @Nonnull UserNotificationWithFeedback notification);
   }

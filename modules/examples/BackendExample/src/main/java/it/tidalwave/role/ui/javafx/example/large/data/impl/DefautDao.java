@@ -28,12 +28,12 @@
  */
 package it.tidalwave.role.ui.javafx.example.large.data.impl;
 
-import it.tidalwave.role.ui.javafx.example.large.data.*;
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
-import static java.util.stream.Collectors.toList;
 import java.util.stream.IntStream;
-import javax.annotation.Nonnull;
+import it.tidalwave.role.ui.javafx.example.large.data.*;
+import static java.util.stream.Collectors.toList;
 
 /***********************************************************************************************************************
  *

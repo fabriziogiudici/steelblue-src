@@ -51,6 +51,10 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * The JavaFX controller just works as a dumb object with SteelBlue: it must implement in the most simple way each
+ * method in the presentation interface, by applying simple manipulation to the UI. No logic here, neither presentaton
+ * nor business.
+ *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
  * @version $Id: $
  *
@@ -94,9 +98,15 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
     @FXML
     private TextArea taLog;
 
+    // This facility provides all the methods to bind JavaFX controls to DCI roles.
     @Inject
     private JavaFXBinder binder;
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void bind (final @Nonnull UserAction action,
                       final @Nonnull UserAction actionDialogOk,
@@ -113,11 +123,21 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
         binder.bindBidirectionally(tfTextField, fields.textProperty, fields.booleanProperty);
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void showUp()
       {
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void populate (final @Nonnull PresentationModel listPm,final @Nonnull PresentationModel arrayPm)
       {
@@ -128,18 +148,33 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
         binder.bind(ttvTreeTableView, arrayPm, () -> log.info("Finished setup of ttvTreeTableView"));
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void notify (final @Nonnull UserNotificationWithFeedback notification)
       {
         binder.showInModalDialog(new Label(notification.getText()), notification);
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void notify (final @Nonnull String message)
       {
         taLog.appendText(message + "\n");
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void pickFile (final @Nonnull BoundProperty<Path> selectedFile,
                           final @Nonnull UserNotificationWithFeedback notification)
@@ -147,6 +182,11 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
         binder.openFileChooserFor(notification, selectedFile);
       }
 
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     ******************************************************************************************************************/
     @Override
     public void pickDirectory (final @Nonnull BoundProperty<Path> selectedFolder,
                                final @Nonnull UserNotificationWithFeedback notification)
