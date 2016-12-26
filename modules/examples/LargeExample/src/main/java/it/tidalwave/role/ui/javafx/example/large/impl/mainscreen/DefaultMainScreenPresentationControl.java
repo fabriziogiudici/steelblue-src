@@ -33,11 +33,16 @@ import it.tidalwave.role.spi.ArrayListSimpleComposite;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import it.tidalwave.role.spi.DefaultDisplayable;
+import it.tidalwave.role.ui.ActionProvider;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.spi.UserActionSupport;
 import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.role.ui.spi.DefaultPresentationModel;
+import it.tidalwave.role.ui.spi.DefaultUserActionProvider;
+import it.tidalwave.util.NotFoundException;
 import java.util.Arrays;
+import java.util.Collection;
 import static java.util.stream.Collectors.toList;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
@@ -89,6 +94,52 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     @Nonnull
     private static PresentationModel pmFor (final @Nonnull Object owner)
       {
-        return new DefaultPresentationModel(owner);
+        final UserAction selectionAction = new UserActionSupport(new DefaultDisplayable("Default action")) // FIXME: refactor with UserAction8
+          {
+            @Override
+            public void actionPerformed()
+              {
+                log.info("SELECTED " + owner);
+              }
+          };
+
+        final UserAction contextAction1 = new UserActionSupport(new DefaultDisplayable("Context action 1")) // FIXME: refactor with UserAction8
+          {
+            @Override
+            public void actionPerformed()
+              {
+                log.info("CONTEXT ACTION 1 " + owner );
+              }
+          };
+
+        final UserAction contextAction2 = new UserActionSupport(new DefaultDisplayable("Context action 2")) // FIXME: refactor with UserAction8
+          {
+            @Override
+            public void actionPerformed()
+              {
+                log.info("CONTEXT ACTION 2" + owner);
+              }
+          };
+
+        return new DefaultPresentationModel(owner, actionProvider(selectionAction, contextAction1, contextAction2));
+      }
+
+    @Nonnull
+    private static UserActionProvider actionProvider (final @Nonnull UserAction ... actions)
+      {
+        return new UserActionProvider()
+          {
+            @Override @Nonnull
+            public Collection<? extends UserAction> getActions()
+              {
+                return Arrays.asList(actions);
+              }
+
+            @Override @Nonnull
+            public UserAction getDefaultAction()
+              {
+                return actions[0];
+              }
+          };
       }
   }
