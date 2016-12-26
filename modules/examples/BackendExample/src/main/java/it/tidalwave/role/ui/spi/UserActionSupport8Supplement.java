@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @Slf4j
-public abstract class UserActionSupport8 extends UserActionSupport implements UserAction8
+public abstract class UserActionSupport8Supplement extends UserActionSupport implements UserAction8
   {
     @Getter @Accessors(fluent = true)
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
@@ -61,7 +61,7 @@ public abstract class UserActionSupport8 extends UserActionSupport implements Us
         this.enabled().set(newValue);
       };
 
-    public UserActionSupport8 (final @Nonnull Object... rolesOrFactories)
+    public UserActionSupport8Supplement (final @Nonnull Object... rolesOrFactories)
       {
         super(rolesOrFactories);
 

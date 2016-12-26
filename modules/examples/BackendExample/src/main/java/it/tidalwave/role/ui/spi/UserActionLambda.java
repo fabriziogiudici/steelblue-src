@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-public class UserActionLambda extends UserActionSupport8
+public class UserActionLambda extends UserActionSupport8Supplement
   {
     public interface Task
       {
