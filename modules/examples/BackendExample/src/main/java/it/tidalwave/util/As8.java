@@ -26,36 +26,24 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large.impl.mainscreen;
+package it.tidalwave.util;
 
-import it.tidalwave.role.ui.javafx.example.large.impl.FlowController;
-import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator;
-import lombok.Delegate;
-import static it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.createNodeAndDelegate;
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: $
+ * An extension of {@link As} for Java 8 which makes use of {@link Optional}.
+ *
+ * @author  Fabrizio Giudici
+ * @version $Id$
  *
  **********************************************************************************************************************/
-public class JavaFXMainScreenPresentation implements MainScreenPresentation
+public interface As8 extends As
   {
-    static interface Exclusions
+    @Nonnull
+    default <T> Optional<T> asOptional (final @Nonnull Class<T> type)
       {
-        public void showUp();
-      }
-
-    private static final String FXML_URL = "/it/tidalwave/role/ui/javafx/example/large/mainscreen/MainScreen.fxml";
-
-    private final JavaFXSafeProxyCreator.NodeAndDelegate nad = createNodeAndDelegate(getClass(), FXML_URL);
-
-    @Delegate(excludes = Exclusions.class)
-    private final MainScreenPresentation delegate = nad.getDelegate();
-
-    @Override
-    public void showUp()
-      {
-        FlowController.setContent(nad.getNode());
+        return Optional.ofNullable(as(type, throwable -> null));
       }
   }

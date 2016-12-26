@@ -26,42 +26,15 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large;
-
-import javax.annotation.Nonnull;
-import javafx.application.Platform;
-import org.springframework.context.ApplicationContext;
-import it.tidalwave.ui.javafx.JavaFXSpringApplication;
-import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
+package it.tidalwave.role.ui.javafx.example.large.mainscreen;
 
 /***********************************************************************************************************************
  *
- * The main class initializes the logging facility and starts the JavaFX application.
- *
- * @author  Fabrizio Giudici
- * @version $Id$
+ * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @version $Id: $
  *
  **********************************************************************************************************************/
-public class Main extends JavaFXSpringApplication
+public interface MainScreenPresentationControl
   {
-    public static void main (final @Nonnull String ... args)
-      {
-        try
-          {
-            Platform.setImplicitExit(true);
-            launch(args);
-          }
-        catch (Throwable t)
-          {
-            // Don't use logging facilities here, they could be not initialized
-            t.printStackTrace();
-            System.exit(-1);
-          }
-      }
-
-    @Override
-    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
-      {
-        applicationContext.getBean(MainScreenPresentationControl.class).start();
-      }
+    public void start();
   }

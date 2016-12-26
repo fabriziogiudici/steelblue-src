@@ -26,42 +26,46 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large;
+package it.tidalwave.role.ui.spi;
 
 import javax.annotation.Nonnull;
-import javafx.application.Platform;
-import org.springframework.context.ApplicationContext;
-import it.tidalwave.ui.javafx.JavaFXSpringApplication;
-import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import it.tidalwave.role.ui.UserAction8;
+import lombok.Getter;
+import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
- *
- * The main class initializes the logging facility and starts the JavaFX application.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class Main extends JavaFXSpringApplication
+@Slf4j
+public abstract class UserActionSupport8 extends UserActionSupport implements UserAction8
   {
-    public static void main (final @Nonnull String ... args)
-      {
-        try
-          {
-            Platform.setImplicitExit(true);
-            launch(args);
-          }
-        catch (Throwable t)
-          {
-            // Don't use logging facilities here, they could be not initialized
-            t.printStackTrace();
-            System.exit(-1);
-          }
-      }
+    @Getter @Accessors(fluent = true)
+    private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
 
-    @Override
-    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
+//    private final InvalidationListener invalidationListener = (Observable observable) ->
+//      {
+//        log.info("invalidated {}", observable);
+//      };
+
+    private final ChangeListener<Boolean> changeListener =
+            (ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) ->
       {
-        applicationContext.getBean(MainScreenPresentationControl.class).start();
-      }
+        this.enabled().set(newValue);
+      };
+
+    public UserActionSupport8 (final @Nonnull Object... rolesOrFactories)
+      {
+        super(rolesOrFactories);
+
+        enabledProperty.addListener(changeListener);
+//        enabledProperty.addListener(invalidationListener);
+    }
   }

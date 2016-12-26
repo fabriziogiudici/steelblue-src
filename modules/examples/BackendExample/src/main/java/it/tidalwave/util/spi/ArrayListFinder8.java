@@ -26,42 +26,49 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large;
+package it.tidalwave.util.spi;
 
 import javax.annotation.Nonnull;
-import javafx.application.Platform;
-import org.springframework.context.ApplicationContext;
-import it.tidalwave.ui.javafx.JavaFXSpringApplication;
-import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import it.tidalwave.util.Finder;
+import static it.tidalwave.util.spi.FinderSupport.getSource;
 
 /***********************************************************************************************************************
  *
- * The main class initializes the logging facility and starts the JavaFX application.
+ * An implementation of {@link Finder} which holds an immutable list of items.
  *
- * @author  Fabrizio Giudici
- * @version $Id$
+ * @param  <T>   the type of contained items
+ *
+ * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @version $Id: Class.java,v 631568052e17 2013/02/19 15:45:02 fabrizio $
  *
  **********************************************************************************************************************/
-public class Main extends JavaFXSpringApplication
+public class ArrayListFinder8<T> extends SimpleFinder8Support<T>
   {
-    public static void main (final @Nonnull String ... args)
+    private static final long serialVersionUID = -3529114277448372453L;
+
+    @Nonnull
+    private final Collection<T> items;
+
+    public ArrayListFinder8 (final @Nonnull Collection<T> items)
       {
-        try
-          {
-            Platform.setImplicitExit(true);
-            launch(args);
-          }
-        catch (Throwable t)
-          {
-            // Don't use logging facilities here, they could be not initialized
-            t.printStackTrace();
-            System.exit(-1);
-          }
+        this.items = Collections.unmodifiableCollection(new ArrayList<>(items));
       }
 
-    @Override
-    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
+    public ArrayListFinder8 (final @Nonnull ArrayListFinder8<T> other, @Nonnull Object override)
       {
-        applicationContext.getBean(MainScreenPresentationControl.class).start();
+        super(other, override);
+        final ArrayListFinder8<T> source = getSource(ArrayListFinder8.class, other, override);
+        this.items = source.items;
+      }
+
+    @Override @Nonnull
+    protected List<? extends T> computeResults()
+      {
+        return new CopyOnWriteArrayList<>(items);
       }
   }

@@ -26,15 +26,43 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large.impl.mainscreen;
+package it.tidalwave.role.ui;
+
+import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.Collection;
+import it.tidalwave.util.NotFoundException;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: $
+ * @author  Fabrizio Giudici
+ * @version $Id$
  *
  **********************************************************************************************************************/
-public interface MainScreenPresentationControl
+public class UserActionProviderSupplement
   {
-    public void start();
+    @Nonnull
+    public static UserActionProvider of (final @Nonnull UserAction ... actions)
+      {
+        return new UserActionProvider()
+          {
+            @Override @Nonnull
+            public Collection<? extends UserAction> getActions()
+              {
+                return Arrays.asList(actions);
+              }
+
+            @Override @Nonnull
+            public UserAction getDefaultAction()
+              throws NotFoundException
+              {
+                if (actions.length == 0)
+                  {
+                    throw new NotFoundException();
+                  }
+
+                return actions[0];
+              }
+          };
+      }
   }

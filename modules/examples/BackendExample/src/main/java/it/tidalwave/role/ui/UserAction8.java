@@ -26,42 +26,19 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large;
+package it.tidalwave.role.ui;
 
 import javax.annotation.Nonnull;
-import javafx.application.Platform;
-import org.springframework.context.ApplicationContext;
-import it.tidalwave.ui.javafx.JavaFXSpringApplication;
-import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
+import javafx.beans.property.BooleanProperty;
 
 /***********************************************************************************************************************
- *
- * The main class initializes the logging facility and starts the JavaFX application.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class Main extends JavaFXSpringApplication
+public interface UserAction8 extends UserAction
   {
-    public static void main (final @Nonnull String ... args)
-      {
-        try
-          {
-            Platform.setImplicitExit(true);
-            launch(args);
-          }
-        catch (Throwable t)
-          {
-            // Don't use logging facilities here, they could be not initialized
-            t.printStackTrace();
-            System.exit(-1);
-          }
-      }
-
-    @Override
-    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
-      {
-        applicationContext.getBean(MainScreenPresentationControl.class).start();
-      }
+    @Nonnull
+    public BooleanProperty enabledProperty();
   }

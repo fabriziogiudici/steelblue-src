@@ -26,11 +26,11 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large.impl.mainscreen;
+package it.tidalwave.role.ui.javafx.example.large.data;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.role.ui.PresentationModel;
-import it.tidalwave.role.ui.UserAction;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /***********************************************************************************************************************
  *
@@ -38,11 +38,15 @@ import it.tidalwave.role.ui.UserAction;
  * @version $Id: $
  *
  **********************************************************************************************************************/
-public interface MainScreenPresentation
+@AllArgsConstructor @Getter
+public class SimpleEntity
   {
-    public void bind (@Nonnull UserAction action,
-                      @Nonnull PresentationModel listPm,
-                      @Nonnull PresentationModel arrayPm);
+    @Nonnull
+    private final String name;
 
-    public void showUp();
+    @Override @Nonnull
+    public String toString()
+      {
+        return String.format("SimpleEntity(%s)", name);
+      }
   }

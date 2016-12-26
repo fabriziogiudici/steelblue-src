@@ -26,36 +26,37 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large.impl.mainscreen;
+package it.tidalwave.role.ui.spi;
 
 import javax.annotation.Nonnull;
-import lombok.Delegate;
-import it.tidalwave.util.As;
-import it.tidalwave.util.spi.AsSupport;
+import java.util.HashMap;
+import java.util.Map;
+import it.tidalwave.role.Aggregate;
+import it.tidalwave.role.spi.MapAggregate;
+import it.tidalwave.role.ui.PresentationModel;
+import lombok.NoArgsConstructor;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: $
+ * @author  Fabrizio Giudici
+ * @version $Id$
  *
  **********************************************************************************************************************/
-public class SampleEntity implements As
+@NoArgsConstructor(staticName = "builder")
+public class MapAggregateSupplement
   {
+    private final Map<String, PresentationModel> map = new HashMap<>();
+
     @Nonnull
-    private final String id;
-
-    @Delegate
-    private final AsSupport asDelegate;
-
-    public SampleEntity (final @Nonnull String id, final @Nonnull Object ... rolesOrFactories)
+    public MapAggregateSupplement with (final @Nonnull String name, final @Nonnull Object ... roles)
       {
-        this.id = id;
-        asDelegate = new AsSupport(this, rolesOrFactories);
+        map.put(name, new DefaultPresentationModel("", roles));
+        return this;
       }
 
-    @Override @Nonnull
-    public String toString()
+    @Nonnull
+    public Aggregate create()
       {
-        return String.format("SampleEntity(%s)", id);
+        return new MapAggregate<>(map);
       }
   }

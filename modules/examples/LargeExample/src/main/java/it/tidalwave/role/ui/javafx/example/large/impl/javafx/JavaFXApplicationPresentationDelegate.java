@@ -26,42 +26,25 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large;
+package it.tidalwave.role.ui.javafx.example.large.impl.javafx;
 
-import javax.annotation.Nonnull;
-import javafx.application.Platform;
-import org.springframework.context.ApplicationContext;
-import it.tidalwave.ui.javafx.JavaFXSpringApplication;
-import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
+import javafx.fxml.FXML;
+import javafx.scene.layout.BorderPane;
 
 /***********************************************************************************************************************
  *
- * The main class initializes the logging facility and starts the JavaFX application.
- *
- * @author  Fabrizio Giudici
- * @version $Id$
+ * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @version $Id: $
  *
  **********************************************************************************************************************/
-public class Main extends JavaFXSpringApplication
+public class JavaFXApplicationPresentationDelegate
   {
-    public static void main (final @Nonnull String ... args)
-      {
-        try
-          {
-            Platform.setImplicitExit(true);
-            launch(args);
-          }
-        catch (Throwable t)
-          {
-            // Don't use logging facilities here, they could be not initialized
-            t.printStackTrace();
-            System.exit(-1);
-          }
-      }
+    @FXML
+    private BorderPane pnMainPane;
 
-    @Override
-    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
+    @FXML
+    public void initialize()
       {
-        applicationContext.getBean(MainScreenPresentationControl.class).start();
+        FlowController.setContentPane(pnMainPane);
       }
   }

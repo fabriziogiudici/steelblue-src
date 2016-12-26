@@ -26,10 +26,14 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large.impl;
+package it.tidalwave.role.ui.javafx.example.large.mainscreen;
 
-import javafx.fxml.FXML;
-import javafx.scene.layout.BorderPane;
+import javax.annotation.Nonnull;
+import java.nio.file.Path;
+import it.tidalwave.util.ui.UserNotificationWithFeedback;
+import it.tidalwave.role.ui.BoundProperty;
+import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.UserAction;
 
 /***********************************************************************************************************************
  *
@@ -37,14 +41,32 @@ import javafx.scene.layout.BorderPane;
  * @version $Id: $
  *
  **********************************************************************************************************************/
-public class JavaFXApplicationPresentationDelegate
+public interface MainScreenPresentation
   {
-    @FXML
-    private BorderPane pnMainPane;
-
-    @FXML
-    public void initialize()
+    static class FormFields
       {
-        FlowController.setContentPane(pnMainPane);
+        public final BoundProperty<String> textProperty = new BoundProperty<>("1");
+        public final BoundProperty<Boolean> booleanProperty = new BoundProperty<>(true);
       }
+
+    public void bind (@Nonnull UserAction action,
+                      @Nonnull UserAction actionDialogOk,
+                      @Nonnull UserAction actionDialogCancelOk,
+                      @Nonnull UserAction actionPickFile,
+                      @Nonnull UserAction actionPickDirectory,
+                      @Nonnull FormFields fields);
+
+    public void showUp();
+
+    public void populate (@Nonnull PresentationModel pm1, @Nonnull PresentationModel pm2);
+
+    public void notify (@Nonnull UserNotificationWithFeedback notification);
+
+    public void notify (@Nonnull String message);
+
+    public void pickFile (@Nonnull BoundProperty<Path> selectedFile,
+                          @Nonnull UserNotificationWithFeedback notification);
+
+    public void pickDirectory (@Nonnull BoundProperty<Path> selectedFolder,
+                               @Nonnull UserNotificationWithFeedback notification);
   }

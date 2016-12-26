@@ -26,42 +26,39 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large;
+package it.tidalwave.role.ui.javafx.example.large.data.impl;
 
+import it.tidalwave.role.ui.javafx.example.large.data.*;
+import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
+import static java.util.stream.Collectors.toList;
+import java.util.stream.IntStream;
 import javax.annotation.Nonnull;
-import javafx.application.Platform;
-import org.springframework.context.ApplicationContext;
-import it.tidalwave.ui.javafx.JavaFXSpringApplication;
-import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
 
 /***********************************************************************************************************************
  *
- * The main class initializes the logging facility and starts the JavaFX application.
- *
- * @author  Fabrizio Giudici
- * @version $Id$
+ * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @version $Id: $
  *
  **********************************************************************************************************************/
-public class Main extends JavaFXSpringApplication
+public class DefautDao implements Dao
   {
-    public static void main (final @Nonnull String ... args)
+    @Override @Nonnull
+    public Collection<SimpleEntity> getSimpleEntities()
       {
-        try
-          {
-            Platform.setImplicitExit(true);
-            launch(args);
-          }
-        catch (Throwable t)
-          {
-            // Don't use logging facilities here, they could be not initialized
-            t.printStackTrace();
-            System.exit(-1);
-          }
+        return IntStream.rangeClosed(1, 1000).mapToObj(Integer::toString).map(SimpleEntity::new).collect(toList());
       }
 
-    @Override
-    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
+    @Override @Nonnull
+    public Collection<SimpleDciEntity> getDciEntities()
       {
-        applicationContext.getBean(MainScreenPresentationControl.class).start();
+        final AtomicInteger sequence = new AtomicInteger(3); // I know it's bad, it's just an example
+        return IntStream.rangeClosed(1, 1000).mapToObj(row ->
+          {
+            final int attr1 = sequence.getAndIncrement();
+            final int attr2 = sequence.getAndIncrement();
+            final String name = String.format("(%d ; %d)", attr1, attr2);
+            return new SimpleDciEntity(name, attr1, attr2);
+          }).collect(toList());
       }
   }

@@ -26,42 +26,37 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large;
+package it.tidalwave.role.ui.javafx.example.large.mainscreen.impl.javafx;
 
-import javax.annotation.Nonnull;
-import javafx.application.Platform;
-import org.springframework.context.ApplicationContext;
-import it.tidalwave.ui.javafx.JavaFXSpringApplication;
-import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
+import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation;
+import it.tidalwave.role.ui.javafx.example.large.impl.javafx.FlowController;
+import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator;
+import lombok.Delegate;
+import static it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.createNodeAndDelegate;
 
 /***********************************************************************************************************************
  *
- * The main class initializes the logging facility and starts the JavaFX application.
- *
- * @author  Fabrizio Giudici
- * @version $Id$
+ * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @version $Id: $
  *
  **********************************************************************************************************************/
-public class Main extends JavaFXSpringApplication
+public class JavaFXMainScreenPresentation implements MainScreenPresentation
   {
-    public static void main (final @Nonnull String ... args)
+    static interface Exclusions
       {
-        try
-          {
-            Platform.setImplicitExit(true);
-            launch(args);
-          }
-        catch (Throwable t)
-          {
-            // Don't use logging facilities here, they could be not initialized
-            t.printStackTrace();
-            System.exit(-1);
-          }
+        public void showUp();
       }
 
+    private static final String FXML_URL = "/it/tidalwave/role/ui/javafx/example/large/mainscreen/impl/javafx/MainScreen.fxml";
+
+    private final JavaFXSafeProxyCreator.NodeAndDelegate nad = createNodeAndDelegate(getClass(), FXML_URL);
+
+    @Delegate(excludes = Exclusions.class)
+    private final MainScreenPresentation delegate = nad.getDelegate();
+
     @Override
-    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
+    public void showUp()
       {
-        applicationContext.getBean(MainScreenPresentationControl.class).start();
+        FlowController.setContent(nad.getNode());
       }
   }

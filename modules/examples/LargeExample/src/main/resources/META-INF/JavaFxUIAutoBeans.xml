@@ -68,8 +68,10 @@
 
     <!-- -->
 
-    <bean class="it.tidalwave.role.ui.javafx.example.large.impl.mainscreen.DefaultMainScreenPresentationControl" />
+    <bean class="it.tidalwave.role.ui.javafx.example.large.data.impl.DefautDao" />
 
-    <bean class="it.tidalwave.role.ui.javafx.example.large.impl.mainscreen.JavaFXMainScreenPresentation" />
+    <bean class="it.tidalwave.role.ui.javafx.example.large.mainscreen.impl.DefaultMainScreenPresentationControl" />
+
+    <bean class="it.tidalwave.role.ui.javafx.example.large.mainscreen.impl.javafx.JavaFXMainScreenPresentation" />
 
 </beans>

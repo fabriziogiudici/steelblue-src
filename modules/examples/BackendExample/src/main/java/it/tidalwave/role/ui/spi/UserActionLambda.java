@@ -26,42 +26,46 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large;
+package it.tidalwave.role.ui.spi;
 
 import javax.annotation.Nonnull;
-import javafx.application.Platform;
-import org.springframework.context.ApplicationContext;
-import it.tidalwave.ui.javafx.JavaFXSpringApplication;
-import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
- *
- * The main class initializes the logging facility and starts the JavaFX application.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class Main extends JavaFXSpringApplication
+@RequiredArgsConstructor @Slf4j
+public class UserActionLambda extends UserActionSupport8
   {
-    public static void main (final @Nonnull String ... args)
+    public interface Task
+      {
+        public void run()
+          throws Exception;
+      }
+
+    @Nonnull
+    private final Task task;
+
+    public UserActionLambda (final @Nonnull Object roleOrFactory, final @Nonnull Task task)
+      {
+        super(new Object[] { roleOrFactory });
+        this.task = task;
+     }
+
+    @Override
+    public final void actionPerformed()
       {
         try
           {
-            Platform.setImplicitExit(true);
-            launch(args);
+            task.run();
           }
-        catch (Throwable t)
+        catch (Exception e)
           {
-            // Don't use logging facilities here, they could be not initialized
-            t.printStackTrace();
-            System.exit(-1);
+            log.error("", e); // FIXME: delegate to a handler
           }
-      }
-
-    @Override
-    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
-      {
-        applicationContext.getBean(MainScreenPresentationControl.class).start();
       }
   }

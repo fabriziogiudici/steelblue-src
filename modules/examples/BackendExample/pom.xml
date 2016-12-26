@@ -37,30 +37,28 @@
     </parent>
 
     <groupId>it.tidalwave.steelblue</groupId>
-    <artifactId>it-tidalwave-steelblue-example-large</artifactId>
+    <artifactId>it-tidalwave-steelblue-example-backend</artifactId>
     <packaging>jar</packaging>
     <version>1.0-ALPHA-12-SNAPSHOT</version>
-    <name>SteelBlue - Examples - Large</name>
+    <name>SteelBlue - Examples - Backend</name>
 
     <properties>
-        <tft.mainClass>it.tidalwave.role.ui.javafx.example.large.Main</tft.mainClass>
         <tft.slf4j.version>1.7.21</tft.slf4j.version>
         <thesefoolishthings.version>3.0.3</thesefoolishthings.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>it.tidalwave.steelblue</groupId>
-            <artifactId>it-tidalwave-steelblue-example-backend</artifactId>
-            <version>1.0-ALPHA-12-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>it.tidalwave.steelblue</groupId>
-            <artifactId>it-tidalwave-role-ui-javafx</artifactId>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-role</artifactId>
         </dependency>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
-            <artifactId>it-tidalwave-role</artifactId>
+            <artifactId>it-tidalwave-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-util-java8supplement</artifactId>
         </dependency>
 
        <!-- These are indirect dependencies, directly referencing them solves convergency problems -->
@@ -80,30 +78,6 @@
         </dependency>
         <!-- end -->
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${tft.slf4j.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jul-to-slf4j</artifactId>
-            <version>${tft.slf4j.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${tft.logback.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${tft.logback.version}</version>
-            <scope>runtime</scope>
-        </dependency>
     </dependencies>
 
 </project>

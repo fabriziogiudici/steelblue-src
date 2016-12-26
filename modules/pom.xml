@@ -113,6 +113,7 @@
 
     <modules>
         <module>JavaFXBindings</module>
+        <module>examples/BackendExample</module>
         <module>examples/LargeExample</module>
     </modules>
 

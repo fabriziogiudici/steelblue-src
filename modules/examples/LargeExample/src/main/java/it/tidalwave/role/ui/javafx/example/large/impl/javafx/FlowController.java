@@ -26,42 +26,31 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large;
+package it.tidalwave.role.ui.javafx.example.large.impl.javafx;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 import javafx.application.Platform;
-import org.springframework.context.ApplicationContext;
-import it.tidalwave.ui.javafx.JavaFXSpringApplication;
-import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
+import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
+import lombok.Getter;
+import lombok.Setter;
 
 /***********************************************************************************************************************
  *
- * The main class initializes the logging facility and starts the JavaFX application.
- *
- * @author  Fabrizio Giudici
- * @version $Id$
+ * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @version $Id: $
  *
  **********************************************************************************************************************/
-public class Main extends JavaFXSpringApplication
+public class FlowController
   {
-    public static void main (final @Nonnull String ... args)
-      {
-        try
-          {
-            Platform.setImplicitExit(true);
-            launch(args);
-          }
-        catch (Throwable t)
-          {
-            // Don't use logging facilities here, they could be not initialized
-            t.printStackTrace();
-            System.exit(-1);
-          }
-      }
+    @Getter @Setter
+    private static BorderPane contentPane;
 
-    @Override
-    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
+    public static void setContent (final @Nonnull Node content)
       {
-        applicationContext.getBean(MainScreenPresentationControl.class).start();
+        Objects.requireNonNull(contentPane, "contentPane");
+        Objects.requireNonNull(content, "content");
+        Platform.runLater(() -> contentPane.getChildren().add(content));
       }
   }

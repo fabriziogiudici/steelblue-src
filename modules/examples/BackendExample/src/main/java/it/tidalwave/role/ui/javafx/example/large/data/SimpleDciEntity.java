@@ -26,15 +26,15 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large.impl;
+package it.tidalwave.role.ui.javafx.example.large.data;
 
-import java.util.Objects;
-import javafx.application.Platform;
-import javafx.scene.Node;
-import javafx.scene.layout.BorderPane;
 import javax.annotation.Nonnull;
+import it.tidalwave.util.As;
+import it.tidalwave.util.spi.AsSupport;
+import it.tidalwave.role.spi.DefaultDisplayable;
+import lombok.Delegate;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
@@ -42,15 +42,24 @@ import lombok.Setter;
  * @version $Id: $
  *
  **********************************************************************************************************************/
-public class FlowController
+@Getter @ToString(exclude = "asDelegate")
+public class SimpleDciEntity implements As
   {
-    @Getter @Setter
-    private static BorderPane contentPane;
+    @Delegate
+    private final AsSupport asDelegate;
 
-    public static void setContent (final @Nonnull Node content)
+    @Nonnull
+    private final String name;
+
+    private final int attribute1;
+
+    private final int attribute2;
+
+    public SimpleDciEntity (final @Nonnull String id, final int attribute1, final int attribute2)
       {
-        Objects.requireNonNull(contentPane, "contentPane");
-        Objects.requireNonNull(content, "content");
-        Platform.runLater(() -> contentPane.getChildren().add(content));
+        this.name = id;
+        this.attribute1 = attribute1;
+        this.attribute2 = attribute2;
+        asDelegate = new AsSupport(this, new DefaultDisplayable(name));
       }
   }
