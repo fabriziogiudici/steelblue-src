@@ -21,7 +21,7 @@
     <properties>
         <guava.version>14.0.1</guava.version>
         <tft.spring.version>4.0.2.RELEASE</tft.spring.version>
-        <thesefoolishthings.version>2.1</thesefoolishthings.version>
+        <thesefoolishthings.version>3.0.3</thesefoolishthings.version>
         <netbeans.version>RELEASE691</netbeans.version>
     </properties>
 

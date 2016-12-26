@@ -44,7 +44,6 @@
 
     <properties>
         <tft.slf4j.version>1.7.21</tft.slf4j.version>
-        <thesefoolishthings.version>3.0.3</thesefoolishthings.version>
     </properties>
 
     <dependencies>
