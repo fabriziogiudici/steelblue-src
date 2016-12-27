@@ -125,12 +125,14 @@ public class DialogBindings extends DelegateSupport
                 okButton.setDefaultButton(true);
                 cancelButton.setCancelButton(true);
 
+                final UserNotificationWithFeedback.Feedback feedback = notification.getFeedback();
+
                 final DialogCloserHandler closeAndConfirm = new DialogCloserHandler(executor, dialogStage)
                   {
                     @Override
                     protected void doSomething() throws Exception
                       {
-                        notification.getFeedback().onConfirm();
+                        feedback.onConfirm();
                       }
                   };
 
@@ -139,7 +141,7 @@ public class DialogBindings extends DelegateSupport
                     @Override
                     protected void doSomething() throws Exception
                       {
-                        notification.getFeedback().onCancel();
+                        feedback.onCancel();
                       }
                   };
 
@@ -149,7 +151,7 @@ public class DialogBindings extends DelegateSupport
                   {
                     try
                       {
-                        notification.getFeedback().onCancel();
+                        feedback.onCancel();
                       }
                     catch (Exception e)
                       {
