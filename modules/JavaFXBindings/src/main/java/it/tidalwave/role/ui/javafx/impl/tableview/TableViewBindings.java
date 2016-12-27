@@ -29,6 +29,7 @@
 package it.tidalwave.role.ui.javafx.impl.tableview;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import javafx.util.Callback;
 import javafx.collections.ObservableList;
@@ -59,13 +60,13 @@ public class TableViewBindings extends DelegateSupport
   {
     private Callback<TableColumn<PresentationModel, PresentationModel>,
                      TableCell<PresentationModel, PresentationModel>> cellFactory = c -> new AsObjectTableCell<>();
-    
+
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
-    @VisibleForTesting final ChangeListener<PresentationModel> changeListener = (ov, oldItem, item) -> 
+    @VisibleForTesting final ChangeListener<PresentationModel> changeListener = (ov, oldItem, item) ->
       {
         if (item == null)
           {
@@ -74,7 +75,7 @@ public class TableViewBindings extends DelegateSupport
             return;
           }
 
-        executor.execute(() -> 
+        executor.execute(() ->
           {
             try
               {
@@ -86,7 +87,7 @@ public class TableViewBindings extends DelegateSupport
               }
           });
       };
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -99,36 +100,37 @@ public class TableViewBindings extends DelegateSupport
 
     /*******************************************************************************************************************
      *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     public void bind (final @Nonnull TableView<PresentationModel> tableView,
                       final @Nonnull PresentationModel pm,
-                      final @Nonnull Runnable callback)
+                      final @Nonnull Optional<Runnable> callback)
       {
         assertIsFxApplicationThread();
 
         final ReadOnlyObjectProperty<PresentationModel> pmProperty = tableView.getSelectionModel().selectedItemProperty();
         pmProperty.removeListener(changeListener);
-        
+
         executor.execute(() ->
           {
             final SimpleComposite<PresentationModel> composite = pm.as(SimpleComposite);
             final ObservableList<PresentationModel> items = observableArrayList(composite.findChildren().results());
-            
-            Platform.runLater(() -> 
+
+            Platform.runLater(() ->
               {
                 tableView.setItems(items);
                 pmProperty.addListener(changeListener);
-                
+
                 final TableAggregateAdapter tableAggregateAdapter = new TableAggregateAdapter();
                 final ObservableList rawColumns = tableView.getColumns(); // FIXME
-                ((ObservableList<TableColumn<PresentationModel, PresentationModel>>)rawColumns).stream().forEach(column -> 
+                ((ObservableList<TableColumn<PresentationModel, PresentationModel>>)rawColumns).stream().forEach(column ->
                   {
                     column.setCellValueFactory(tableAggregateAdapter);
                     column.setCellFactory(cellFactory);
                   });
 
-                callback.run();
+                callback.ifPresent(Runnable::run);
               });
           });
       }

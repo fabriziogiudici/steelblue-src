@@ -26,54 +26,24 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl.dialog;
+package it.tidalwave.util;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.Executor;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.stage.Stage;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Optional;
 
 /***********************************************************************************************************************
  *
- * An {@link EventHandler} for {@link ActionEvent}s that closes a dialog {@link Stage} and performs a task in a
- * background thread. It's useful to be bound as the callback of buttons in a dialog that should close the dialog.
+ * An extension of {@link As} for Java 8 which makes use of {@link Optional}.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
-abstract class DialogCloserHandler implements EventHandler<ActionEvent>
+public interface As8 extends As
   {
     @Nonnull
-    private final Executor executor;
-
-    @Nonnull
-    private final Stage dialogStage;
-
-    @Override
-    public void handle (final @Nonnull ActionEvent event)
+    default <T> Optional<T> asOptional (final @Nonnull Class<T> type)
       {
-        dialogStage.close();
-        executor.execute(new Runnable()
-          {
-            @Override
-            public void run()
-              {
-                try
-                  {
-                    doSomething();
-                  }
-                catch (Exception e)
-                  {
-                    log.error("", e);
-                  }
-              }
-          });
+        return Optional.ofNullable(as(type, throwable -> null));
       }
-
-    protected abstract void doSomething() throws Exception;
   }

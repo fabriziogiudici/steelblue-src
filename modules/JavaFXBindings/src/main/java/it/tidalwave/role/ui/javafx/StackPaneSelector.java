@@ -37,6 +37,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
+ * A facility that is used to manage areas in the UI where multiple contents should appear in a mutually exclusive
+ * way.
+ *
  * @author Fabrizio Giudici
  * @version $Id$
  *
@@ -46,18 +49,41 @@ public class StackPaneSelector // FIXME: rename, introduce interface
   {
     private final WeakHashMap<String, StackPane> stackPaneMapByArea = new WeakHashMap<>();
 
+    /*******************************************************************************************************************
+     *
+     * Register a new area associated to a {@link StackPane}.
+     *
+     * @param   area        the area name
+     * @param   stackPane   the {@code StackPane}
+     *
+     ******************************************************************************************************************/
     public void registerArea (final @Nonnull String area, final @Nonnull StackPane stackPane)
       {
-        log.debug("addArea({}, {})", area, stackPane);
+        log.debug("registerArea({}, {})", area, stackPane);
         stackPaneMapByArea.put(area, stackPane);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Add a {@link Node} to a previously registered area.
+     *
+     * @param   area        the area name
+     * @param   node        the {@code Node}
+     *
+     ******************************************************************************************************************/
     public void add (final @Nonnull String area, final @Nonnull Node node)
       {
         node.setVisible(false);
         findStackPaneFor(area).getChildren().add(node);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Sets the given {@link Node} as the shown one in the area where it is contained.
+     * 
+     * @param   node        the {@code Node}
+     *
+     ******************************************************************************************************************/
     public void setShownNode (final @Nonnull Node node)
       {
         log.info("setShownNode({})", node);
@@ -68,11 +94,7 @@ public class StackPaneSelector // FIXME: rename, introduce interface
 
             if (children.contains(node))
               {
-                for (final Node child : children)
-                  {
-                    child.setVisible(false);
-                  }
-
+                children.stream().forEach(child -> child.setVisible(false));
                 node.setVisible(true); // at last
                 return;
               }
@@ -82,6 +104,9 @@ public class StackPaneSelector // FIXME: rename, introduce interface
 
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private StackPane findStackPaneFor (final @Nonnull String area)
       {

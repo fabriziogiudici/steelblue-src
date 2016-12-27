@@ -26,94 +26,77 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl.dialog;
+package it.tidalwave.role.ui.javafx.example.large;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import javax.annotation.Nonnull;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.stage.Stage;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.mockito.Mockito.*;
+import org.springframework.context.ApplicationContext;
+import it.tidalwave.ui.javafx.JavaFXSpringApplication;
+import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
 
 /***********************************************************************************************************************
+ *
+ * The main class extends {@link JavaFXSpringApplication} and invokes a starting method on a controller that boots
+ * the application.
  *
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
-public class DialogCloserHandlerTest
+public class Main extends JavaFXSpringApplication
   {
-    private Stage dialogStage;
-
-    private DialogCloserHandler fixture;
-
-    private ExecutorService executorService;
-
-    private AssertionError error;
-
-    private boolean doSomethingCalled;
-
     /*******************************************************************************************************************
      *
+     * Usually {@code main()} does nothing more than a typical {@code main()} of a typical JavaFX application.
+     * JavaFX and Spring are automatically booted with an implicit configuration:
+     *
+     * <ul>
+     * <li>The FXML resource for the main UI is loaded from the same package as this class, and the name's
+     *     {@code Application.fxml}</li>
+     * <li>A splash screen is created from a FXML resource in the same package as this class and name
+     *     {@code Splash.fxml}, It is rendered on the screen while the system is initialised in background.</li>
+     * </ul>
+     *
      ******************************************************************************************************************/
-    @BeforeMethod
-    public void setupFixture()
+    public static void main (final @Nonnull String ... args)
       {
-        executorService = Executors.newSingleThreadExecutor();
-        dialogStage = mock(Stage.class);
-        error = null;
-        doSomethingCalled = false;
-
-        fixture = new DialogCloserHandler(executorService, dialogStage)
+        try
           {
-            @Override
-            protected void doSomething()
-              {
-                try
-                  {
-                    doSomethingCalled = true;
-                    assertThat(Platform.isFxApplicationThread(), is(false));
-                  }
-                catch (AssertionError e)
-                  {
-                    error = e;
-                  }
-              }
-          };
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Test
-    public void must_close_the_dialog_Stage()
-      {
-        fixture.handle(new ActionEvent());
-
-        verify(dialogStage).close();
-      }
-
-    /*******************************************************************************************************************
-     *
-     ******************************************************************************************************************/
-    @Test
-    public void must_call_doSomething_in_a_non_FX_thread()
-      throws InterruptedException
-      {
-        fixture.handle(new ActionEvent());
-        executorService.shutdown();
-        executorService.awaitTermination(10, TimeUnit.SECONDS);
-
-        assertThat(doSomethingCalled, is(true));
-
-        if (error != null)
-          {
-            throw error;
+            Platform.setImplicitExit(true);
+            launch(args);
           }
+        catch (Throwable t)
+          {
+            // Don't use logging facilities here, they could be not initialized
+            t.printStackTrace();
+            System.exit(-1);
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     * This method allows to change some default settings, if needed.
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void init()
+      {
+//        setUseAquaFxOnMacOsX(true);
+        super.init(); // always call super.init()!!
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
+     * This method retrieves a reference to the main controller and boots it.
+     *
+     ******************************************************************************************************************/
+    @Override
+    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
+      {
+        applicationContext.getBean(MainScreenPresentationControl.class).start();
       }
   }

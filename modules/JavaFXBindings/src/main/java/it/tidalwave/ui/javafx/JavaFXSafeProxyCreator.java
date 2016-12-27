@@ -46,8 +46,11 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
 import it.tidalwave.role.ui.javafx.impl.util.JavaFXSafeProxy;
 import it.tidalwave.role.ui.javafx.impl.DefaultJavaFXBinder;
+import it.tidalwave.role.ui.javafx.impl.util.ReflectionUtils;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************
  *
@@ -133,7 +136,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JavaFXSafeProxyCreator
   {
-    private final static Map<Class<?>, Object> BEANS = new HashMap<>();
+    public final static Map<Class<?>, Object> BEANS = new HashMap<>();
 
     @Getter
     private static final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -158,45 +161,85 @@ public class JavaFXSafeProxyCreator
      *
      *
      ******************************************************************************************************************/
+    @RequiredArgsConstructor(access = PRIVATE)
     public static class NodeAndDelegate
       {
         @Getter @Nonnull
         private final Node node;
 
         @Nonnull
-        private final Object safeDelegate;
+        private final Object delegate;
 
         @Nonnull
         public <T> T getDelegate()
           {
-            return (T)safeDelegate;
+            return (T)delegate;
           }
 
-        public <T> NodeAndDelegate (final @Nonnull Class<T> clazz, final @Nonnull String resource)
+        @Nonnull
+        public static <T> NodeAndDelegate load (final @Nonnull Class<T> clazz, final @Nonnull String resource)
           throws IOException
           {
             log.debug("NodeAndDelegate({}, {})", clazz, resource);
             assert Platform.isFxApplicationThread() : "Not in JavaFX UI Thread";
             final FXMLLoader loader = new FXMLLoader(clazz.getResource(resource));
-            node = (Node)loader.load();
+            final Node node = (Node)loader.load();
             final T jfxController = loader.getController();
-            injectDependencies(jfxController);
-            final Class<T> interfaceClass = (Class<T>)jfxController.getClass().getInterfaces()[0]; // FIXME
-            safeDelegate = JavaFXSafeProxyCreator.createSafeProxy(jfxController, interfaceClass);
-            log.debug(">>>> load({}, {}) completed", clazz, resource);
+            ReflectionUtils.injectDependencies(jfxController, BEANS);
+            final Class<?>[] interfaces = jfxController.getClass().getInterfaces();
+
+            if (interfaces.length == 0)
+              {
+                log.warn("{} has no interface: not creating safe proxy", jfxController.getClass());
+                log.debug(">>>> load({}, {}) completed", clazz, resource);
+                return new NodeAndDelegate(node, jfxController);
+              }
+            else
+              {
+                final Class<T> interfaceClass = (Class<T>)interfaces[0]; // FIXME
+                final T safeDelegate = JavaFXSafeProxyCreator.createSafeProxy(jfxController, interfaceClass);
+                log.debug(">>>> load({}, {}) completed", clazz, resource);
+                return new NodeAndDelegate(node, safeDelegate);
+              }
           }
       }
 
     /*******************************************************************************************************************
      *
+     * Creates a {@link NodeAndDelegate} for the given presentation class. The FXML resource name is inferred by
+     * default, For instance, is the class is named {@code JavaFXFooBarPresentation}, the resource name is
+     * {@code FooBar.fxml} and searched in the same packages as the class.
      *
+     * @see #createNodeAndDelegate(java.lang.Class, java.lang.String)
+     *
+     * @since 1.0-ALPHA-13
+     *
+     * @param   presentationClass   the class of the presentation for which the resources must be created.
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static <T> NodeAndDelegate createNodeAndDelegate (final @Nonnull Class<?> clazz,
-                                                             final @Nonnull String resource)
+    public static <T> NodeAndDelegate createNodeAndDelegate (final @Nonnull Class<?> presentationClass)
       {
-        log.debug("createNodeAndDelegate({}, {})", clazz, resource);
+        final String resource = presentationClass.getSimpleName().replaceAll("^JavaFX", "")
+                                                                 .replaceAll("^JavaFx", "")
+                                                                 .replaceAll("Presentation$", "")
+                                                                 + ".fxml";
+        return createNodeAndDelegate(presentationClass, resource);
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Creates a {@link NodeAndDelegate} for the given presentation class.
+     *
+     * @param   presentationClass   the class of the presentation for which the resources must be created.
+     * @param   fxmlResourcePath    the path of the FXML resource
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public static <T> NodeAndDelegate createNodeAndDelegate (final @Nonnull Class<?> presentationClass,
+                                                             final @Nonnull String fxmlResourcePath)
+      {
+        log.debug("createNodeAndDelegate({}, {})", presentationClass, fxmlResourcePath);
 
         final CountDownLatch latch = new CountDownLatch(1);
         final AtomicReference<NodeAndDelegate> nad = new AtomicReference<>();
@@ -206,7 +249,7 @@ public class JavaFXSafeProxyCreator
           {
             try
               {
-                return new NodeAndDelegate(clazz, resource);
+                return NodeAndDelegate.load(presentationClass, fxmlResourcePath);
               }
             catch (IOException e)
               {
@@ -218,7 +261,7 @@ public class JavaFXSafeProxyCreator
           {
             try
               {
-                nad.set(new NodeAndDelegate(clazz, resource));
+                nad.set(NodeAndDelegate.load(presentationClass, fxmlResourcePath));
               }
             catch (RuntimeException e)
               {
@@ -265,38 +308,5 @@ public class JavaFXSafeProxyCreator
         return (T)Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                                          new Class[] { interfaceClass },
                                          new JavaFXSafeProxy<>(target));
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    private static void injectDependencies (final @Nonnull Object object)
-      {
-        for (final Field field : object.getClass().getDeclaredFields())
-          {
-              System.err.println(">>>> considering to inject " + field);
-            if (field.getAnnotation(Inject.class) != null)
-              {
-                field.setAccessible(true);
-                final Class<?> type = field.getType();
-                final Object dependency = BEANS.get(type);
-
-                if (dependency == null)
-                  {
-                    throw new RuntimeException("Can't inject " + object + "." + field.getName());
-                  }
-
-                try
-                  {
-                    field.set(object, dependency);
-                  }
-                catch (IllegalArgumentException | IllegalAccessException e)
-                  {
-                    throw new RuntimeException(e);
-                  }
-              }
-          }
       }
   }

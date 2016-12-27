@@ -64,6 +64,16 @@ UI technology so the code depending on it is segregated in a confined section.
                 <artifactId>it-tidalwave-role-ui-javafx</artifactId>
                 <version>1.0-ALPHA-13-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>it.tidalwave.steelblue</groupId>
+                <artifactId>it-tidalwave-steelblue-example-backend</artifactId>
+                <version>1.0-ALPHA-13-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>it.tidalwave.steelblue</groupId>
+                <artifactId>it-tidalwave-steelblue-example-large</artifactId>
+                <version>1.0-ALPHA-13-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

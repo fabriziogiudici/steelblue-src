@@ -30,6 +30,7 @@ package it.tidalwave.role.ui.javafx.impl.combobox;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import javafx.util.Callback;
 import javafx.collections.ObservableList;
@@ -75,7 +76,7 @@ public class ComboBoxBindings extends DelegateSupport
      *
      ******************************************************************************************************************/
     private final EventHandler<ActionEvent> eventHandler = event ->
-      { 
+      {
         try
           {
             final ComboBox<PresentationModel> comboBox = (ComboBox<PresentationModel>)event.getSource();
@@ -87,7 +88,7 @@ public class ComboBoxBindings extends DelegateSupport
             // ok no action
           }
       };
-        
+
     /*******************************************************************************************************************
      *
      *
@@ -100,17 +101,17 @@ public class ComboBoxBindings extends DelegateSupport
 
     /*******************************************************************************************************************
      *
-     *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     public void bind (final @Nonnull ComboBox<PresentationModel> comboBox,
                       final @Nonnull PresentationModel pm,
-                      final @Nonnull Runnable callback)
+                      final @Nonnull Optional<Runnable> callback)
       {
         comboBox.setCellFactory(cellFactory);
         comboBox.setButtonCell(new AsObjectListCell<>());
         comboBox.setOnAction(eventHandler);
-        
+
         // FIXME: WEAK LISTENERS
 
         // FIXME: this won't work with any external navigation system, such as CEC menus
@@ -132,14 +133,14 @@ public class ComboBoxBindings extends DelegateSupport
             Platform.runLater(() ->
               {
                 comboBox.setItems(items);
-                
+
                 if (!items.isEmpty())
                   {
                     comboBox.getSelectionModel().select(items.get(0));
                   }
-                
+
                 pmProperty.addListener(changeListener);
-                callback.run();
+                callback.ifPresent(Runnable::run);
               });
           });
       }

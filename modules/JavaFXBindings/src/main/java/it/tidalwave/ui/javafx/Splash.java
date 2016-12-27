@@ -53,6 +53,9 @@ public class Splash
     @Nonnull
     private final Object application;
 
+    @Nonnull
+    private final String fxml;
+
     private Pane splashPane;
 
     private Stage splashStage;
@@ -66,7 +69,8 @@ public class Splash
       {
         try
           {
-            splashPane = FXMLLoader.load(application.getClass().getResource("Splash.fxml"));
+            log.info("Loading Splash.fxml for application {}", application);
+            splashPane = FXMLLoader.load(application.getClass().getResource(fxml));
           }
         catch (IOException e)
           {
@@ -103,7 +107,7 @@ public class Splash
         final Timeline slideAnimation = new Timeline(start, end);
         slideAnimation.setOnFinished(event -> splashStage.close());
         slideAnimation.play();
-        
+
 //         FIXME: fade transition really doesn't work: it fades out the pane, but the stage is opaque.
 //        final FadeTransition fadeSplash = new FadeTransition(Duration.seconds(0.5), splashPane);
 //        fadeSplash.setFromValue(1.0);

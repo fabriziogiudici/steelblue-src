@@ -40,6 +40,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import it.tidalwave.role.ui.javafx.Widget;
+import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator;
+import javafx.fxml.FXMLLoader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static lombok.AccessLevel.PRIVATE;
@@ -77,24 +79,47 @@ public class JavaFXSafeComponentBuilder<I, T extends I>
         return new JavaFXSafeComponentBuilder<>(componentClass, interfaceClass);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Creates an instance of a surrogate JavaFX delegate. JavaFX delegates (controllers in JavaFX jargon) are those
+     * objects with fields annotated with {@link @FXML} that are created by the {@link FXMLLoader} starting from a
+     * {@code .fxml} file. Sometimes a surrogate delegate is needed, that is a class that is not mapped to any
+     * {@link @FXML} file, but whose fields are copied from another existing delegate.
+     *
+     * @param   componentClass      the class of the surrogate
+     * @param   fxmlFieldsSource    the existing JavaFX delegate with {@code @FXML} annotated fields.
+     * @return                      the new surrogate delegate
+     *
+     ******************************************************************************************************************/
     @Nonnull
     public static <J, X extends J> X createInstance (final @Nonnull Class<X> componentClass,
-                                                     final @Nonnull Object referenceHolder)
+                                                     final @Nonnull Object fxmlFieldsSource)
       {
         final JavaFXSafeComponentBuilder<J, X> builder = builderFor(componentClass);
-        return builder.createInstance(referenceHolder);
+        return builder.createInstance(fxmlFieldsSource);
       }
 
+    /*******************************************************************************************************************
+     *
+     * Creates an instance of a surrogate JavaFX delegate. JavaFX delegates (controllers in JavaFX jargon) are those
+     * objects with fields annotated with {@link @FXML} that are created by the {@link FXMLLoader} starting from a
+     * {@code .fxml} file. Sometimes a surrogate delegate is needed, that is a class that is not mapped to any
+     * {@link @FXML} file, but whose fields are copied from another existing delegate.
+     *
+     * @param   fxmlFieldsSource    the existing JavaFX delegate with {@code @FXML} annotated fields.
+     * @return                      the new surrogate delegate
+     *
+     ******************************************************************************************************************/
     @Nonnull
-    public synchronized T createInstance (final @Nonnull Object referenceHolder)
+    public synchronized T createInstance (final @Nonnull Object fxmlFieldsSource)
       {
-        log.trace("createInstance({})", referenceHolder);
+        log.trace("createInstance({})", fxmlFieldsSource);
         T presentation = presentationRef.get();
 
         if (presentation == null)
           {
             presentation = Platform.isFxApplicationThread() ? createComponentInstance() : createComponentInstanceInJAT();
-            applyInjection(presentation, referenceHolder); // FIXME: in JFX thread?
+            copyFxmlFields(presentation, fxmlFieldsSource); // FIXME: in JFX thread?
 
             try // FIXME // FIXME: in JFX thread?
               {
@@ -115,6 +140,11 @@ public class JavaFXSafeComponentBuilder<I, T extends I>
         return presentation;
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     protected T createComponentInstance()
       {
@@ -129,6 +159,11 @@ public class JavaFXSafeComponentBuilder<I, T extends I>
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     @Nonnull
     private T createComponentInstanceInJAT()
       {
@@ -158,9 +193,17 @@ public class JavaFXSafeComponentBuilder<I, T extends I>
         return reference.get();
       }
 
-    private void applyInjection (final @Nonnull T target, final @Nonnull Object source)
+    /*******************************************************************************************************************
+     *
+     * Inject fields annotated with {@link FXML} in {@code source} to {@code target}.
+     *
+     * @param   target  the target object
+     * @param   source  the source object
+     *
+     ******************************************************************************************************************/
+    private void copyFxmlFields (final @Nonnull Object target, final @Nonnull Object source)
       {
-        log.trace("injecting {} with fields from {}", target, source);
+        log.debug("injecting {} with fields from {}", target, source);
         final Map<String, Object> valuesMapByFieldName = new HashMap<>();
 
         for (final Field field : source.getClass().getDeclaredFields())
@@ -186,15 +229,16 @@ public class JavaFXSafeComponentBuilder<I, T extends I>
         for (final Field field : target.getClass().getDeclaredFields())
           {
             final Widget widget = field.getAnnotation(Widget.class);
+            final FXML fxml = field.getAnnotation(FXML.class);
 
-            if (widget != null)
+            if ((widget != null) || (fxml != null))
               {
-                final String name = widget.value();
+                final String name = (widget != null) ? widget.value() : field.getName();
                 final Object value = valuesMapByFieldName.get(name);
 
                 if (value == null)
                   {
-                    throw new RuntimeException("Null value for " + name);
+                    throw new RuntimeException("Can't inject " + name + ": available: " + valuesMapByFieldName.keySet());
                   }
 
                 field.setAccessible(true);
@@ -209,5 +253,7 @@ public class JavaFXSafeComponentBuilder<I, T extends I>
                   }
               }
           }
+
+          ReflectionUtils.injectDependencies(target, JavaFXSafeProxyCreator.BEANS);
       }
   }

@@ -31,6 +31,7 @@ package it.tidalwave.role.ui.javafx.impl.util;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
 
 /***********************************************************************************************************************
  *
@@ -51,13 +53,47 @@ import java.util.Map;
  **********************************************************************************************************************/
 public class ReflectionUtils
   {
-  /**
-   * Get the actual type arguments a child class has used to extend a generic base class.
-   *
-   * @param baseClass the base class
-   * @param childClass the child class
-   * @return a list of the raw classes for the actual type arguments.
-   */
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    public static void injectDependencies (final @Nonnull Object object, final @Nonnull Map<Class<?>, Object> beans)
+      {
+        for (final Field field : object.getClass().getDeclaredFields())
+          {
+            if (field.getAnnotation(Inject.class) != null)
+              {
+                field.setAccessible(true);
+                final Class<?> type = field.getType();
+                final Object dependency = beans.get(type);
+
+                if (dependency == null)
+                  {
+                    throw new RuntimeException("Can't inject " + object + "." + field.getName());
+                  }
+
+                try
+                  {
+                    field.set(object, dependency);
+                  }
+                catch (IllegalArgumentException | IllegalAccessException e)
+                  {
+                    throw new RuntimeException(e);
+                  }
+              }
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Get the actual type arguments a child class has used to extend a generic base class.
+     *
+     * @param baseClass the base class
+     * @param childClass the child class
+     * @return a list of the raw classes for the actual type arguments.
+     *
+     ******************************************************************************************************************/
     public static <T> List<Class<?>> getTypeArguments (final @Nonnull Class<T> baseClass,
                                                        final @Nonnull Class<? extends T> childClass)
       {
@@ -119,6 +155,11 @@ public class ReflectionUtils
         return typeArgumentsAsClasses;
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     @CheckForNull
     public static Class<?> getClass (final @Nonnull Type type)
       {
