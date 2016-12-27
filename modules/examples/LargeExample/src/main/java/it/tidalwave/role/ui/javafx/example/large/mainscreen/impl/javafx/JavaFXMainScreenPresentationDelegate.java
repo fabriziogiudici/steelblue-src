@@ -34,7 +34,6 @@ import java.nio.file.Path;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -156,7 +155,7 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
     @Override
     public void notify (final @Nonnull UserNotificationWithFeedback notification)
       {
-        binder.showInModalDialog(new Label(notification.getText()), notification);
+        binder.showInModalDialog(notification);
       }
 
     /*******************************************************************************************************************

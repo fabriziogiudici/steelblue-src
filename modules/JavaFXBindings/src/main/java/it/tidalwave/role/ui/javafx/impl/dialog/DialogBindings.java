@@ -29,29 +29,23 @@
 package it.tidalwave.role.ui.javafx.impl.dialog;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Optional;
 import java.util.concurrent.Executor;
-import javafx.application.Platform;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.application.Platform;
+import it.tidalwave.util.Callback;
 import it.tidalwave.util.ui.UserNotificationWithFeedback;
 import it.tidalwave.util.ui.UserNotificationWithFeedback.Feedback;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import it.tidalwave.role.ui.spi.Feedback8;
-import it.tidalwave.util.Callback;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import javafx.scene.control.Alert;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -78,19 +72,8 @@ public class DialogBindings extends DelegateSupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void showInModalDialog (final @Nonnull Node node, final @Nonnull UserNotificationWithFeedback notification)
-      {
-        showInModalDialog(node, notification, new BoundProperty<>(true));
-      }
-
-    /*******************************************************************************************************************
-     *
-     * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
-    public void showInModalDialog (final @Nonnull Node node,
-                                   final @Nonnull UserNotificationWithFeedback notification,
-                                   final @Nonnull BoundProperty<Boolean> valid)
+    public void showInModalDialog (final @Nonnull UserNotificationWithFeedback notification,
+                                   final @Nonnull Optional<Node> node)
       {
         Platform.runLater(new Runnable() // FIXME: should not be needed
           {
@@ -99,49 +82,56 @@ public class DialogBindings extends DelegateSupport
               {
                 log.info("modalDialog({}, {})", node, notification);
 
-                final Stage dialogStage = new Stage(StageStyle.DECORATED);
-                dialogStage.setResizable(false);
-                dialogStage.initModality(Modality.APPLICATION_MODAL);
-                dialogStage.initOwner(mainWindow);
-                dialogStage.setTitle(notification.getCaption());
-
-                final VBox vbox = new VBox();
-                vbox.setPadding(new Insets(8, 8, 8, 8));
-                final FlowPane buttonPane = new FlowPane();
-                buttonPane.setAlignment(Pos.CENTER_RIGHT);
-                buttonPane.setHgap(8);
+//                final Dialog<ButtonType> dialog = new Dialog<>();
+                final Dialog<ButtonType> dialog = new Alert(Alert.AlertType.NONE);
+                dialog.initOwner(mainWindow);
+                dialog.setTitle(notification.getCaption());
+                dialog.setResizable(false);
+                dialog.setContentText(notification.getText());
+                node.ifPresent(n -> dialog.getDialogPane().setContent(n));
 
                 final Feedback feedback = notification.getFeedback();
                 final boolean hasOnCancel = hasOnCancel(feedback);
-                buttonPane.getChildren().addAll(createButtons(dialogStage, feedback, hasOnCancel));
 
-                vbox.getChildren().add(node);
-                vbox.getChildren().add(buttonPane);
+                final ObservableList<ButtonType> buttonTypes = dialog.getDialogPane().getButtonTypes();
+                buttonTypes.clear();
+                buttonTypes.add(ButtonType.OK);
+
+                if (hasOnCancel)
+                  {
+                    buttonTypes.add(ButtonType.CANCEL);
+                  }
 
 //                okButton.disableProperty().bind(new PropertyAdapter<>(valid)); // FIXME: doesn't work
 
-                dialogStage.setOnCloseRequest(event -> executor.execute(() ->
-                  {
-                    try
-                      {
-                        if (hasOnCancel)
-                          {
-                            feedback.onCancel();
-                          }
-                        else
-                          {
-                            feedback.onConfirm();
-                          }
-                      }
-                    catch (Exception e)
-                      {
-                        log.error("", e);
-                      }
-                  }));
+                final Optional<ButtonType> result = dialog.showAndWait();
 
-                dialogStage.setScene(new Scene(vbox));
-                dialogStage.centerOnScreen();
-                dialogStage.showAndWait();
+                if (!result.isPresent())
+                  {
+                    if (hasOnCancel)
+                      {
+                        wrap(feedback::onCancel);
+                      }
+                    else
+                      {
+                        wrap(feedback::onConfirm);
+                      }
+                  }
+                else
+                  {
+                    if (result.get() == ButtonType.OK)
+                      {
+                        wrap(feedback::onConfirm);
+                      }
+                    else if (result.get() == ButtonType.CANCEL)
+                      {
+                        wrap(feedback::onCancel);
+                      }
+                    else
+                      {
+                        throw new IllegalStateException("Unexpected button pressed: " + result.get());
+                      }
+                  }
               }
           });
       }
@@ -151,31 +141,10 @@ public class DialogBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    @Nonnull
-    private List<Button> createButtons (final @Nonnull Stage dialogStage,
-                                        final @Nonnull Feedback feedback,
-                                        final boolean hasOnCancel)
+    @SneakyThrows(Throwable.class)
+    private static void wrap (final @Nonnull Callback callback)
       {
-        final List<Button> buttons = new ArrayList<>();
-        final Button okButton = new Button("Ok");
-        okButton.setDefaultButton(true);
-        okButton.setOnAction(new DialogCloserHandler(executor, dialogStage, feedback::onConfirm));
-        buttons.add(okButton);
-
-        if (hasOnCancel)
-          {
-            final Button cancelButton = new Button("Cancel");
-            cancelButton.setCancelButton(true);
-            cancelButton.setOnAction(new DialogCloserHandler(executor, dialogStage, feedback::onCancel));
-            buttons.add(cancelButton);
-          }
-
-        if (isOSX())
-          {
-            Collections.reverse(buttons);
-          }
-
-        return buttons;
+        callback.call();
       }
 
     /*******************************************************************************************************************

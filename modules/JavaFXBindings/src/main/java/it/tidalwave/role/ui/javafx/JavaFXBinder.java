@@ -402,7 +402,7 @@ public interface JavaFXBinder
      *
      * Binds a {@link ComboBox} to a {@link PresentationModel} and a callback.
      * See {@link #bind(javafx.scene.control.ComboBox, it.tidalwave.role.ui.PresentationModel, java.util.Optional)}.
-     * 
+     *
      * @since   1.0-ALPHA-13
      * @param   comboBox        the {@code ComboBox}
      * @param   pm              the {@code PresentationModel}
@@ -490,12 +490,27 @@ public interface JavaFXBinder
      * @param  notification  the object notifying whether the operation is confirmed or cancelled
      *
      ******************************************************************************************************************/
-    public void showInModalDialog (@Nonnull Node node, @Nonnull UserNotificationWithFeedback notification);
+    public void showInModalDialog (@Nonnull UserNotificationWithFeedback notification,
+                                   @Nonnull Optional<Node> node);
 
     // FIXME: use a Builder, merge with the above
-    public void showInModalDialog (@Nonnull Node node,
-                                   @Nonnull UserNotificationWithFeedback notification,
-                                   @Nonnull BoundProperty<Boolean> valid);
+    default public void showInModalDialog (@Nonnull Node node,
+                                           @Nonnull UserNotificationWithFeedback notification,
+                                           @Nonnull BoundProperty<Boolean> valid)
+      {
+        showInModalDialog(notification, Optional.of(node));
+      }
+
+    @Deprecated
+    default public void showInModalDialog (@Nonnull Node node, @Nonnull UserNotificationWithFeedback notification)
+      {
+        showInModalDialog(notification, Optional.of(node));
+      }
+
+    default public void showInModalDialog (@Nonnull UserNotificationWithFeedback notification)
+      {
+        showInModalDialog(notification, Optional.empty());
+      }
 
     /*******************************************************************************************************************
      *
