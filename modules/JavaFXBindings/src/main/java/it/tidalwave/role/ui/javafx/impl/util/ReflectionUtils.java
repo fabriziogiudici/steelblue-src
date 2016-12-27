@@ -51,13 +51,15 @@ import java.util.Map;
  **********************************************************************************************************************/
 public class ReflectionUtils
   {
-  /**
-   * Get the actual type arguments a child class has used to extend a generic base class.
-   *
-   * @param baseClass the base class
-   * @param childClass the child class
-   * @return a list of the raw classes for the actual type arguments.
-   */
+    /*******************************************************************************************************************
+     *
+     * Get the actual type arguments a child class has used to extend a generic base class.
+     *
+     * @param baseClass the base class
+     * @param childClass the child class
+     * @return a list of the raw classes for the actual type arguments.
+     *
+     ******************************************************************************************************************/
     public static <T> List<Class<?>> getTypeArguments (final @Nonnull Class<T> baseClass,
                                                        final @Nonnull Class<? extends T> childClass)
       {
@@ -119,6 +121,11 @@ public class ReflectionUtils
         return typeArgumentsAsClasses;
       }
 
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
     @CheckForNull
     public static Class<?> getClass (final @Nonnull Type type)
       {
