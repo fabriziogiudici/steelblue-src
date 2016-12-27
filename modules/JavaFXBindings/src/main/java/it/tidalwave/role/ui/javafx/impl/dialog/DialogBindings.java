@@ -145,28 +145,17 @@ public class DialogBindings extends DelegateSupport
 
 //                okButton.disableProperty().bind(new PropertyAdapter<>(valid)); // FIXME: doesn't work
 
-                dialogStage.setOnCloseRequest(new EventHandler<WindowEvent>()
+                dialogStage.setOnCloseRequest(event -> executor.execute(() ->
                   {
-                    @Override
-                    public void handle (final @Nonnull WindowEvent event)
+                    try
                       {
-                        executor.execute(new Runnable()
-                          {
-                            @Override
-                            public void run()
-                              {
-                                try
-                                  {
-                                    notification.getFeedback().onCancel();
-                                  }
-                                catch (Exception e)
-                                  {
-                                    log.error("", e);
-                                  }
-                              }
-                          });
+                        notification.getFeedback().onCancel();
                       }
-                  });
+                    catch (Exception e)
+                      {
+                        log.error("", e);
+                      }
+                  }));
 
                 okButton.setOnAction(closeAndConfirm);
                 cancelButton.setOnAction(closeAndCancel);
