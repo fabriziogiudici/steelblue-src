@@ -127,24 +127,6 @@ public class DialogBindings extends DelegateSupport
 
                 final UserNotificationWithFeedback.Feedback feedback = notification.getFeedback();
 
-                final DialogCloserHandler closeAndConfirm = new DialogCloserHandler(executor, dialogStage)
-                  {
-                    @Override
-                    protected void doSomething() throws Exception
-                      {
-                        feedback.onConfirm();
-                      }
-                  };
-
-                final DialogCloserHandler closeAndCancel = new DialogCloserHandler(executor, dialogStage)
-                  {
-                    @Override
-                    protected void doSomething() throws Exception
-                      {
-                        feedback.onCancel();
-                      }
-                  };
-
 //                okButton.disableProperty().bind(new PropertyAdapter<>(valid)); // FIXME: doesn't work
 
                 dialogStage.setOnCloseRequest(event -> executor.execute(() ->
@@ -159,8 +141,8 @@ public class DialogBindings extends DelegateSupport
                       }
                   }));
 
-                okButton.setOnAction(closeAndConfirm);
-                cancelButton.setOnAction(closeAndCancel);
+                okButton.setOnAction(new DialogCloserHandler(executor, dialogStage, feedback::onConfirm));
+                cancelButton.setOnAction(new DialogCloserHandler(executor, dialogStage, feedback::onCancel));
 
                 dialogStage.setScene(new Scene(vbox));
                 dialogStage.centerOnScreen();

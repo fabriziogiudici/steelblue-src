@@ -69,22 +69,20 @@ public class DialogCloserHandlerTest
         error = null;
         doSomethingCalled = false;
 
-        fixture = new DialogCloserHandler(executorService, dialogStage)
+        final DialogCloserHandler.Callback callback = () ->
           {
-            @Override
-            protected void doSomething()
+            try
               {
-                try
-                  {
-                    doSomethingCalled = true;
-                    assertThat(Platform.isFxApplicationThread(), is(false));
-                  }
-                catch (AssertionError e)
-                  {
-                    error = e;
-                  }
+                doSomethingCalled = true;
+                assertThat(Platform.isFxApplicationThread(), is(false));
+              }
+            catch (AssertionError e)
+              {
+                error = e;
               }
           };
+
+        fixture = new DialogCloserHandler(executorService, dialogStage, callback);
       }
 
     /*******************************************************************************************************************

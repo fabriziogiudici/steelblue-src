@@ -46,13 +46,22 @@ import lombok.extern.slf4j.Slf4j;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
-abstract class DialogCloserHandler implements EventHandler<ActionEvent>
+final class DialogCloserHandler implements EventHandler<ActionEvent>
   {
+    static interface Callback
+      {
+        public void doSomething()
+          throws Exception;
+      }
+
     @Nonnull
     private final Executor executor;
 
     @Nonnull
     private final Stage dialogStage;
+
+    @Nonnull
+    private final Callback callable;
 
     @Override
     public void handle (final @Nonnull ActionEvent event)
@@ -62,7 +71,7 @@ abstract class DialogCloserHandler implements EventHandler<ActionEvent>
           {
             try
               {
-                doSomething();
+                callable.doSomething();
               }
             catch (Exception e)
               {
@@ -70,6 +79,4 @@ abstract class DialogCloserHandler implements EventHandler<ActionEvent>
               }
           });
       }
-
-    protected abstract void doSomething() throws Exception;
   }
