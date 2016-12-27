@@ -31,6 +31,7 @@ package it.tidalwave.role.ui.javafx.impl.util;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
 
 /***********************************************************************************************************************
  *
@@ -51,6 +53,38 @@ import java.util.Map;
  **********************************************************************************************************************/
 public class ReflectionUtils
   {
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    public static void injectDependencies (final @Nonnull Object object, final @Nonnull Map<Class<?>, Object> beans)
+      {
+        for (final Field field : object.getClass().getDeclaredFields())
+          {
+            if (field.getAnnotation(Inject.class) != null)
+              {
+                field.setAccessible(true);
+                final Class<?> type = field.getType();
+                final Object dependency = beans.get(type);
+
+                if (dependency == null)
+                  {
+                    throw new RuntimeException("Can't inject " + object + "." + field.getName());
+                  }
+
+                try
+                  {
+                    field.set(object, dependency);
+                  }
+                catch (IllegalArgumentException | IllegalAccessException e)
+                  {
+                    throw new RuntimeException(e);
+                  }
+              }
+          }
+      }
+
     /*******************************************************************************************************************
      *
      * Get the actual type arguments a child class has used to extend a generic base class.

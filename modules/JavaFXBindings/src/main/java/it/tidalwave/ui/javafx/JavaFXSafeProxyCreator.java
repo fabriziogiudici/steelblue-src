@@ -46,6 +46,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
 import it.tidalwave.role.ui.javafx.impl.util.JavaFXSafeProxy;
 import it.tidalwave.role.ui.javafx.impl.DefaultJavaFXBinder;
+import it.tidalwave.role.ui.javafx.impl.util.ReflectionUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -135,7 +136,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Slf4j
 public class JavaFXSafeProxyCreator
   {
-    private final static Map<Class<?>, Object> BEANS = new HashMap<>();
+    public final static Map<Class<?>, Object> BEANS = new HashMap<>();
 
     @Getter
     private static final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -184,7 +185,7 @@ public class JavaFXSafeProxyCreator
             final FXMLLoader loader = new FXMLLoader(clazz.getResource(resource));
             final Node node = (Node)loader.load();
             final T jfxController = loader.getController();
-            injectDependencies(jfxController);
+            ReflectionUtils.injectDependencies(jfxController, BEANS);
             final Class<?>[] interfaces = jfxController.getClass().getInterfaces();
 
             if (interfaces.length == 0)
@@ -307,37 +308,5 @@ public class JavaFXSafeProxyCreator
         return (T)Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                                          new Class[] { interfaceClass },
                                          new JavaFXSafeProxy<>(target));
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    private static void injectDependencies (final @Nonnull Object object)
-      {
-        for (final Field field : object.getClass().getDeclaredFields())
-          {
-            if (field.getAnnotation(Inject.class) != null)
-              {
-                field.setAccessible(true);
-                final Class<?> type = field.getType();
-                final Object dependency = BEANS.get(type);
-
-                if (dependency == null)
-                  {
-                    throw new RuntimeException("Can't inject " + object + "." + field.getName());
-                  }
-
-                try
-                  {
-                    field.set(object, dependency);
-                  }
-                catch (IllegalArgumentException | IllegalAccessException e)
-                  {
-                    throw new RuntimeException(e);
-                  }
-              }
-          }
       }
   }

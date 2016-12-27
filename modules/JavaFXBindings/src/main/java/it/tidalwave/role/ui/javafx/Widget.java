@@ -34,12 +34,15 @@ import java.lang.annotation.RetentionPolicy;
 
 /***********************************************************************************************************************
  *
+ * @deprecated  Use @FXML instead
+ * 
  * @author  Fabrizio Giudici
  * @version $Id$
  *
  **********************************************************************************************************************/
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
+@Deprecated
 public @interface Widget
   {
     String value();
