@@ -58,19 +58,15 @@ abstract class DialogCloserHandler implements EventHandler<ActionEvent>
     public void handle (final @Nonnull ActionEvent event)
       {
         dialogStage.close();
-        executor.execute(new Runnable()
+        executor.execute(() ->
           {
-            @Override
-            public void run()
+            try
               {
-                try
-                  {
-                    doSomething();
-                  }
-                catch (Exception e)
-                  {
-                    log.error("", e);
-                  }
+                doSomething();
+              }
+            catch (Exception e)
+              {
+                log.error("", e);
               }
           });
       }
