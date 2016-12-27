@@ -53,6 +53,9 @@ public class Splash
     @Nonnull
     private final Object application;
 
+    @Nonnull
+    private final String fxml;
+
     private Pane splashPane;
 
     private Stage splashStage;
@@ -67,7 +70,7 @@ public class Splash
         try
           {
             log.info("Loading Splash.fxml for application {}", application);
-            splashPane = FXMLLoader.load(application.getClass().getResource("Splash.fxml"));
+            splashPane = FXMLLoader.load(application.getClass().getResource(fxml));
           }
         catch (IOException e)
           {

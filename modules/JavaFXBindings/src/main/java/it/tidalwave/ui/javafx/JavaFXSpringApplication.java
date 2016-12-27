@@ -69,7 +69,7 @@ public class JavaFXSpringApplication extends JavaFXApplicationWithSplash
     protected NodeAndDelegate createParent()
       throws IOException
       {
-        return NodeAndDelegate.load(getClass(), "Application.fxml");
+        return NodeAndDelegate.load(getClass(), applicationFxml);
       }
 
     /*******************************************************************************************************************

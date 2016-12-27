@@ -54,10 +54,14 @@ import lombok.Setter;
  **********************************************************************************************************************/
 public abstract class JavaFXApplicationWithSplash extends Application
   {
+    private static final String DEFAULT_APPLICATION_FXML = "Application.fxml";
+
+    private static final String DEFAULT_SPLASH_FXML = "Splash.fxml";
+
     // Don't use Slf4j and its static logger - give Main a chance to initialize things
     private final Logger log = LoggerFactory.getLogger(JavaFXApplicationWithSplash.class);
 
-    private final Splash splash = new Splash(this);
+    private Splash splash;
 
     @Getter @Setter
     private boolean maximized;
@@ -71,6 +75,12 @@ public abstract class JavaFXApplicationWithSplash extends Application
     @Getter @Setter
     private boolean useAquaFxOnMacOsX;
 
+    @Getter @Setter
+    protected String applicationFxml = DEFAULT_APPLICATION_FXML;
+
+    @Getter @Setter
+    protected String splashFxml = DEFAULT_SPLASH_FXML;
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -80,6 +90,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
     public void init()
       {
         log.info("init()");
+        splash = new Splash(this, splashFxml);
         splash.init();
       }
 
