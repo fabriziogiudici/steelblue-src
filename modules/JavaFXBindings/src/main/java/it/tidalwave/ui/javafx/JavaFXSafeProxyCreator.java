@@ -47,7 +47,9 @@ import it.tidalwave.role.ui.javafx.JavaFXBinder;
 import it.tidalwave.role.ui.javafx.impl.util.JavaFXSafeProxy;
 import it.tidalwave.role.ui.javafx.impl.DefaultJavaFXBinder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static lombok.AccessLevel.PRIVATE;
 
 /***********************************************************************************************************************
  *
@@ -158,32 +160,46 @@ public class JavaFXSafeProxyCreator
      *
      *
      ******************************************************************************************************************/
+    @RequiredArgsConstructor(access = PRIVATE)
     public static class NodeAndDelegate
       {
         @Getter @Nonnull
         private final Node node;
 
         @Nonnull
-        private final Object safeDelegate;
+        private final Object delegate;
 
         @Nonnull
         public <T> T getDelegate()
           {
-            return (T)safeDelegate;
+            return (T)delegate;
           }
 
-        public <T> NodeAndDelegate (final @Nonnull Class<T> clazz, final @Nonnull String resource)
+        @Nonnull
+        public static <T> NodeAndDelegate load (final @Nonnull Class<T> clazz, final @Nonnull String resource)
           throws IOException
           {
             log.debug("NodeAndDelegate({}, {})", clazz, resource);
             assert Platform.isFxApplicationThread() : "Not in JavaFX UI Thread";
             final FXMLLoader loader = new FXMLLoader(clazz.getResource(resource));
-            node = (Node)loader.load();
+            final Node node = (Node)loader.load();
             final T jfxController = loader.getController();
             injectDependencies(jfxController);
-            final Class<T> interfaceClass = (Class<T>)jfxController.getClass().getInterfaces()[0]; // FIXME
-            safeDelegate = JavaFXSafeProxyCreator.createSafeProxy(jfxController, interfaceClass);
-            log.debug(">>>> load({}, {}) completed", clazz, resource);
+            final Class<?>[] interfaces = jfxController.getClass().getInterfaces();
+
+            if (interfaces.length == 0)
+              {
+                log.warn("{} has no interface: not creating safe proxy", jfxController.getClass());
+                log.debug(">>>> load({}, {}) completed", clazz, resource);
+                return new NodeAndDelegate(node, jfxController);
+              }
+            else
+              {
+                final Class<T> interfaceClass = (Class<T>)interfaces[0]; // FIXME
+                final T safeDelegate = JavaFXSafeProxyCreator.createSafeProxy(jfxController, interfaceClass);
+                log.debug(">>>> load({}, {}) completed", clazz, resource);
+                return new NodeAndDelegate(node, safeDelegate);
+              }
           }
       }
 
@@ -204,6 +220,7 @@ public class JavaFXSafeProxyCreator
     public static <T> NodeAndDelegate createNodeAndDelegate (final @Nonnull Class<?> presentationClass)
       {
         final String resource = presentationClass.getSimpleName().replaceAll("^JavaFX", "")
+                                                                 .replaceAll("^JavaFx", "")
                                                                  .replaceAll("Presentation$", "")
                                                                  + ".fxml";
         return createNodeAndDelegate(presentationClass, resource);
@@ -231,7 +248,7 @@ public class JavaFXSafeProxyCreator
           {
             try
               {
-                return new NodeAndDelegate(presentationClass, fxmlResourcePath);
+                return NodeAndDelegate.load(presentationClass, fxmlResourcePath);
               }
             catch (IOException e)
               {
@@ -243,7 +260,7 @@ public class JavaFXSafeProxyCreator
           {
             try
               {
-                nad.set(new NodeAndDelegate(presentationClass, fxmlResourcePath));
+                nad.set(NodeAndDelegate.load(presentationClass, fxmlResourcePath));
               }
             catch (RuntimeException e)
               {

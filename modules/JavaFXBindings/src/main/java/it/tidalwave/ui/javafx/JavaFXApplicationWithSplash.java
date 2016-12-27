@@ -42,6 +42,7 @@ import javafx.application.Platform;
 import com.aquafx_project.AquaFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.NodeAndDelegate;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -55,15 +56,15 @@ public abstract class JavaFXApplicationWithSplash extends Application
   {
     // Don't use Slf4j and its static logger - give Main a chance to initialize things
     private final Logger log = LoggerFactory.getLogger(JavaFXApplicationWithSplash.class);
-    
+
     private final Splash splash = new Splash(this);
-    
+
     @Getter @Setter
     private boolean maximized;
-    
+
     @Getter @Setter
     private boolean fullScreen;
-    
+
     @Getter @Setter
     private boolean fullScreenLocked;
 
@@ -94,14 +95,14 @@ public abstract class JavaFXApplicationWithSplash extends Application
 //        splashStage.setMaximized(maximized); FIXME: doesn't work
         configureFullScreen(stage);
 //        configureFullScreen(splashStage); FIXME: deadlocks JDK 1.8.0_40
-        
+
         if (!maximized && !fullScreen)
           {
             splashStage.centerOnScreen();
           }
 
         splash.show(splashStage);
-        
+
         getExecutor().execute(() -> // FIXME: use JavaFX Worker?
           {
             initializeInBackground();
@@ -109,8 +110,8 @@ public abstract class JavaFXApplicationWithSplash extends Application
               {
                 try
                   {
-                    final Parent application = createParent();
-                    final Scene scene = new Scene(application);
+                    final NodeAndDelegate applicationNad = createParent();
+                    final Scene scene = new Scene((Parent)applicationNad.getNode());
 
                     if (isOSX())
                       {
@@ -119,7 +120,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
 
                     stage.setOnCloseRequest(event -> onClosing());
                     stage.setScene(scene);
-                    onStageCreated(stage);
+                    onStageCreated(stage, applicationNad);
                     stage.show();
                     splashStage.toFront();
                     splash.dismiss();
@@ -137,7 +138,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
      *
      *
      ******************************************************************************************************************/
-    protected void onStageCreated (@Nonnull Stage stage)
+    protected void onStageCreated (final @Nonnull Stage stage, final @Nonnull NodeAndDelegate applicationNad)
       {
       }
 
@@ -147,7 +148,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected abstract Parent createParent()
+    protected abstract NodeAndDelegate createParent()
       throws IOException;
 
     /*******************************************************************************************************************
@@ -200,7 +201,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
       {
         return System.getProperty("os.name").contains("OS X");
       }
-    
+
     /*******************************************************************************************************************
      *
      *
@@ -208,7 +209,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
     private void configureFullScreen (final @Nonnull Stage stage)
       {
         stage.setFullScreen(fullScreen);
-        
+
         if (fullScreen && fullScreenLocked)
           {
             stage.setFullScreenExitHint("");
