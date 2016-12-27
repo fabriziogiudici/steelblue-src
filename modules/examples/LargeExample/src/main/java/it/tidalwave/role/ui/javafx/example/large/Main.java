@@ -78,6 +78,20 @@ public class Main extends JavaFXSpringApplication
      *
      * {@inheritDoc}
      *
+     * This method allows to change some default settings, if needed.
+     *
+     ******************************************************************************************************************/
+    @Override
+    public void init()
+      {
+//        setUseAquaFxOnMacOsX(true);
+        super.init(); // always call super.init()!!
+      }
+
+    /*******************************************************************************************************************
+     *
+     * {@inheritDoc}
+     *
      * This method retrieves a reference to the main controller and boots it.
      *
      ******************************************************************************************************************/

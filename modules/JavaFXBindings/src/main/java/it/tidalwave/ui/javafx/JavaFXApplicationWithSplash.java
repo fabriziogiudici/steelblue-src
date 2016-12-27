@@ -68,6 +68,9 @@ public abstract class JavaFXApplicationWithSplash extends Application
     @Getter @Setter
     private boolean fullScreenLocked;
 
+    @Getter @Setter
+    private boolean useAquaFxOnMacOsX;
+
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
@@ -113,7 +116,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
                     final NodeAndDelegate applicationNad = createParent();
                     final Scene scene = new Scene((Parent)applicationNad.getNode());
 
-                    if (isOSX())
+                    if (useAquaFxOnMacOsX && isOSX())
                       {
                         setMacOSXLookAndFeel(scene);
                       }
@@ -185,11 +188,8 @@ public abstract class JavaFXApplicationWithSplash extends Application
      ******************************************************************************************************************/
     private void setMacOSXLookAndFeel (final @Nonnull Scene scene)
       {
-        if (isOSX())
-          {
-            log.info("Setting Aqua style");
-            AquaFx.style();
-          }
+        log.info("Setting Aqua style");
+        AquaFx.style();
       }
 
     /*******************************************************************************************************************
