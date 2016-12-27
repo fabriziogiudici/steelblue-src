@@ -29,9 +29,11 @@
 package it.tidalwave.role.ui.javafx.impl.dialog;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Executor;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -42,10 +44,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import it.tidalwave.util.ui.UserNotificationWithFeedback;
+import it.tidalwave.util.ui.UserNotificationWithFeedback.Feedback;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
+import it.tidalwave.role.ui.spi.Feedback8;
+import it.tidalwave.util.Callback;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -105,27 +111,12 @@ public class DialogBindings extends DelegateSupport
                 buttonPane.setAlignment(Pos.CENTER_RIGHT);
                 buttonPane.setHgap(8);
 
-                final Button okButton = new Button("Ok");
-                final Button cancelButton = new Button("Cancel");
-
-                if (isOSX())
-                  {
-                    buttonPane.getChildren().add(cancelButton);
-                    buttonPane.getChildren().add(okButton);
-                  }
-                else
-                  {
-                    buttonPane.getChildren().add(okButton);
-                    buttonPane.getChildren().add(cancelButton);
-                  }
+                final Feedback feedback = notification.getFeedback();
+                final boolean hasOnCancel = hasOnCancel(feedback);
+                buttonPane.getChildren().addAll(createButtons(dialogStage, feedback, hasOnCancel));
 
                 vbox.getChildren().add(node);
                 vbox.getChildren().add(buttonPane);
-
-                okButton.setDefaultButton(true);
-                cancelButton.setCancelButton(true);
-
-                final UserNotificationWithFeedback.Feedback feedback = notification.getFeedback();
 
 //                okButton.disableProperty().bind(new PropertyAdapter<>(valid)); // FIXME: doesn't work
 
@@ -133,7 +124,14 @@ public class DialogBindings extends DelegateSupport
                   {
                     try
                       {
-                        feedback.onCancel();
+                        if (hasOnCancel)
+                          {
+                            feedback.onCancel();
+                          }
+                        else
+                          {
+                            feedback.onConfirm();
+                          }
                       }
                     catch (Exception e)
                       {
@@ -141,13 +139,71 @@ public class DialogBindings extends DelegateSupport
                       }
                   }));
 
-                okButton.setOnAction(new DialogCloserHandler(executor, dialogStage, feedback::onConfirm));
-                cancelButton.setOnAction(new DialogCloserHandler(executor, dialogStage, feedback::onCancel));
-
                 dialogStage.setScene(new Scene(vbox));
                 dialogStage.centerOnScreen();
                 dialogStage.showAndWait();
               }
           });
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private List<Button> createButtons (final @Nonnull Stage dialogStage,
+                                        final @Nonnull Feedback feedback,
+                                        final boolean hasOnCancel)
+      {
+        final List<Button> buttons = new ArrayList<>();
+        final Button okButton = new Button("Ok");
+        okButton.setDefaultButton(true);
+        okButton.setOnAction(new DialogCloserHandler(executor, dialogStage, feedback::onConfirm));
+        buttons.add(okButton);
+
+        if (hasOnCancel)
+          {
+            final Button cancelButton = new Button("Cancel");
+            cancelButton.setCancelButton(true);
+            cancelButton.setOnAction(new DialogCloserHandler(executor, dialogStage, feedback::onCancel));
+            buttons.add(cancelButton);
+          }
+
+        if (isOSX())
+          {
+            Collections.reverse(buttons);
+          }
+
+        return buttons;
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    // FIXME: refactor as methods of Feedback and Feedback8
+    private static boolean hasOnCancel (final @Nonnull Feedback feedback)
+      {
+        try
+          {
+            if (feedback instanceof Feedback8)
+              {
+                final Field onCancelField = feedback.getClass().getDeclaredField("onCancel");
+                onCancelField.setAccessible(true);
+                return !onCancelField.get(feedback).equals(Callback.EMPTY);
+              }
+            else
+              {
+                final Method emptyMethod = Feedback.class.getMethod("onCancel");
+                final Method actualMethod = feedback.getClass().getMethod("onCancel");
+                return !actualMethod.equals(emptyMethod);
+              }
+          }
+        catch (NoSuchMethodException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
+          {
+            throw new RuntimeException(e); // never occurs
+          }
       }
   }
