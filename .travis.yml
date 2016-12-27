@@ -6,4 +6,4 @@ addons:
   apt:
     packages:
       - oracle-java8-installer
-script: mvn install -B -Pit.tidalwave-ci-v1
+script: mvn install -B -DskipTests -Pit.tidalwave-ci-v1
