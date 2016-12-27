@@ -61,7 +61,8 @@ public interface JavaFXBinder
   {
     /*******************************************************************************************************************
      *
-     * Sets the main window. This operation must be performed before any other method is called.
+     * Sets the main window. This operation must be performed before any other method is called. This operation is
+     * automatically performed by the SteelBlue runtime.
      *
      * @param   window      the main window
      *
