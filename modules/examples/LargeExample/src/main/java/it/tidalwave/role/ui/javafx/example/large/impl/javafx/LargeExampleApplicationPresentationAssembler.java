@@ -29,23 +29,25 @@
 package it.tidalwave.role.ui.javafx.example.large.impl.javafx;
 
 import javax.annotation.Nonnull;
-import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.layout.BorderPane;
+import javax.inject.Inject;
+import it.tidalwave.role.ui.javafx.ApplicationPresentationAssembler;
+import it.tidalwave.role.ui.javafx.example.large.mainscreen.impl.javafx.JavaFXMainScreenPresentation;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: $
+ * @version $Id: Class.java,v 631568052e17 2013/02/19 15:45:02 fabrizio $
  *
  **********************************************************************************************************************/
-public class JavaFXApplicationPresentationDelegate
+public class LargeExampleApplicationPresentationAssembler
+        implements ApplicationPresentationAssembler<JavaFXApplicationPresentationDelegate>
   {
-    @FXML
-    private BorderPane pnMainPane;
+    @Inject
+    private JavaFXMainScreenPresentation mainScreenPresentation;
 
-    public void assemble (final @Nonnull Node node)
+    @Override
+    public void assemble (final @Nonnull JavaFXApplicationPresentationDelegate delegate)
       {
-        pnMainPane.getChildren().setAll(node);
+        delegate.assemble(mainScreenPresentation.getNad().getNode());
       }
   }

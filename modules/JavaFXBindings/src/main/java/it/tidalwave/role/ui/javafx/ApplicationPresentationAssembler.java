@@ -26,31 +26,30 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large.impl.javafx;
+package it.tidalwave.role.ui.javafx;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
-import javafx.application.Platform;
-import javafx.scene.Node;
-import javafx.scene.layout.BorderPane;
-import lombok.Getter;
-import lombok.Setter;
 
 /***********************************************************************************************************************
  *
+ * Implementation of this interface are called after Spring and JavaFX have been initialised. The purpose of those
+ * implementations is to assemble the parts of the application presentation that might have been separately created.
+ *
+ * @param <DELEGATE>
+ *
+ * @since   1.0-ALPHA-13
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
  * @version $Id: $
  *
  **********************************************************************************************************************/
-public class ApplicationPresentationController
+public interface ApplicationPresentationAssembler<DELEGATE>
   {
-    @Getter @Setter
-    private static BorderPane contentPane;
-
-    public static void setContent (final @Nonnull Node content)
-      {
-        Objects.requireNonNull(contentPane, "contentPane");
-        Objects.requireNonNull(content, "content");
-        Platform.runLater(() -> contentPane.getChildren().add(content));
-      }
+    /*******************************************************************************************************************
+     *
+     * Assemble the application presentation. This method is called in the JavaFX thread.
+     *
+     * @param   delegate    the JavaFX delegate of the main UI
+     *
+     ******************************************************************************************************************/
+    public void assemble (@Nonnull DELEGATE delegate);
   }

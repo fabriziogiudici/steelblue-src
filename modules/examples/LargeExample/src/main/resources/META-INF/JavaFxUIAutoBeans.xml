@@ -72,4 +72,6 @@
 
     <bean class="it.tidalwave.role.ui.javafx.example.large.mainscreen.impl.javafx.JavaFXMainScreenPresentation" />
 
+    <bean class="it.tidalwave.role.ui.javafx.example.large.impl.javafx.LargeExampleApplicationPresentationAssembler" />
+
 </beans>

@@ -37,8 +37,10 @@ import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.io.IOException;
 import javafx.stage.Stage;
+import javafx.application.Platform;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import it.tidalwave.role.ui.javafx.ApplicationPresentationAssembler;
 import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.NodeAndDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,24 +121,24 @@ public class JavaFXSpringApplication extends JavaFXApplicationWithSplash
      ******************************************************************************************************************/
     @Override
     protected void onStageCreated (final @Nonnull Stage stage,
-                                   final @Nonnull JavaFXSafeProxyCreator.NodeAndDelegate applicationNad)
+                                   final @Nonnull NodeAndDelegate applicationNad)
       {
+        assert Platform.isFxApplicationThread();
         JavaFXSafeProxyCreator.getJavaFxBinder().setMainWindow(stage);
-//        applicationContext.getBean(JavaFXBinder.class).setMainWindow(stage);
-        Executors.newSingleThreadExecutor().execute(() -> onStageCreated(applicationContext, applicationNad));
+        runApplicationAssemblers(applicationNad);
+        Executors.newSingleThreadExecutor().execute(() -> onStageCreated(applicationContext));
       }
 
     /*******************************************************************************************************************
      *
      * Invoked when the {@link Stage} is created and the {@link ApplicationContext} has been initialized. Typically
      * the main class overrides this, retrieves a reference to the main controller and boots it.
+     * This method is executed in a background thread.
      *
      * @param   applicationContext  the application context
-     * @param   applicationNad      the {@code NodeAndDelegate} for the main UI resource
      *
      ******************************************************************************************************************/
-    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext,
-                                   final @Nonnull JavaFXSafeProxyCreator.NodeAndDelegate applicationNad)
+    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
       {
       }
 
@@ -149,6 +151,18 @@ public class JavaFXSpringApplication extends JavaFXApplicationWithSplash
     protected void onClosing()
       {
         applicationContext.close();
+      }
+
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    private void runApplicationAssemblers (final @Nonnull NodeAndDelegate applicationNad)
+      {
+        applicationContext.getBeansOfType(ApplicationPresentationAssembler.class).values()
+                .stream()
+                .forEach(a -> a.assemble(applicationNad.getDelegate()));
       }
 
     /*******************************************************************************************************************

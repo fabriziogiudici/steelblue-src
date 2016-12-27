@@ -30,9 +30,8 @@ package it.tidalwave.role.ui.javafx.example.large.mainscreen.impl.javafx;
 
 import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.NodeAndDelegate;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation;
-import it.tidalwave.role.ui.javafx.example.large.impl.javafx.ApplicationPresentationController;
 import lombok.Delegate;
-import static it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.createNodeAndDelegate;
+import lombok.Getter;
 import static it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.createNodeAndDelegate;
 
 /***********************************************************************************************************************
@@ -57,6 +56,7 @@ public class JavaFXMainScreenPresentation implements MainScreenPresentation
 
     // NoteAndDelegate contains both the JavaFX {@code Node} and its controller (delegate). The delegate is wrapped
     // by a decorator that makes sure that all methods are invoked in the JavaFX thread.
+    @Getter
     private final NodeAndDelegate nad = createNodeAndDelegate(getClass());
 
     // Typically almost all the methods are delegated, with the exception of the one that brings the presentation into
@@ -67,6 +67,5 @@ public class JavaFXMainScreenPresentation implements MainScreenPresentation
     @Override
     public void showUp()
       {
-        ApplicationPresentationController.setContent(nad.getNode());
       }
   }
