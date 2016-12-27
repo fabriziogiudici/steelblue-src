@@ -28,6 +28,7 @@
  */
 package it.tidalwave.role.ui.javafx.impl.dialog;
 
+import it.tidalwave.util.Callback;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -69,7 +70,7 @@ public class DialogCloserHandlerTest
         error = null;
         doSomethingCalled = false;
 
-        final DialogCloserHandler.Callback callback = () ->
+        final Callback callback = () ->
           {
             try
               {

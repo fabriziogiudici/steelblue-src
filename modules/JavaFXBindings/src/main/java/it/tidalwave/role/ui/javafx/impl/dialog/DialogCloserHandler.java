@@ -28,6 +28,7 @@
  */
 package it.tidalwave.role.ui.javafx.impl.dialog;
 
+import it.tidalwave.util.Callback;
 import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;
 import javafx.event.ActionEvent;
@@ -48,12 +49,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor @Slf4j
 final class DialogCloserHandler implements EventHandler<ActionEvent>
   {
-    static interface Callback
-      {
-        public void doSomething()
-          throws Exception;
-      }
-
     @Nonnull
     private final Executor executor;
 
@@ -71,9 +66,9 @@ final class DialogCloserHandler implements EventHandler<ActionEvent>
           {
             try
               {
-                callable.doSomething();
+                callable.call();
               }
-            catch (Exception e)
+            catch (Throwable e)
               {
                 log.error("", e);
               }
