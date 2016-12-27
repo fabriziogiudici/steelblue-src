@@ -42,7 +42,7 @@ import lombok.Setter;
  * @version $Id: $
  *
  **********************************************************************************************************************/
-public class FlowController
+public class ApplicationPresentationController
   {
     @Getter @Setter
     private static BorderPane contentPane;

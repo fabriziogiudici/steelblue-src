@@ -32,7 +32,6 @@ import javax.annotation.Nonnull;
 import javafx.application.Platform;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.ui.javafx.JavaFXSpringApplication;
-import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
 
 /***********************************************************************************************************************
@@ -96,8 +95,7 @@ public class Main extends JavaFXSpringApplication
      *
      ******************************************************************************************************************/
     @Override
-    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext,
-                                   final @Nonnull JavaFXSafeProxyCreator.NodeAndDelegate applicationNad)
+    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
       {
         applicationContext.getBean(MainScreenPresentationControl.class).start();
       }

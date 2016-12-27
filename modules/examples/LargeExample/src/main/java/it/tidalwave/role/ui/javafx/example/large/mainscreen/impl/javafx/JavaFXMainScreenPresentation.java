@@ -30,8 +30,9 @@ package it.tidalwave.role.ui.javafx.example.large.mainscreen.impl.javafx;
 
 import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.NodeAndDelegate;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation;
-import it.tidalwave.role.ui.javafx.example.large.impl.javafx.FlowController;
+import it.tidalwave.role.ui.javafx.example.large.impl.javafx.ApplicationPresentationController;
 import lombok.Delegate;
+import static it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.createNodeAndDelegate;
 import static it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.createNodeAndDelegate;
 
 /***********************************************************************************************************************
@@ -66,6 +67,6 @@ public class JavaFXMainScreenPresentation implements MainScreenPresentation
     @Override
     public void showUp()
       {
-        FlowController.setContent(nad.getNode());
+        ApplicationPresentationController.setContent(nad.getNode());
       }
   }

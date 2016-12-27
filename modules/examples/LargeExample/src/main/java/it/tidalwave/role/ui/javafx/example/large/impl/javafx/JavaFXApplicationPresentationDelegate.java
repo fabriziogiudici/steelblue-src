@@ -45,6 +45,6 @@ public class JavaFXApplicationPresentationDelegate
     @FXML
     public void initialize()
       {
-        FlowController.setContentPane(pnMainPane);
+        ApplicationPresentationController.setContentPane(pnMainPane);
       }
   }
