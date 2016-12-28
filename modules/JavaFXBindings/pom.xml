@@ -3,10 +3,12 @@
   #%L
   *********************************************************************************************************************
 
-  NorthernWind
+  SteelBlue
+  http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
   %%
-  Copyright (C) 2013 - 2014 Tidalwave s.a.s. (http://tidalwave.it)
+  Copyright (C) 2015 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
   %%
+
   *********************************************************************************************************************
 
   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with

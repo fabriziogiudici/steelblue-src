@@ -3,8 +3,8 @@
   #%L
   *********************************************************************************************************************
 
-  blueMarine2 - Semantic Media Center
-  http://bluemarine2.tidalwave.it - git clone https://tidalwave@bitbucket.org/tidalwave/bluemarine2-src.git
+  SteelBlue
+  http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
   %%
   Copyright (C) 2015 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
   %%
@@ -27,7 +27,6 @@
 *********************************************************************************************************************
 #L%
 -->
-
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
