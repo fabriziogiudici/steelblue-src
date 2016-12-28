@@ -5,7 +5,7 @@
  * SteelBlue
  * http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
  * %%
- * Copyright (C) 2015 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2015 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  *
  * *********************************************************************************************************************
@@ -46,12 +46,12 @@ import it.tidalwave.role.ui.spi.DefaultPresentationModel;
  * @version $Id$
  *
  **********************************************************************************************************************/
-class TreeTableAggregateAdapter implements Callback<TreeTableColumn.CellDataFeatures<PresentationModel, PresentationModel>, ObservableValue<PresentationModel>> 
+class TreeTableAggregateAdapter implements Callback<TreeTableColumn.CellDataFeatures<PresentationModel, PresentationModel>, ObservableValue<PresentationModel>>
   {
     private final static PresentationModel EMPTY = new DefaultPresentationModel("???", new DefaultDisplayable("???"));
-    
+
     @Override
-    public ObservableValue<PresentationModel> call(TreeTableColumn.CellDataFeatures<PresentationModel, PresentationModel> cell) 
+    public ObservableValue<PresentationModel> call(TreeTableColumn.CellDataFeatures<PresentationModel, PresentationModel> cell)
       {
         return new ObservableValueBase<PresentationModel>() // FIXME: use a concrete specialization?
           {

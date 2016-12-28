@@ -5,7 +5,7 @@
  * SteelBlue
  * http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
  * %%
- * Copyright (C) 2015 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2015 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  *
  * *********************************************************************************************************************
@@ -80,7 +80,7 @@ public class StackPaneSelector // FIXME: rename, introduce interface
     /*******************************************************************************************************************
      *
      * Sets the given {@link Node} as the shown one in the area where it is contained.
-     * 
+     *
      * @param   node        the {@code Node}
      *
      ******************************************************************************************************************/
