@@ -15,11 +15,35 @@
     <version>1.0-ALPHA-14-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SteelBlue</name>
+    <url>http://steelblue.tidalwave.it</url>
+    <inceptionYear>2015</inceptionYear>
     <description>
 SteelBlue contains the JavaFX implementation of a set of UI-related DCI roles defined in the project
 TheseFoolishThings. It allows to design rich client applications in a fashion that is mostly independent of the
 UI technology so the code depending on it is segregated in a confined section.
     </description>
+
+    <repositories>
+        <repository>
+            <id>snapshots-oss.sonatype.org</id>
+            <name>Sonatype Snapshots Repository</name>
+            <url>http://oss.sonatype.org/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
+    <scm>
+        <connection>scm:git:${scm.repo.readonly.url}</connection>
+        <developerConnection>scm:git:${scm.repo.effective.url}</developerConnection>
+        <url>${scm.repo.browse.url}</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <scm.repo.url>git@bitbucket.org:tidalwave/steelblue-src.git</scm.repo.url>
@@ -38,23 +62,6 @@ UI technology so the code depending on it is segregated in a confined section.
 
         <tft.clirr.skip>true</tft.clirr.skip> <!-- FIXME Clirr makes the build fail -->
     </properties>
-
-    <url>http://steelblue.tidalwave.it</url>
-    <inceptionYear>2015</inceptionYear>
-
-    <repositories>
-        <repository>
-            <id>snapshots-oss.sonatype.org</id>
-            <name>Sonatype Snapshots Repository</name>
-            <url>http://oss.sonatype.org/content/repositories/snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <dependencyManagement>
         <dependencies>
@@ -75,14 +82,6 @@ UI technology so the code depending on it is segregated in a confined section.
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
-    <scm>
-        <connection>scm:git:${scm.repo.readonly.url}</connection>
-        <developerConnection>scm:git:${scm.repo.effective.url}</developerConnection>
-        <url>${scm.repo.browse.url}</url>
-        <tag>HEAD</tag>
-    </scm>
 
     <modules>
         <module>modules</module>
