@@ -5,7 +5,7 @@
  * SteelBlue
  * http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
  * %%
- * Copyright (C) 2015 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2015 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  *
  * *********************************************************************************************************************
@@ -55,7 +55,7 @@ public class ChangeListenerSelectableAdapter implements ChangeListener<Presentat
     public void changed (final @Nonnull ObservableValue<? extends PresentationModel> ov,
                          final @Nonnull PresentationModel oldItem,
                          final @CheckForNull PresentationModel item)
-      { 
+      {
         if (item != null) // no selection
           {
             executor.execute(() ->

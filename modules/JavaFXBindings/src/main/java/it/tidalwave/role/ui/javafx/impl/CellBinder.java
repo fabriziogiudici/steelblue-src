@@ -5,7 +5,7 @@
  * SteelBlue
  * http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
  * %%
- * Copyright (C) 2015 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2015 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  *
  * *********************************************************************************************************************
@@ -35,9 +35,9 @@ import it.tidalwave.util.As;
 
 /***********************************************************************************************************************
  *
- * A service that binds text, graphic, default action, context menu and css style to a {@link Cell} extracting data from 
+ * A service that binds text, graphic, default action, context menu and css style to a {@link Cell} extracting data from
  * an {@link As}-capable item.
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *

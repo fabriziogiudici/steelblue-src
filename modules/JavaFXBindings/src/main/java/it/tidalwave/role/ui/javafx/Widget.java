@@ -5,7 +5,7 @@
  * SteelBlue
  * http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
  * %%
- * Copyright (C) 2015 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2015 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  *
  * *********************************************************************************************************************
@@ -35,7 +35,7 @@ import java.lang.annotation.RetentionPolicy;
 /***********************************************************************************************************************
  *
  * @deprecated  Use @FXML instead
- * 
+ *
  * @author  Fabrizio Giudici
  * @version $Id$
  *

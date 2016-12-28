@@ -5,7 +5,7 @@
  * SteelBlue
  * http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
  * %%
- * Copyright (C) 2015 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2015 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  *
  * *********************************************************************************************************************
@@ -42,7 +42,7 @@ import lombok.ToString;
 /***********************************************************************************************************************
  *
  * A decorator for {@link PresentationModel} that also searches for roles in a specified delegate as a fallback.
- * 
+ *
  * @stereotype Decorator
  *
  * @author  Fabrizio Giudici
@@ -54,16 +54,16 @@ public class PresentationModelAsDelegateDecorator implements PresentationModel
   {
     @Delegate(excludes = As.class) @Nonnull
     private final PresentationModel pmDelegate;
-    
-    
+
+
     private final As asDelegate;
 
     @Override @Nonnull
-    public <T> T as (final @Nonnull Class<T> type) 
+    public <T> T as (final @Nonnull Class<T> type)
       {
         try
           {
-            return pmDelegate.as(type);  
+            return pmDelegate.as(type);
           }
         catch (AsException e)
           {
@@ -78,12 +78,12 @@ public class PresentationModelAsDelegateDecorator implements PresentationModel
       }
 
     @Override @Nonnull
-    public <T> Collection<T> asMany (final @Nonnull Class<T> type) 
+    public <T> Collection<T> asMany (final @Nonnull Class<T> type)
       {
         final List<T> results = new ArrayList<>();
         results.addAll(pmDelegate.asMany(type));
         results.addAll(asDelegate.asMany(type));
-        
+
         return results;
       }
   }

@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  *********************************************************************************************************************
+
+  SteelBlue
+  http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
+  %%
+  Copyright (C) 2015 - 2016 Tidalwave s.a.s. (http://tidalwave.it)
+  %%
+
+  *********************************************************************************************************************
+
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+  the License. You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations under the License.
+
+  *********************************************************************************************************************
+
+  $Id$
+
+*********************************************************************************************************************
+#L%
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -15,11 +43,35 @@
     <version>1.0-ALPHA-14-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SteelBlue</name>
+    <url>http://steelblue.tidalwave.it</url>
+    <inceptionYear>2015</inceptionYear>
     <description>
 SteelBlue contains the JavaFX implementation of a set of UI-related DCI roles defined in the project
 TheseFoolishThings. It allows to design rich client applications in a fashion that is mostly independent of the
 UI technology so the code depending on it is segregated in a confined section.
     </description>
+
+    <repositories>
+        <repository>
+            <id>snapshots-oss.sonatype.org</id>
+            <name>Sonatype Snapshots Repository</name>
+            <url>http://oss.sonatype.org/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
+    <scm>
+        <connection>scm:git:${scm.repo.readonly.url}</connection>
+        <developerConnection>scm:git:${scm.repo.effective.url}</developerConnection>
+        <url>${scm.repo.browse.url}</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <scm.repo.url>git@bitbucket.org:tidalwave/steelblue-src.git</scm.repo.url>
@@ -38,23 +90,6 @@ UI technology so the code depending on it is segregated in a confined section.
 
         <tft.clirr.skip>true</tft.clirr.skip> <!-- FIXME Clirr makes the build fail -->
     </properties>
-
-    <url>http://steelblue.tidalwave.it</url>
-    <inceptionYear>2015</inceptionYear>
-
-    <repositories>
-        <repository>
-            <id>snapshots-oss.sonatype.org</id>
-            <name>Sonatype Snapshots Repository</name>
-            <url>http://oss.sonatype.org/content/repositories/snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <dependencyManagement>
         <dependencies>
@@ -75,14 +110,6 @@ UI technology so the code depending on it is segregated in a confined section.
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
-    <scm>
-        <connection>scm:git:${scm.repo.readonly.url}</connection>
-        <developerConnection>scm:git:${scm.repo.effective.url}</developerConnection>
-        <url>${scm.repo.browse.url}</url>
-        <tag>HEAD</tag>
-    </scm>
 
     <modules>
         <module>modules</module>
