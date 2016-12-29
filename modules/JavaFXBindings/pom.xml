@@ -81,13 +81,6 @@
             <artifactId>aquafx</artifactId>
         </dependency>
 
-        <!-- For @VisibleForTesting -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- TEST DEPENDENCIES -->
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>

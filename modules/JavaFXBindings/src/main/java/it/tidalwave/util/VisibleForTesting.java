@@ -26,34 +26,17 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl.treetable;
+package it.tidalwave.util;
 
-import javax.annotation.CheckForNull;
-import javax.inject.Inject;
-import javafx.scene.control.TreeTableCell;
-import org.springframework.beans.factory.annotation.Configurable;
-import it.tidalwave.util.As;
-import it.tidalwave.util.VisibleForTesting;
-import it.tidalwave.role.ui.javafx.impl.CellBinder;
+import java.lang.annotation.Documented;
 
 /***********************************************************************************************************************
  *
- * A specialisation of {@link TreeTableCell} which binds to an {@link As}-capable item.
- *
- * @author  Fabrizio Giudici
- * @version $Id$
+ * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @version $Id: $
  *
  **********************************************************************************************************************/
-@Configurable
-class AsObjectTreeTableCell<T extends As> extends TreeTableCell<T, T>
+@Documented
+public @interface VisibleForTesting
   {
-    @Inject
-    @VisibleForTesting CellBinder cellBinder;
-
-    @Override
-    public void updateItem (final @CheckForNull T item, final boolean empty)
-      {
-        super.updateItem(item, empty);
-        cellBinder.bind(this, item, empty);
-      }
   }

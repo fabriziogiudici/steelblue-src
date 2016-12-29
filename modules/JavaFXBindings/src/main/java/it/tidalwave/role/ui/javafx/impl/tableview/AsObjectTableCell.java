@@ -31,9 +31,9 @@ package it.tidalwave.role.ui.javafx.impl.tableview;
 import javax.annotation.CheckForNull;
 import javax.inject.Inject;
 import javafx.scene.control.cell.TextFieldTableCell;
-import com.google.common.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
+import it.tidalwave.util.VisibleForTesting;
 import it.tidalwave.role.ui.javafx.impl.CellBinder;
 
 /***********************************************************************************************************************
