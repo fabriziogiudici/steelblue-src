@@ -29,20 +29,29 @@
 package it.tidalwave.role.ui.javafx.impl;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Objects;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicInteger;
 import javafx.beans.property.Property;
 import javafx.beans.binding.BooleanExpression;
-import javafx.stage.Window;
 import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
+import javafx.stage.Window;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.application.Platform;
 import it.tidalwave.util.As;
 import it.tidalwave.util.AsException;
@@ -63,21 +72,12 @@ import it.tidalwave.role.ui.javafx.impl.util.PropertyAdapter;
 import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
+import static java.util.Objects.*;
 import static java.util.stream.Collectors.toList;
 import static it.tidalwave.role.Displayable.Displayable;
 import static it.tidalwave.role.SimpleComposite.SimpleComposite;
 import static it.tidalwave.role.ui.Styleable.Styleable;
 import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
-import java.util.Collection;
-import java.util.Objects;
-import static java.util.Objects.requireNonNull;
-import java.util.concurrent.atomic.AtomicInteger;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
-import javafx.scene.control.Button;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 
 /***********************************************************************************************************************
  *
