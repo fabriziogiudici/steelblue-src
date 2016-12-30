@@ -48,6 +48,7 @@ import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.UserActionProvider;
+import it.tidalwave.role.ui.javafx.impl.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import it.tidalwave.role.ui.javafx.impl.common.AsObjectListCell;
 import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
@@ -65,8 +66,10 @@ import static it.tidalwave.role.SimpleComposite.SimpleComposite;
 @Slf4j
 public class ComboBoxBindings extends DelegateSupport
   {
-    private final Callback<ListView<PresentationModel>, ListCell<PresentationModel>> cellFactory =
-            (comboBox) -> new AsObjectListCell<>();
+    @Nonnull
+    private final CellBinder cellBinder;
+
+    private final Callback<ListView<PresentationModel>, ListCell<PresentationModel>> cellFactory;
 
     private final ChangeListener<PresentationModel> changeListener = new ChangeListenerSelectableAdapter(executor);
 
@@ -94,9 +97,11 @@ public class ComboBoxBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    public ComboBoxBindings (final @Nonnull Executor executor)
+    public ComboBoxBindings (final @Nonnull Executor executor, final @Nonnull CellBinder cellBinder)
       {
         super(executor);
+        this.cellBinder = cellBinder;
+        cellFactory = comboBox -> new AsObjectListCell<>(cellBinder);
       }
 
     /*******************************************************************************************************************
@@ -109,7 +114,7 @@ public class ComboBoxBindings extends DelegateSupport
                       final @Nonnull Optional<Runnable> callback)
       {
         comboBox.setCellFactory(cellFactory);
-        comboBox.setButtonCell(new AsObjectListCell<>());
+        comboBox.setButtonCell(new AsObjectListCell<>(cellBinder));
         comboBox.setOnAction(eventHandler);
 
         // FIXME: WEAK LISTENERS

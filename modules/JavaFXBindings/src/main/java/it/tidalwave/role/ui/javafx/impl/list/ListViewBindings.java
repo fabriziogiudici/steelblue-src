@@ -42,6 +42,7 @@ import javafx.application.Platform;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.javafx.impl.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.DefaultCellBinder;
 import it.tidalwave.role.ui.javafx.impl.RoleBag;
 import it.tidalwave.role.ui.javafx.impl.common.AsObjectListCell;
@@ -62,8 +63,9 @@ import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
 @Slf4j
 public class ListViewBindings extends DelegateSupport
   {
-    private final Callback<ListView<PresentationModel>, ListCell<PresentationModel>> cellFactory =
-            (listView) -> new AsObjectListCell<>();
+//    private final CellBinder cellBinder;
+//
+    private final Callback<ListView<PresentationModel>, ListCell<PresentationModel>> cellFactory;
 
     private final ChangeListener<PresentationModel> changeListener = new ChangeListenerSelectableAdapter(executor);
 
@@ -72,9 +74,10 @@ public class ListViewBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    public ListViewBindings (final @Nonnull Executor executor)
+    public ListViewBindings (final @Nonnull Executor executor, final @Nonnull CellBinder cellBinder)
       {
         super(executor);
+        cellFactory = listView -> new AsObjectListCell<>(cellBinder);
       }
 
     /*******************************************************************************************************************

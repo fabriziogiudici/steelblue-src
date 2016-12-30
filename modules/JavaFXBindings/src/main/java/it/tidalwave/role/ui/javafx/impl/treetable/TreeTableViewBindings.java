@@ -44,6 +44,7 @@ import it.tidalwave.util.AsException;
 import it.tidalwave.util.VisibleForTesting;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.javafx.impl.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import it.tidalwave.role.ui.javafx.impl.tree.ObsoletePresentationModelDisposer;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +60,9 @@ import static it.tidalwave.role.ui.Selectable.Selectable;
 @Slf4j
 public class TreeTableViewBindings extends DelegateSupport
   {
+    @Nonnull
+    private final CellBinder cellBinder;
+
     private final ObsoletePresentationModelDisposer presentationModelDisposer = new ObsoletePresentationModelDisposer();
 
     /*******************************************************************************************************************
@@ -66,9 +70,10 @@ public class TreeTableViewBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    public TreeTableViewBindings (final @Nonnull Executor executor)
+    public TreeTableViewBindings (final @Nonnull Executor executor, final @Nonnull CellBinder cellBinder)
       {
         super(executor);
+        this.cellBinder = cellBinder;
       }
 
     /*******************************************************************************************************************
@@ -114,7 +119,7 @@ public class TreeTableViewBindings extends DelegateSupport
         for (final TreeTableColumn<PresentationModel, PresentationModel> column : columns)
           {
             column.setCellValueFactory(new TreeTableAggregateAdapter());
-            column.setCellFactory(c -> new AsObjectTreeTableCell());
+            column.setCellFactory(c -> new AsObjectTreeTableCell(cellBinder));
           }
 
         final ReadOnlyObjectProperty<TreeItem<PresentationModel>> selectedItemProperty =

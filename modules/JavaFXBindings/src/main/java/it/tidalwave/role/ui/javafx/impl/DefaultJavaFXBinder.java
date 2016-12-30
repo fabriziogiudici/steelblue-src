@@ -118,6 +118,8 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     @Delegate(excludes = Exclusions.class)
     private final FileChooserBindings fileChooserBindings;
 
+    private final CellBinder cellBinder;
+
     /*******************************************************************************************************************
      *
      *
@@ -126,11 +128,12 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     public DefaultJavaFXBinder (final @Nonnull Executor executor)
       {
         this.executor = executor;
-        comboBoxBindings = new ComboBoxBindings(executor);
-        treeItemBindings = new TreeViewBindings(executor);
-        tableViewBindings = new TableViewBindings(executor);
-        treeTableViewBindings = new TreeTableViewBindings(executor);
-        listViewBindings = new ListViewBindings(executor);
+        cellBinder = new DefaultCellBinder(executor);
+        comboBoxBindings = new ComboBoxBindings(executor, cellBinder);
+        treeItemBindings = new TreeViewBindings(executor, cellBinder);
+        tableViewBindings = new TableViewBindings(executor, cellBinder);
+        treeTableViewBindings = new TreeTableViewBindings(executor, cellBinder);
+        listViewBindings = new ListViewBindings(executor, cellBinder);
         dialogBindings = new DialogBindings(executor);
         fileChooserBindings = new FileChooserBindings(executor);
       }

@@ -44,6 +44,7 @@ import it.tidalwave.util.AsException;
 import it.tidalwave.util.VisibleForTesting;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.javafx.impl.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.SimpleComposite.*;
@@ -58,6 +59,11 @@ import static it.tidalwave.role.ui.Selectable.Selectable;
 @Slf4j
 public class TreeViewBindings extends DelegateSupport
   {
+//    @Nonnull
+//    private final CellBinder cellBinder;
+//
+    @VisibleForTesting final Callback<TreeView<PresentationModel>, TreeCell<PresentationModel>> treeCellFactory;
+
     private final ObsoletePresentationModelDisposer presentationModelDisposer = new ObsoletePresentationModelDisposer();
 
     /*******************************************************************************************************************
@@ -65,18 +71,12 @@ public class TreeViewBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    public TreeViewBindings (final @Nonnull Executor executor)
+    public TreeViewBindings (final @Nonnull Executor executor, final @Nonnull CellBinder cellBinder)
       {
         super(executor);
+//        this.cellBinder = cellBinder;
+        treeCellFactory = treeView -> new AsObjectTreeCell<>(cellBinder);
       }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @VisibleForTesting final Callback<TreeView<PresentationModel>, TreeCell<PresentationModel>> treeCellFactory =
-            treeView -> new AsObjectTreeCell<>();
 
     /*******************************************************************************************************************
      *

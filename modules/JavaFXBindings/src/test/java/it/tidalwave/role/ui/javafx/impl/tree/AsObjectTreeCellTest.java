@@ -59,8 +59,7 @@ public class AsObjectTreeCellTest
     public void setupFixture()
       {
         cellBinder = mock(CellBinder.class);
-        underTest = new AsObjectTreeCell<>();
-        underTest.cellBinder = cellBinder;
+        underTest = new AsObjectTreeCell<>(cellBinder);
       }
 
     /*******************************************************************************************************************

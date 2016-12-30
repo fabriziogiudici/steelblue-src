@@ -29,12 +29,11 @@
 package it.tidalwave.role.ui.javafx.impl.common;
 
 import javax.annotation.CheckForNull;
-import javax.inject.Inject;
+import javax.annotation.Nonnull;
 import javafx.scene.control.cell.TextFieldListCell;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
-import it.tidalwave.util.VisibleForTesting;
 import it.tidalwave.role.ui.javafx.impl.CellBinder;
+import lombok.AllArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -44,11 +43,11 @@ import it.tidalwave.role.ui.javafx.impl.CellBinder;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable
+@AllArgsConstructor
 public class AsObjectListCell<T extends As> extends TextFieldListCell<T>
   {
-    @Inject
-    @VisibleForTesting CellBinder cellBinder;
+    @Nonnull
+    private final CellBinder cellBinder;
 
     @Override
     public void updateItem (final @CheckForNull T item, final boolean empty)

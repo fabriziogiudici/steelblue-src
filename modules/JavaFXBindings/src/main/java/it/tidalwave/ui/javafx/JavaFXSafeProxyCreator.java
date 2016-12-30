@@ -29,8 +29,6 @@
 package it.tidalwave.ui.javafx;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
-import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
