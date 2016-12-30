@@ -39,10 +39,11 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.application.Platform;
-import com.google.common.annotations.VisibleForTesting;
 import it.tidalwave.util.AsException;
+import it.tidalwave.util.VisibleForTesting;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.javafx.impl.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import lombok.extern.slf4j.Slf4j;
 import static javafx.collections.FXCollections.observableArrayList;
@@ -58,8 +59,11 @@ import static it.tidalwave.role.SimpleComposite.SimpleComposite;
 @Slf4j
 public class TableViewBindings extends DelegateSupport
   {
+    @Nonnull
+    private final CellBinder cellBinder;
+
     private Callback<TableColumn<PresentationModel, PresentationModel>,
-                     TableCell<PresentationModel, PresentationModel>> cellFactory = c -> new AsObjectTableCell<>();
+                     TableCell<PresentationModel, PresentationModel>> cellFactory;
 
     /*******************************************************************************************************************
      *
@@ -93,9 +97,11 @@ public class TableViewBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    public TableViewBindings (final @Nonnull Executor executor)
+    public TableViewBindings (final @Nonnull Executor executor, final @Nonnull CellBinder cellBinder)
       {
         super(executor);
+        this.cellBinder = cellBinder;
+        cellFactory = tableView -> new AsObjectTableCell<>(cellBinder);
       }
 
     /*******************************************************************************************************************

@@ -29,12 +29,10 @@
 package it.tidalwave.role.ui.javafx.impl.tree;
 
 import javax.annotation.CheckForNull;
-import javax.inject.Inject;
 import javafx.scene.control.cell.TextFieldTreeCell;
-import com.google.common.annotations.VisibleForTesting;
-import org.springframework.beans.factory.annotation.Configurable;
 import it.tidalwave.util.As;
 import it.tidalwave.role.ui.javafx.impl.CellBinder;
+import lombok.AllArgsConstructor;
 
 /***********************************************************************************************************************
  *
@@ -44,11 +42,10 @@ import it.tidalwave.role.ui.javafx.impl.CellBinder;
  * @version $Id$
  *
  **********************************************************************************************************************/
-@Configurable
+@AllArgsConstructor
 public class AsObjectTreeCell<T extends As> extends TextFieldTreeCell<T>
   {
-    @Inject
-    @VisibleForTesting CellBinder cellBinder;
+    private final CellBinder cellBinder;
 
     @Override
     public void updateItem (final @CheckForNull T item, final boolean empty)

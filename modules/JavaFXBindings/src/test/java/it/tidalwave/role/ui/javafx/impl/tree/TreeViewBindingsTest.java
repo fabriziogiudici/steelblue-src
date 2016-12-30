@@ -38,6 +38,8 @@ import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.util.spi.EmptyAsDelegateProvider;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.Selectable;
+import it.tidalwave.role.ui.javafx.impl.CellBinder;
+import it.tidalwave.role.ui.javafx.impl.DefaultCellBinder;
 import it.tidalwave.role.ui.spi.DefaultPresentationModel;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -67,7 +69,8 @@ public class TreeViewBindingsTest
         AsDelegateProvider.Locator.set(new EmptyAsDelegateProvider());
         ContextManager.Locator.set(new DefaultContextManagerProvider());
         executor = Executors.newSingleThreadExecutor();
-        fixture = new TreeViewBindings(executor);
+        final CellBinder cellBinder = new DefaultCellBinder(executor);
+        fixture = new TreeViewBindings(executor, cellBinder);
       }
 
     /*******************************************************************************************************************
