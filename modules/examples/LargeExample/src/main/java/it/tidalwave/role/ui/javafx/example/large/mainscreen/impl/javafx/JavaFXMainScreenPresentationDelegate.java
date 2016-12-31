@@ -107,19 +107,14 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
      *
      ******************************************************************************************************************/
     @Override
-    public void bind (final @Nonnull UserAction action,
-                      final @Nonnull UserAction actionDialogOk,
-                      final @Nonnull UserAction actionDialogCancelOk,
-                      final @Nonnull UserAction actionPickFile,
-                      final @Nonnull UserAction actionPickDirectory,
-                      final @Nonnull FormFields fields)
+    public void bind (final @Nonnull Bindings bindings)
       {
-        binder.bind(btButton, action);
-        binder.bind(btDialogOk, actionDialogOk);
-        binder.bind(btDialogOkCancel, actionDialogCancelOk);
-        binder.bind(btPickFile, actionPickFile);
-        binder.bind(btPickDirectory, actionPickDirectory);
-        binder.bindBidirectionally(tfTextField, fields.textProperty, fields.booleanProperty);
+        binder.bind(btButton, bindings.buttonAction);
+        binder.bind(btDialogOk, bindings.actionDialogOk);
+        binder.bind(btDialogOkCancel, bindings.actionDialogCancelOk);
+        binder.bind(btPickFile, bindings.actionPickFile);
+        binder.bind(btPickDirectory, bindings.actionPickDirectory);
+        binder.bindBidirectionally(tfTextField, bindings.textProperty, bindings.booleanProperty);
       }
 
     /*******************************************************************************************************************

@@ -48,10 +48,11 @@ import it.tidalwave.role.ui.javafx.example.large.data.Dao;
 import it.tidalwave.role.ui.javafx.example.large.data.SimpleEntity;
 import it.tidalwave.role.ui.javafx.example.large.data.SimpleDciEntity;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation;
-import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation.FormFields;
+import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation.Bindings;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
 import static it.tidalwave.util.ui.UserNotificationWithFeedback.notificationWithFeedback;
 import static it.tidalwave.role.ui.spi.Feedback8.feedback;
+import static it.tidalwave.role.ui.spi.PresentationModelCollectors.toCompositePresentationModel;
 import static it.tidalwave.role.ui.spi.PresentationModelCollectors.toCompositePresentationModel;
 
 /***********************************************************************************************************************
@@ -74,8 +75,6 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     @Inject
     private Dao dao;
 
-    private final FormFields fields = new FormFields();
-
     // For each button on the presentation that can do something, a UserAction is provided.
     private final UserAction buttonAction = new UserActionSupport8(this::onButtonPressed,
                                                                    new DefaultDisplayable("Press me"));
@@ -92,23 +91,26 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     private final UserAction actionPickDirectory = new UserActionSupport8(this::onButtonPickDirectoryPressed,
                                                                           new DefaultDisplayable("Pick directory"));
 
+    private final Bindings bindings = Bindings.builder()
+                                              .buttonAction(buttonAction)
+                                              .actionDialogOk(actionDialogOk)
+                                              .actionDialogCancelOk(actionDialogCancelOk)
+                                              .actionPickFile(actionPickFile)
+                                              .actionPickDirectory(actionPickDirectory)
+                                              .build();
+
     // Then there can be a set of variables that represent the internal state of the control.
     private int status = 1;
 
     /*******************************************************************************************************************
      *
-     * At {@link PostConstruct} time the control just peforms the binding to the presentation.
+     * At {@link PostConstruct} time the control just performs the binding to the presentation.
      *
      ******************************************************************************************************************/
     @PostConstruct
     private void initialize()
       {
-        presentation.bind(buttonAction,
-                          actionDialogOk,
-                          actionDialogCancelOk,
-                          actionPickFile,
-                          actionPickDirectory,
-                          fields);
+        presentation.bind(bindings);
       }
 
     /*******************************************************************************************************************
@@ -189,7 +191,7 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
       {
         presentation.notify("Button pressed");
         status++;
-        fields.textProperty.set(Integer.toString(status));
+        bindings.textProperty.set(Integer.toString(status));
       }
 
     /*******************************************************************************************************************
