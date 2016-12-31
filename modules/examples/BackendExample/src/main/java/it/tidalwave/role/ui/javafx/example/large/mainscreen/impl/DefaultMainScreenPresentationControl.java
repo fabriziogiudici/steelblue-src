@@ -77,19 +77,19 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     private final FormFields fields = new FormFields();
 
     // For each button on the presentation that can do something, a UserAction is provided.
-    private final UserAction buttonAction = new UserActionSupport8(() -> onButtonPressed(),
+    private final UserAction buttonAction = new UserActionSupport8(this::onButtonPressed,
                                                                    new DefaultDisplayable("Press me"));
 
-    private final UserAction actionDialogOk = new UserActionSupport8(() -> onButtonDialogOkPressed(),
+    private final UserAction actionDialogOk = new UserActionSupport8(this::onButtonDialogOkPressed,
                                                                      new DefaultDisplayable("Dialog with ok"));
 
-    private final UserAction actionDialogCancelOk = new UserActionSupport8(() -> onButtonDialogOkCancelPressed(),
+    private final UserAction actionDialogCancelOk = new UserActionSupport8(this::onButtonDialogOkCancelPressed,
                                                                            new DefaultDisplayable("Dialog with ok/cancel"));
 
-    private final UserAction actionPickFile = new UserActionSupport8(() -> onButtonPickFilePressed(),
+    private final UserAction actionPickFile = new UserActionSupport8(this::onButtonPickFilePressed,
                                                                      new DefaultDisplayable("Pick file"));
 
-    private final UserAction actionPickDirectory = new UserActionSupport8(() -> onButtonPickDirectoryPressed(),
+    private final UserAction actionPickDirectory = new UserActionSupport8(this::onButtonPickDirectoryPressed,
                                                                           new DefaultDisplayable("Pick directory"));
 
     // Then there can be a set of variables that represent the internal state of the control.
