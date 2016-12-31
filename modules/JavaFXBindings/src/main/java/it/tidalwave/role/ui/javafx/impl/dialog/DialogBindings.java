@@ -80,7 +80,7 @@ public class DialogBindings extends DelegateSupport
             @Override
             public void run()
               {
-                log.info("modalDialog({}, {})", node, notification);
+                log.debug("modalDialog({}, {})", node, notification);
 
 //                final Dialog<ButtonType> dialog = new Dialog<>();
                 final Dialog<ButtonType> dialog = new Alert(Alert.AlertType.NONE);
