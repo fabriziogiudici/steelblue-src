@@ -46,7 +46,7 @@
     <description>SteelBlue (modules)</description>
 
     <properties>
-        <thesefoolishthings.version>3.1-ALPHA-1</thesefoolishthings.version>
+        <thesefoolishthings.version>3.1-ALPHA-2</thesefoolishthings.version>
     </properties>
 
     <dependencyManagement>

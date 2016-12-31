@@ -34,7 +34,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ObservableValueBase;
 import javafx.scene.control.TreeTableColumn;
 import it.tidalwave.util.AsException;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.spi.DefaultDisplayable;
 import it.tidalwave.role.ui.PresentationModel;
@@ -63,10 +62,11 @@ class TreeTableAggregateAdapter implements Callback<TreeTableColumn.CellDataFeat
                     final PresentationModel rowPm = cell.getValue().getValue();
                     final Aggregate<PresentationModel> aggregate = rowPm.as(Aggregate.class);
                     // FIXME: uses the column header names, should be an internal id instead
-                    final PresentationModel columnPm = aggregate.getByName(cell.getTreeTableColumn().getText());
-                    return new PresentationModelAsDelegateDecorator(columnPm, rowPm);
+                    return aggregate.getByName(cell.getTreeTableColumn().getText())
+                                    .map(columnPm -> (PresentationModel)new PresentationModelAsDelegateDecorator(columnPm, rowPm))
+                                    .orElse(EMPTY);
                   }
-                catch (AsException | NullPointerException | NotFoundException e) // FIXME: NPE
+                catch (AsException e)
                   {
                     return EMPTY;
                   }

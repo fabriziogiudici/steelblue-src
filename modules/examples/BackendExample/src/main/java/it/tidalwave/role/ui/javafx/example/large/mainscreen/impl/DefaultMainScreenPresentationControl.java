@@ -36,22 +36,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.spi.DefaultDisplayable;
+import it.tidalwave.role.ui.AggregatePresentationModelBuilder;
 import it.tidalwave.role.ui.BoundProperty;
-import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.Selectable;
-import it.tidalwave.role.ui.UserActionProviderSupplement;
-import it.tidalwave.role.ui.spi.MapAggregateSupplement;
+import it.tidalwave.role.ui.UserAction;
+import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.role.ui.spi.DefaultPresentationModel;
-import it.tidalwave.role.ui.spi.UserActionLambda;
+import it.tidalwave.role.ui.spi.UserActionSupport8;
 import it.tidalwave.role.ui.javafx.example.large.data.Dao;
 import it.tidalwave.role.ui.javafx.example.large.data.SimpleEntity;
 import it.tidalwave.role.ui.javafx.example.large.data.SimpleDciEntity;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation;
-import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation.FormFields;
+import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation.Bindings;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
 import static it.tidalwave.util.ui.UserNotificationWithFeedback.notificationWithFeedback;
 import static it.tidalwave.role.ui.spi.Feedback8.feedback;
+import static it.tidalwave.role.ui.spi.PresentationModelCollectors.toCompositePresentationModel;
 import static it.tidalwave.role.ui.spi.PresentationModelCollectors.toCompositePresentationModel;
 
 /***********************************************************************************************************************
@@ -74,41 +75,42 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     @Inject
     private Dao dao;
 
-    private final FormFields fields = new FormFields();
-
     // For each button on the presentation that can do something, a UserAction is provided.
-    private final UserAction buttonAction = new UserActionLambda(new DefaultDisplayable("Press me"),
-                                                                 () -> onButtonPressed());
+    private final UserAction buttonAction = new UserActionSupport8(this::onButtonPressed,
+                                                                   new DefaultDisplayable("Press me"));
 
-    private final UserAction actionDialogOk = new UserActionLambda(new DefaultDisplayable("Dialog with ok"),
-                                                                 () -> onButtonDialogOkPressed());
+    private final UserAction actionDialogOk = new UserActionSupport8(this::onButtonDialogOkPressed,
+                                                                     new DefaultDisplayable("Dialog with ok"));
 
-    private final UserAction actionDialogCancelOk = new UserActionLambda(new DefaultDisplayable("Dialog with ok/cancel"),
-                                                                 () -> onButtonDialogOkCancelPressed());
+    private final UserAction actionDialogCancelOk = new UserActionSupport8(this::onButtonDialogOkCancelPressed,
+                                                                           new DefaultDisplayable("Dialog with ok/cancel"));
 
-    private final UserAction actionPickFile = new UserActionLambda(new DefaultDisplayable("Pick file"),
-                                                                 () -> onButtonPickFilePressed());
+    private final UserAction actionPickFile = new UserActionSupport8(this::onButtonPickFilePressed,
+                                                                     new DefaultDisplayable("Pick file"));
 
-    private final UserAction actionPickDirectory = new UserActionLambda(new DefaultDisplayable("Pick directory"),
-                                                                 () -> onButtonPickDirectoryPressed());
+    private final UserAction actionPickDirectory = new UserActionSupport8(this::onButtonPickDirectoryPressed,
+                                                                          new DefaultDisplayable("Pick directory"));
+
+    private final Bindings bindings = Bindings.builder()
+                                              .buttonAction(buttonAction)
+                                              .actionDialogOk(actionDialogOk)
+                                              .actionDialogCancelOk(actionDialogCancelOk)
+                                              .actionPickFile(actionPickFile)
+                                              .actionPickDirectory(actionPickDirectory)
+                                              .build();
 
     // Then there can be a set of variables that represent the internal state of the control.
     private int status = 1;
 
     /*******************************************************************************************************************
      *
-     * At {@link PostConstruct} time the control just peforms the binding to the presentation.
+     * At {@link PostConstruct} time the control just performs the binding to the presentation.
      *
      ******************************************************************************************************************/
     @PostConstruct
     private void initialize()
       {
-        presentation.bind(buttonAction,
-                          actionDialogOk,
-                          actionDialogCancelOk,
-                          actionPickFile,
-                          actionPickDirectory,
-                          fields);
+        presentation.bind(bindings);
       }
 
     /*******************************************************************************************************************
@@ -146,13 +148,13 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     private PresentationModel pmFor (final @Nonnull SimpleEntity entity)
       {
         final Selectable selectable = () -> onSelected(entity);
-        final UserAction action1 = new UserActionLambda(new DefaultDisplayable("Action 1"), () -> action1(entity));
-        final UserAction action2 = new UserActionLambda(new DefaultDisplayable("Action 2"), () -> action2(entity));
-        final UserAction action3 = new UserActionLambda(new DefaultDisplayable("Action 3"), () -> action3(entity));
+        final UserAction action1 = new UserActionSupport8(() -> action1(entity), new DefaultDisplayable("Action 1"));
+        final UserAction action2 = new UserActionSupport8(() -> action2(entity), new DefaultDisplayable("Action 2"));
+        final UserAction action3 = new UserActionSupport8(() -> action3(entity), new DefaultDisplayable("Action 3"));
         return new DefaultPresentationModel(entity,
                                             new DefaultDisplayable("Item #" + entity.getName()),
                                             selectable,
-                                            UserActionProviderSupplement.of(action1, action2, action3));
+                                            UserActionProvider.of(action1, action2, action3));
       }
 
     /*******************************************************************************************************************
@@ -164,23 +166,23 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     private PresentationModel pmFor (final @Nonnull SimpleDciEntity entity)
       {
         // FIXME: column names
-        final Aggregate aggregate = MapAggregateSupplement.builder()
+        final Aggregate aggregate = AggregatePresentationModelBuilder.newInstance()
                                         .with("C1", new DefaultDisplayable(entity.getName()))
                                         .with("C2", new DefaultDisplayable("" + entity.getAttribute1()))
                                         .with("C3", new DefaultDisplayable("" + entity.getAttribute2()))
                                         .create();
         final Selectable selectable = () -> onSelected(entity);
-        final UserAction action1 = new UserActionLambda(new DefaultDisplayable("Action 1"), () -> action1(entity));
-        final UserAction action2 = new UserActionLambda(new DefaultDisplayable("Action 2"), () -> action2(entity));
-        final UserAction action3 = new UserActionLambda(new DefaultDisplayable("Action 3"), () -> action3(entity));
+        final UserAction action1 = new UserActionSupport8(() -> action1(entity), new DefaultDisplayable("Action 1"));
+        final UserAction action2 = new UserActionSupport8(() -> action2(entity), new DefaultDisplayable("Action 2"));
+        final UserAction action3 = new UserActionSupport8(() -> action3(entity), new DefaultDisplayable("Action 3"));
         // No explicit Displayable here, as the one inside SimpleDciEntity is used.
         return new DefaultPresentationModel(entity,
                                             aggregate,
                                             selectable,
-                                            UserActionProviderSupplement.of(action1, action2, action3));
+                                            UserActionProvider.of(action1, action2, action3));
       }
 
-    // Below simple business methonds, as usual business.
+    // Below simple business methonds, as per usual business.
 
     /*******************************************************************************************************************
      *
@@ -189,7 +191,7 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
       {
         presentation.notify("Button pressed");
         status++;
-        fields.textProperty.set(Integer.toString(status));
+        bindings.textProperty.set(Integer.toString(status));
       }
 
     /*******************************************************************************************************************

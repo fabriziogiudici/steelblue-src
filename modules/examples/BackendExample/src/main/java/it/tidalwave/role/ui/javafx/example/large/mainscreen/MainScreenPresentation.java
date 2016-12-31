@@ -34,6 +34,7 @@ import it.tidalwave.util.ui.UserNotificationWithFeedback;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.UserAction;
+import lombok.Builder;
 
 /***********************************************************************************************************************
  *
@@ -53,8 +54,24 @@ public interface MainScreenPresentation
      * which exposes {@link BoundProperty} instances.
      *
      ******************************************************************************************************************/
-    static class FormFields
+    @Builder
+    public static class Bindings
       {
+        @Nonnull
+        public final UserAction buttonAction;
+
+        @Nonnull
+        public final UserAction actionDialogOk;
+
+        @Nonnull
+        public final UserAction actionDialogCancelOk;
+
+        @Nonnull
+        public final UserAction actionPickFile;
+
+        @Nonnull
+        public final UserAction actionPickDirectory;
+
         public final BoundProperty<String> textProperty = new BoundProperty<>("1");
 
         public final BoundProperty<Boolean> booleanProperty = new BoundProperty<>(true);
@@ -66,12 +83,7 @@ public interface MainScreenPresentation
      * and form fields. There is no requirement on the name and signature of the method.
      *
      ******************************************************************************************************************/
-    public void bind (@Nonnull UserAction action,
-                      @Nonnull UserAction actionDialogOk,
-                      @Nonnull UserAction actionDialogCancelOk,
-                      @Nonnull UserAction actionPickFile,
-                      @Nonnull UserAction actionPickDirectory,
-                      @Nonnull FormFields fields);
+    public void bind (@Nonnull Bindings bindings);
 
     /*******************************************************************************************************************
      *
