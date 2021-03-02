@@ -53,7 +53,6 @@ import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentati
 import static it.tidalwave.util.ui.UserNotificationWithFeedback.notificationWithFeedback;
 import static it.tidalwave.role.ui.spi.Feedback8.feedback;
 import static it.tidalwave.role.ui.spi.PresentationModelCollectors.toCompositePresentationModel;
-import static it.tidalwave.role.ui.spi.PresentationModelCollectors.toCompositePresentationModel;
 
 /***********************************************************************************************************************
  *
