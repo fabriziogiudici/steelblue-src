@@ -46,7 +46,7 @@
         </fileSet>
         <fileSet>
             <directory>.</directory>
-            <outputDirectory>/lib</outputDirectory>
+            <outputDirectory>/</outputDirectory>
             <includes>
                 <include>**/target/*.jar</include>
                 <include>**/target/*.war</include>
@@ -54,7 +54,11 @@
             <excludes>
                 <exclude>**/*.tar.gz</exclude>
                 <exclude>**/*-tests.jar</exclude>
+                <exclude>**/*-sources.jar</exclude>
+                <exclude>**/*-test-sources.jar</exclude>
+                <exclude>**/*-javadoc.jar</exclude>
                 <exclude>**/it-tidalwave-steelblue-example*.jar</exclude>
+                <exclude>.description</exclude>
             </excludes>
         </fileSet>
         <fileSet>

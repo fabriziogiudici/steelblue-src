@@ -18,7 +18,7 @@
                 <exclude>**/*.iml</exclude>
                 <exclude>**/*.tar.gz</exclude>
                 <exclude>**/target/**</exclude>
-                <exclude>**/*examples/**</exclude>
+                <exclude>**/.description</exclude>
             </excludes>
         </fileSet>
     </fileSets>
