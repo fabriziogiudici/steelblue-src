@@ -47,6 +47,7 @@
 
     <properties>
         <thesefoolishthings.version>3.1-ALPHA-7</thesefoolishthings.version>
+        <tft.javafx.version>11.0.1</tft.javafx.version>
     </properties>
 
     <dependencyManagement>
@@ -64,6 +65,24 @@
                 <artifactId>aquafx</artifactId>
                 <version>0.2</version>
             </dependency>
+
+            <!-- Should activate by itself with JDK 11+, but it fails with Jenkins Maven integration. -->
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-base</artifactId>
+                <version>${tft.javafx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-controls</artifactId>
+                <version>${tft.javafx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-fxml</artifactId>
+                <version>${tft.javafx.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
