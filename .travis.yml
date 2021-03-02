@@ -1,9 +1,11 @@
+before_install:
+  - wget https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
+  - tar xzf apache-maven-3.6.3-bin.tar.gz
+  - export PATH=`pwd`/apache-maven-3.6.3/bin:$PATH
 language: java
 jdk:
-  - oraclejdk8
-sudo: false
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
-script: mvn install -B -DskipTests -Pit.tidalwave-ci-v1
+  - openjdk11
+cache:
+  directories:
+    - $HOME/.m2
+script: mvn install -B -q

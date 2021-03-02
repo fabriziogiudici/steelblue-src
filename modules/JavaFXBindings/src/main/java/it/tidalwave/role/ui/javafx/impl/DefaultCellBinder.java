@@ -44,7 +44,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Cell;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.MenuItemBuilder;
 import javafx.scene.input.KeyCode;
 import it.tidalwave.util.As;
 import it.tidalwave.util.AsException;
@@ -225,9 +224,9 @@ public class DefaultCellBinder implements CellBinder
               {
                 userActionProvider.getActions().stream().forEach(action ->
                   {
-                    menuItems.add(MenuItemBuilder.create().text(action.as(Displayable).getDisplayName())
-                                                                    .onAction(new EventHandlerUserActionAdapter(action))
-                                                          .build());
+                    final MenuItem menuItem = new MenuItem(action.as(Displayable).getDisplayName());
+                    menuItem.setOnAction(new EventHandlerUserActionAdapter(action));
+                    menuItems.add(menuItem);
                   });
               });
 

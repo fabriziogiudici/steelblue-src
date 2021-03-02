@@ -44,10 +44,6 @@
     <version>1.0-ALPHA-16-SNAPSHOT</version>
     <name>SteelBlue - Examples - Backend</name>
 
-    <properties>
-        <tft.slf4j.version>1.7.21</tft.slf4j.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
