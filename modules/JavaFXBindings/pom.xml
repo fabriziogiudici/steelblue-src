@@ -6,7 +6,7 @@
   SteelBlue
   http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
   %%
-  Copyright (C) 2015 - 2019 Tidalwave s.a.s. (http://tidalwave.it)
+  Copyright (C) 2015 - 2021 Tidalwave s.a.s. (http://tidalwave.it)
   %%
 
   *********************************************************************************************************************
@@ -34,14 +34,14 @@
     <parent>
         <groupId>it.tidalwave.steelblue</groupId>
         <artifactId>it-tidalwave-steelblue-modules</artifactId>
-        <version>1.0-ALPHA-16-SNAPSHOT</version>
+        <version>1.0-ALPHA-17-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.steelblue</groupId>
     <artifactId>it-tidalwave-role-ui-javafx</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-ALPHA-16-SNAPSHOT</version>
+    <version>1.0-ALPHA-17-SNAPSHOT</version>
     <name>SteelBlue - JavaFX Bindings</name>
 
     <dependencies>

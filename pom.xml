@@ -6,7 +6,7 @@
   SteelBlue
   http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
   %%
-  Copyright (C) 2015 - 2019 Tidalwave s.a.s. (http://tidalwave.it)
+  Copyright (C) 2015 - 2021 Tidalwave s.a.s. (http://tidalwave.it)
   %%
 
   *********************************************************************************************************************
@@ -40,30 +40,16 @@
 
     <groupId>it.tidalwave.steelblue</groupId>
     <artifactId>steelblue</artifactId>
-    <version>1.0-ALPHA-16-SNAPSHOT</version>
+    <version>1.0-ALPHA-17-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SteelBlue</name>
     <url>http://steelblue.tidalwave.it</url>
     <inceptionYear>2015</inceptionYear>
     <description>
-SteelBlue contains the JavaFX implementation of a set of UI-related DCI roles defined in the project
-TheseFoolishThings. It allows to design rich client applications in a fashion that is mostly independent of the
-UI technology so the code depending on it is segregated in a confined section.
+        SteelBlue contains the JavaFX implementation of a set of UI-related DCI roles defined in the project
+        TheseFoolishThings. It allows to design rich client applications in a fashion that is mostly independent of the
+        UI technology so the code depending on it is segregated in a confined section.
     </description>
-
-    <repositories>
-        <repository>
-            <id>snapshots-oss.sonatype.org</id>
-            <name>Sonatype Snapshots Repository</name>
-            <url>http://oss.sonatype.org/content/repositories/snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
     <scm>
@@ -96,17 +82,17 @@ UI technology so the code depending on it is segregated in a confined section.
             <dependency>
                 <groupId>it.tidalwave.steelblue</groupId>
                 <artifactId>it-tidalwave-role-ui-javafx</artifactId>
-                <version>1.0-ALPHA-16-SNAPSHOT</version>
+                <version>1.0-ALPHA-17-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.steelblue</groupId>
                 <artifactId>it-tidalwave-steelblue-example-backend</artifactId>
-                <version>1.0-ALPHA-16-SNAPSHOT</version>
+                <version>1.0-ALPHA-17-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.steelblue</groupId>
                 <artifactId>it-tidalwave-steelblue-example-large</artifactId>
-                <version>1.0-ALPHA-16-SNAPSHOT</version>
+                <version>1.0-ALPHA-17-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
