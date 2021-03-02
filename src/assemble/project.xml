@@ -10,8 +10,15 @@
             <outputDirectory>/</outputDirectory>
             <useDefaultExcludes>true</useDefaultExcludes>
             <excludes>
+                <exclude>bitbucket-pipelines.yml</exclude>
+                <exclude>.travis.yml</exclude>
+                <exclude>**/.maven-env</exclude>
+                <exclude>.git/**</exclude>
+                <exclude>**/.idea/**</exclude>
+                <exclude>**/*.iml</exclude>
+                <exclude>**/*.tar.gz</exclude>
                 <exclude>**/target/**</exclude>
-                <exclude>.hg/**</exclude>
+                <exclude>**/*examples/**</exclude>
             </excludes>
         </fileSet>
     </fileSets>
