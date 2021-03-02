@@ -52,20 +52,6 @@
         UI technology so the code depending on it is segregated in a confined section.
     </description>
 
-    <repositories>
-        <repository>
-            <id>snapshots-oss.sonatype.org</id>
-            <name>Sonatype Snapshots Repository</name>
-            <url>http://oss.sonatype.org/content/repositories/snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <!-- Repeated because of http://jira.codehaus.org/browse/SCM-442 -->
     <scm>
         <connection>scm:git:${scm.repo.readonly.url}</connection>

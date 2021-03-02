@@ -47,7 +47,6 @@
 
     <properties>
         <tft.mainClass>it.tidalwave.role.ui.javafx.example.large.Main</tft.mainClass>
-        <tft.slf4j.version>1.7.21</tft.slf4j.version>
     </properties>
 
     <dependencies>
@@ -64,7 +63,7 @@
             <artifactId>it-tidalwave-role</artifactId>
         </dependency>
 
-        <!-- These are indirect dependencies, directly referencing them solves convergency problems -->
+        <!-- These are indirect dependencies, directly referencing them solves convergence problems -->
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-role-spring</artifactId>

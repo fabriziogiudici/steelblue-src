@@ -59,7 +59,7 @@
             <artifactId>it-tidalwave-util-java8supplement</artifactId>
         </dependency>
 
-        <!-- These are indirect dependencies, directly referencing them solves convergency problems -->
+        <!-- These are indirect dependencies, directly referencing them solves convergence problems -->
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-role-spring</artifactId>
