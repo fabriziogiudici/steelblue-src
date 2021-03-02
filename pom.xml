@@ -27,7 +27,8 @@
 *********************************************************************************************************************
 #L%
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -35,7 +36,7 @@
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
         <version>4.15</version>
-        <relativePath />
+        <relativePath/>
     </parent>
 
     <groupId>it.tidalwave.steelblue</groupId>
@@ -46,9 +47,9 @@
     <url>http://steelblue.tidalwave.it</url>
     <inceptionYear>2015</inceptionYear>
     <description>
-SteelBlue contains the JavaFX implementation of a set of UI-related DCI roles defined in the project
-TheseFoolishThings. It allows to design rich client applications in a fashion that is mostly independent of the
-UI technology so the code depending on it is segregated in a confined section.
+        SteelBlue contains the JavaFX implementation of a set of UI-related DCI roles defined in the project
+        TheseFoolishThings. It allows to design rich client applications in a fashion that is mostly independent of the
+        UI technology so the code depending on it is segregated in a confined section.
     </description>
 
     <repositories>
