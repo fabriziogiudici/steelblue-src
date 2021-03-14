@@ -47,6 +47,7 @@ import it.tidalwave.role.ui.javafx.impl.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import lombok.extern.slf4j.Slf4j;
 import static javafx.collections.FXCollections.observableArrayList;
+import static it.tidalwave.role.ui.javafx.impl.Logging.*;
 import static it.tidalwave.role.ui.Selectable.Selectable;
 import static it.tidalwave.role.SimpleComposite.SimpleComposite;
 
@@ -114,6 +115,7 @@ public class TableViewBindings extends DelegateSupport
                       final @Nonnull Optional<Runnable> callback)
       {
         assertIsFxApplicationThread();
+        log.debug("bind({}, {}, {})", tableView, pm, callback);
 
         final ReadOnlyObjectProperty<PresentationModel> pmProperty = tableView.getSelectionModel().selectedItemProperty();
         pmProperty.removeListener(changeListener);
@@ -122,6 +124,8 @@ public class TableViewBindings extends DelegateSupport
           {
             final SimpleComposite<PresentationModel> composite = pm.as(SimpleComposite);
             final ObservableList<PresentationModel> items = observableArrayList(composite.findChildren().results());
+            log.debug(">>>> {}", composite);
+            logObjects("", items);
 
             Platform.runLater(() ->
               {
