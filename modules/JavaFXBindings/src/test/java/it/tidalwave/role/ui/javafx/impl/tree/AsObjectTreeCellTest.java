@@ -29,7 +29,7 @@
 package it.tidalwave.role.ui.javafx.impl.tree;
 
 import it.tidalwave.util.As;
-import it.tidalwave.role.spi.DefaultDisplayable;
+import it.tidalwave.role.ui.Displayable;
 import it.tidalwave.role.ui.javafx.impl.CellBinder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -38,7 +38,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static it.tidalwave.role.Displayable.Displayable;
 
 /***********************************************************************************************************************
  *
@@ -69,7 +68,7 @@ public class AsObjectTreeCellTest
     public void must_set_text_from_Displayable_when_non_empty()
       {
         final As asObject = mock(As.class);
-        when(asObject.as(eq(Displayable))).thenReturn(new DefaultDisplayable("foo"));
+        when(asObject.as(eq(Displayable.class))).thenReturn(Displayable.of("foo"));
 
         underTest.updateItem(asObject, false);
 
@@ -83,7 +82,7 @@ public class AsObjectTreeCellTest
     public void must_set_empty_test_when_empty()
       {
         final As asObject = mock(As.class);
-        when(asObject.as(eq(Displayable))).thenReturn(new DefaultDisplayable("foo"));
+        when(asObject.as(eq(Displayable.class))).thenReturn(Displayable.of("foo"));
 
         underTest.updateItem(asObject, true);
 

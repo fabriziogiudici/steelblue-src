@@ -31,11 +31,11 @@ package it.tidalwave.role.ui.javafx.impl;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Optional;
-import it.tidalwave.role.Aggregate;
-import it.tidalwave.role.Composite;
-import it.tidalwave.role.Displayable;
 import it.tidalwave.util.As;
 import it.tidalwave.util.Finder;
+import it.tidalwave.role.Aggregate;
+import it.tidalwave.role.Composite;
+import it.tidalwave.role.ui.Displayable;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.toList;
 

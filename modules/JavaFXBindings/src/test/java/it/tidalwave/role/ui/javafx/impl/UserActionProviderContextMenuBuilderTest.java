@@ -36,18 +36,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import it.tidalwave.role.ui.Displayable;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.MenuItem;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
-import it.tidalwave.role.spi.DefaultDisplayable;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.role.ui.spi.DefaultUserActionProvider;
-import it.tidalwave.role.ui.spi.UserActionSupport;
 import it.tidalwave.util.spi.AsDelegateProvider;
-import it.tidalwave.util.spi.EmptyAsDelegateProvider;
 import lombok.Delegate;
 import lombok.RequiredArgsConstructor;
 import org.testng.annotations.BeforeMethod;
@@ -108,26 +106,24 @@ public class UserActionProviderContextMenuBuilderTest
 
     private TestExecutorService executorService;
 
+    private void checkThread()
+      {
+        assertThat("Must not be in the FX thread!", Platform.isFxApplicationThread(), is(false));
+      }
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @BeforeMethod
     public void setupFixture()
       {
-        AsDelegateProvider.Locator.set(new EmptyAsDelegateProvider());
+        AsDelegateProvider.Locator.set(AsDelegateProvider.empty());
         ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: possibly drop this
         actions = new ArrayList<>();
 
         for (int i = 0; i < 10; i++)
           {
-            actions.add(spy(new UserActionSupport(new DefaultDisplayable("Action #" + i))
-              {
-                @Override
-                public void actionPerformed()
-                  {
-                    assertThat("Must not be in the FX thread!", Platform.isFxApplicationThread(), is(false));
-                  }
-              }));
+            actions.add(spy(UserAction.of(this::checkThread, Displayable.of("Action #" + i))));
           }
 
         final UserActionProvider userActionProvider = new DefaultUserActionProvider()

@@ -55,7 +55,7 @@ import it.tidalwave.ui.role.javafx.CustomGraphicProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.toList;
-import static it.tidalwave.role.Displayable.Displayable;
+import static it.tidalwave.role.ui.Displayable.Displayable;
 import static it.tidalwave.role.ui.Styleable.Styleable;
 import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
 import static it.tidalwave.ui.role.javafx.CustomGraphicProvider.CustomGraphicProvider;

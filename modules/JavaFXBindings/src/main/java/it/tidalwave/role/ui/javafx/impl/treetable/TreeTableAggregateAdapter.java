@@ -29,15 +29,14 @@
 package it.tidalwave.role.ui.javafx.impl.treetable;
 
 import javax.annotation.Nonnull;
+import it.tidalwave.role.ui.Displayable;
 import javafx.util.Callback;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ObservableValueBase;
 import javafx.scene.control.TreeTableColumn;
 import it.tidalwave.util.AsException;
 import it.tidalwave.role.Aggregate;
-import it.tidalwave.role.spi.DefaultDisplayable;
 import it.tidalwave.role.ui.PresentationModel;
-import it.tidalwave.role.ui.spi.DefaultPresentationModel;
 
 /***********************************************************************************************************************
  *
@@ -47,7 +46,7 @@ import it.tidalwave.role.ui.spi.DefaultPresentationModel;
  **********************************************************************************************************************/
 class TreeTableAggregateAdapter implements Callback<TreeTableColumn.CellDataFeatures<PresentationModel, PresentationModel>, ObservableValue<PresentationModel>>
   {
-    private final static PresentationModel EMPTY = new DefaultPresentationModel("???", new DefaultDisplayable("???"));
+    private final static PresentationModel EMPTY = PresentationModel.of("???", Displayable.of("???"));
 
     @Override
     public ObservableValue<PresentationModel> call(TreeTableColumn.CellDataFeatures<PresentationModel, PresentationModel> cell)
