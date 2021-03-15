@@ -35,7 +35,7 @@ import java.util.List;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.util.As;
 import it.tidalwave.util.AsException;
-import lombok.Delegate;
+import lombok.experimental.Delegate;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
