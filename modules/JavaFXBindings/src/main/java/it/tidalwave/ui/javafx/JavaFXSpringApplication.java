@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.Executors;
@@ -80,6 +81,8 @@ public class JavaFXSpringApplication extends JavaFXApplicationWithSplash
     @Override
     protected void initializeInBackground()
       {
+        log.info("initializeInBackground()");
+
         try
           {
             logProperties();
@@ -160,6 +163,7 @@ public class JavaFXSpringApplication extends JavaFXApplicationWithSplash
      ******************************************************************************************************************/
     private void runApplicationAssemblers (final @Nonnull NodeAndDelegate applicationNad)
       {
+        Objects.requireNonNull(applicationContext, "applicationContext is null");
         applicationContext.getBeansOfType(ApplicationPresentationAssembler.class).values()
                 .stream()
                 .forEach(a -> a.assemble(applicationNad.getDelegate()));
