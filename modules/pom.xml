@@ -45,7 +45,7 @@
     <description>SteelBlue (modules)</description>
 
     <properties>
-        <thesefoolishthings.version>3.2-ALPHA-1-SNAPSHOT</thesefoolishthings.version>
+        <thesefoolishthings.version>3.2-ALPHA-1</thesefoolishthings.version>
         <tft.javafx.version>11.0.1</tft.javafx.version>
     </properties>
 
