@@ -41,7 +41,6 @@ import lombok.extern.slf4j.Slf4j;
  * This listener calls {@link PresentationModel#dispose()} on instances that have been detached from a {@link TreeView}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j

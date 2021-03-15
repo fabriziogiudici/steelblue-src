@@ -65,7 +65,6 @@ import static it.tidalwave.ui.role.javafx.CustomGraphicProvider.CustomGraphicPro
  * An implementation of {@link CellBinder} that extracts information from a {@link UserActionProvider}.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j

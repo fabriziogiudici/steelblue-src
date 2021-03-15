@@ -39,7 +39,6 @@ import it.tidalwave.util.As;
  * an {@link As}-capable item.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public interface CellBinder

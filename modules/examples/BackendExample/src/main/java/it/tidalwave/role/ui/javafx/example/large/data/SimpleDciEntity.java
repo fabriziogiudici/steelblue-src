@@ -43,7 +43,6 @@ import lombok.ToString;
  * @stereotype  Datum
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: $
  *
  **********************************************************************************************************************/
 @Getter @ToString(exclude = "asDelegate")

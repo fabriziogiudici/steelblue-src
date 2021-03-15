@@ -39,7 +39,6 @@ import lombok.AllArgsConstructor;
  * A specialisation of {@link TextFieldTreeCell} which binds to an {@link As}-capable item.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @AllArgsConstructor

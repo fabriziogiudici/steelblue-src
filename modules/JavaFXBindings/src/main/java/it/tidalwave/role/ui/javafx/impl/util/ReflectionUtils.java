@@ -48,7 +48,6 @@ import javax.inject.Inject;
  *
  * @author Ian Robertson
  * @author Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class ReflectionUtils

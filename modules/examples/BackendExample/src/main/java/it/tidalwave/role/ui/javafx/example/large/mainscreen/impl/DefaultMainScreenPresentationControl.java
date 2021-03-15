@@ -56,7 +56,6 @@ import static it.tidalwave.role.ui.spi.PresentationModelCollectors.toCompositePr
  * @stereotype  Control
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: $
  *
  **********************************************************************************************************************/
 public class DefaultMainScreenPresentationControl implements MainScreenPresentationControl

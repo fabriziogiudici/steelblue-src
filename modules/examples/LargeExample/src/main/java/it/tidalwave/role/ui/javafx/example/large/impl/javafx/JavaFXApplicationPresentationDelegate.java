@@ -36,7 +36,6 @@ import javafx.scene.layout.BorderPane;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: $
  *
  **********************************************************************************************************************/
 public class JavaFXApplicationPresentationDelegate

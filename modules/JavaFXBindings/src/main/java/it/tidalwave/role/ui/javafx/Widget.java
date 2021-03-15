@@ -37,7 +37,6 @@ import java.lang.annotation.RetentionPolicy;
  * @deprecated  Use @FXML instead
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Documented

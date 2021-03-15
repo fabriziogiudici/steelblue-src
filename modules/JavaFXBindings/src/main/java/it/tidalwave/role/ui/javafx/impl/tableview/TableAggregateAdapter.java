@@ -41,7 +41,6 @@ import it.tidalwave.role.ui.javafx.impl.treetable.PresentationModelAsDelegateDec
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class TableAggregateAdapter implements Callback<TableColumn.CellDataFeatures<PresentationModel, PresentationModel>,

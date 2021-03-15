@@ -39,7 +39,6 @@ import lombok.Getter;
  * @stereotype  Datum
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: $
  *
  **********************************************************************************************************************/
 @AllArgsConstructor @Getter

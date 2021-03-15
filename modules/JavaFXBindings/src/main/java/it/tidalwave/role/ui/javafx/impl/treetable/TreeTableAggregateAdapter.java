@@ -41,7 +41,6 @@ import it.tidalwave.role.ui.PresentationModel;
 /***********************************************************************************************************************
  *
  * @author  fritz
- * @version $Id$
  *
  **********************************************************************************************************************/
 class TreeTableAggregateAdapter implements Callback<TreeTableColumn.CellDataFeatures<PresentationModel, PresentationModel>, ObservableValue<PresentationModel>>

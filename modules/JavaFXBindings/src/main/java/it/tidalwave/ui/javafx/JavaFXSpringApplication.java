@@ -49,7 +49,6 @@ import org.slf4j.LoggerFactory;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class JavaFXSpringApplication extends JavaFXApplicationWithSplash

@@ -36,7 +36,6 @@ import it.tidalwave.role.ui.javafx.example.large.mainscreen.impl.javafx.JavaFXMa
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: Class.java,v 631568052e17 2013/02/19 15:45:02 fabrizio $
  *
  **********************************************************************************************************************/
 public class LargeExampleApplicationPresentationAssembler
