@@ -38,7 +38,6 @@ import static java.util.stream.Collectors.toList;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: $
  *
  **********************************************************************************************************************/
 public class DefautDao implements Dao

@@ -33,7 +33,6 @@ package it.tidalwave.role.ui.javafx.example.large.mainscreen;
  * @stereotype  Control
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: $
  *
  **********************************************************************************************************************/
 public interface MainScreenPresentationControl

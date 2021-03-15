@@ -34,7 +34,6 @@ import java.util.List;
 import javafx.scene.control.TreeItem;
 import it.tidalwave.util.spi.AsDelegateProvider;
 import it.tidalwave.role.ui.PresentationModel;
-import it.tidalwave.util.spi.EmptyAsDelegateProvider;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.hamcrest.CoreMatchers.is;
@@ -44,7 +43,6 @@ import static org.mockito.Mockito.*;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class ObsoletePresentationModelDisposerTest
@@ -56,7 +54,7 @@ public class ObsoletePresentationModelDisposerTest
     @BeforeMethod
     public void setupFixture()
       {
-        AsDelegateProvider.Locator.set(new EmptyAsDelegateProvider());
+        AsDelegateProvider.Locator.set(AsDelegateProvider.empty());
         fixture = new ObsoletePresentationModelDisposer();
         allPMs = new ArrayList<>();
       }

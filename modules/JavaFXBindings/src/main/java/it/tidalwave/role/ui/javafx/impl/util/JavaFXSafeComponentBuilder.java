@@ -51,7 +51,6 @@ import static lombok.AccessLevel.PRIVATE;
  * @stereotype Factory
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor(access = PRIVATE) @Slf4j

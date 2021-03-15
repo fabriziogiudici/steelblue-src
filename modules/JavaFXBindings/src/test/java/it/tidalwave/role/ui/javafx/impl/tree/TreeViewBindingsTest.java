@@ -35,12 +35,10 @@ import java.util.concurrent.TimeUnit;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.util.spi.AsDelegateProvider;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
-import it.tidalwave.util.spi.EmptyAsDelegateProvider;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.Selectable;
 import it.tidalwave.role.ui.javafx.impl.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.DefaultCellBinder;
-import it.tidalwave.role.ui.spi.DefaultPresentationModel;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.mockito.Mockito.mock;
@@ -51,7 +49,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class TreeViewBindingsTest
@@ -66,7 +63,7 @@ public class TreeViewBindingsTest
     @BeforeMethod
     public void setupFixture()
       {
-        AsDelegateProvider.Locator.set(new EmptyAsDelegateProvider());
+        AsDelegateProvider.Locator.set(AsDelegateProvider.empty());
         ContextManager.Locator.set(new DefaultContextManagerProvider());
         executor = Executors.newSingleThreadExecutor();
         final CellBinder cellBinder = new DefaultCellBinder(executor);
@@ -83,8 +80,8 @@ public class TreeViewBindingsTest
         // given
         final Selectable selectable = mock(Selectable.class);
         final Object datum = new Object();
-        final PresentationModel oldPm = new DefaultPresentationModel(datum, selectable);
-        final PresentationModel pm = new DefaultPresentationModel(datum, selectable);
+        final PresentationModel oldPm = PresentationModel.of(datum, selectable);
+        final PresentationModel pm = PresentationModel.of(datum, selectable);
         // when
         fixture.treeItemChangeListener.changed(null, new TreeItem<>(oldPm), new TreeItem<>(pm));
         // then
@@ -102,8 +99,8 @@ public class TreeViewBindingsTest
       {
         // given
         final Object datum = new Object();
-        final PresentationModel oldPm = new DefaultPresentationModel(datum);
-        final PresentationModel pm = new DefaultPresentationModel(datum);
+        final PresentationModel oldPm = PresentationModel.of(datum);
+        final PresentationModel pm = PresentationModel.of(datum);
         // when
         fixture.treeItemChangeListener.changed(null, new TreeItem<>(oldPm), new TreeItem<>(pm));
         // then

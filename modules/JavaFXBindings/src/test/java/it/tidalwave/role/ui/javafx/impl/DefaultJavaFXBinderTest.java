@@ -32,13 +32,11 @@ import java.util.concurrent.Executors;
 import it.tidalwave.util.spi.AsDelegateProvider;
 import it.tidalwave.role.ContextManager;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
-import it.tidalwave.util.spi.EmptyAsDelegateProvider;
 import org.testng.annotations.BeforeMethod;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class DefaultJavaFXBinderTest
@@ -51,7 +49,7 @@ public class DefaultJavaFXBinderTest
     @BeforeMethod
     public void setupFixture()
       {
-        AsDelegateProvider.Locator.set(new EmptyAsDelegateProvider());
+        AsDelegateProvider.Locator.set(AsDelegateProvider.empty());
         ContextManager.Locator.set(new DefaultContextManagerProvider());
         fixture = new DefaultJavaFXBinder(Executors.newSingleThreadExecutor());
       }

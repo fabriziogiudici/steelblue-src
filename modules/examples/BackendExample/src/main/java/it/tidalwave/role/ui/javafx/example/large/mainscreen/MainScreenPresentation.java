@@ -43,7 +43,6 @@ import lombok.Builder;
  * @stereotype  Presentation
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: $
  *
  **********************************************************************************************************************/
 public interface MainScreenPresentation

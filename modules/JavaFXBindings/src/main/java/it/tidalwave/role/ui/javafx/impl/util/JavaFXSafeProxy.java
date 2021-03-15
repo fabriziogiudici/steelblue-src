@@ -49,7 +49,6 @@ import lombok.extern.slf4j.Slf4j;
  * TODO: add support for aysnc returning a Future.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j

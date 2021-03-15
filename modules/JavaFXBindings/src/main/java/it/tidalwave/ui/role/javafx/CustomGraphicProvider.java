@@ -38,7 +38,6 @@ import javax.annotation.Nonnull;
  * @stereotype  Role
  * 
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public interface CustomGraphicProvider 

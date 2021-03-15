@@ -54,7 +54,6 @@ import it.tidalwave.role.ui.UserAction;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public interface JavaFXBinder
@@ -81,8 +80,6 @@ public interface JavaFXBinder
      * The {@code enabled} property of the {@code UserAction} is bound, negated, to the {@code disabled} property of the
      * button.
      *
-     * FIXME: use UserAction8
-     *
      * @param   button      the button
      * @param   action      the action
      *
@@ -100,8 +97,6 @@ public interface JavaFXBinder
      * The action is used as a callback when the button is pressed; invoked in a thread provided by the binder executor.
      * The {@code enabled} property of the {@code UserAction} is bound, negated, to the {@code disabled} property of the
      * menu item.
-     *
-     * FIXME: use UserAction8
      *
      * @param   menuItem    the menu item
      * @param   action      the action

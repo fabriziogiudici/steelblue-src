@@ -46,7 +46,6 @@ import lombok.ToString;
  * @stereotype Decorator
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor @ToString

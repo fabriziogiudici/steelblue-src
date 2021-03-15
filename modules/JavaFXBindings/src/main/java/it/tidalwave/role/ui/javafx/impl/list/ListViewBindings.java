@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.Executor;
+import it.tidalwave.role.ui.javafx.impl.Logging;
 import javafx.util.Callback;
 import javafx.collections.ObservableList;
 import javafx.beans.value.ChangeListener;
@@ -57,7 +58,6 @@ import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j
@@ -127,6 +127,7 @@ public class ListViewBindings extends DelegateSupport
           {
             final SimpleComposite<PresentationModel> composite = pm.as(SimpleComposite);
             final ObservableList<PresentationModel> items = observableArrayList(composite.findChildren().results());
+            Logging.logObjects("", items);
 
             Platform.runLater(() ->
               {

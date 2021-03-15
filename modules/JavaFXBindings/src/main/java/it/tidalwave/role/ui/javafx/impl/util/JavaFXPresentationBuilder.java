@@ -35,7 +35,6 @@ import static it.tidalwave.role.ui.javafx.impl.util.JavaFXSafeComponentBuilder.*
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public abstract class JavaFXPresentationBuilder<I, T extends I>

@@ -29,8 +29,6 @@
 package it.tidalwave.role.ui.javafx.impl.dialog;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import javafx.collections.ObservableList;
@@ -41,9 +39,7 @@ import javafx.application.Platform;
 import it.tidalwave.util.Callback;
 import it.tidalwave.util.ui.UserNotificationWithFeedback;
 import it.tidalwave.util.ui.UserNotificationWithFeedback.Feedback;
-import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
-import it.tidalwave.role.ui.spi.Feedback8;
 import javafx.scene.control.Alert;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +47,6 @@ import lombok.extern.slf4j.Slf4j;
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j
@@ -91,7 +86,7 @@ public class DialogBindings extends DelegateSupport
                 node.ifPresent(n -> dialog.getDialogPane().setContent(n));
 
                 final Feedback feedback = notification.getFeedback();
-                final boolean hasOnCancel = hasOnCancel(feedback);
+                final boolean hasOnCancel = feedback.canCancel();
 
                 final ObservableList<ButtonType> buttonTypes = dialog.getDialogPane().getButtonTypes();
                 buttonTypes.clear();
@@ -110,22 +105,22 @@ public class DialogBindings extends DelegateSupport
                   {
                     if (hasOnCancel)
                       {
-                        wrap(feedback::onCancel);
+                        wrap(notification::cancel);
                       }
                     else
                       {
-                        wrap(feedback::onConfirm);
+                        wrap(notification::confirm);
                       }
                   }
                 else
                   {
                     if (result.get() == ButtonType.OK)
                       {
-                        wrap(feedback::onConfirm);
+                        wrap(notification::confirm);
                       }
                     else if (result.get() == ButtonType.CANCEL)
                       {
-                        wrap(feedback::onCancel);
+                        wrap(notification::cancel);
                       }
                     else
                       {
@@ -145,34 +140,5 @@ public class DialogBindings extends DelegateSupport
     private static void wrap (final @Nonnull Callback callback)
       {
         callback.call();
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    // FIXME: refactor as methods of Feedback and Feedback8
-    private static boolean hasOnCancel (final @Nonnull Feedback feedback)
-      {
-        try
-          {
-            if (feedback instanceof Feedback8)
-              {
-                final Field onCancelField = feedback.getClass().getDeclaredField("onCancel");
-                onCancelField.setAccessible(true);
-                return !onCancelField.get(feedback).equals(Callback.EMPTY);
-              }
-            else
-              {
-                final Method emptyMethod = Feedback.class.getMethod("onCancel");
-                final Method actualMethod = feedback.getClass().getMethod("onCancel");
-                return !actualMethod.equals(emptyMethod);
-              }
-          }
-        catch (NoSuchMethodException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e)
-          {
-            throw new RuntimeException(e); // never occurs
-          }
       }
   }

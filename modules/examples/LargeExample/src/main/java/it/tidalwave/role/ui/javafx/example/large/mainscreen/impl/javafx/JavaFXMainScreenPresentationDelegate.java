@@ -55,7 +55,6 @@ import lombok.extern.slf4j.Slf4j;
  * nor business.
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: $
  *
  **********************************************************************************************************************/
 @Slf4j

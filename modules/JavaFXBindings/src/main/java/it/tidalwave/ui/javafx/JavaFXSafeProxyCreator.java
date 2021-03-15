@@ -128,7 +128,6 @@ import static lombok.AccessLevel.PRIVATE;
  * otherwise a deadlock could be triggered.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j

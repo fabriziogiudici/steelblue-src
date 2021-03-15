@@ -44,7 +44,6 @@ import static it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.createNodeAndDelegat
  * @stereotype  Presentation
  *
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
- * @version $Id: $
  *
  **********************************************************************************************************************/
 public class JavaFXMainScreenPresentation implements MainScreenPresentation

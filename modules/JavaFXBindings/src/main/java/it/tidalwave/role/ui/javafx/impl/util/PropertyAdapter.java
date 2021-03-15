@@ -49,7 +49,6 @@ import lombok.extern.slf4j.Slf4j;
  * {@code BoundProperty} are executed in a separated thread provided by an {@link Executor}.
  * 
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 @Slf4j

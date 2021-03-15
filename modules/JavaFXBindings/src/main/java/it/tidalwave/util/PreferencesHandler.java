@@ -26,60 +26,53 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl;
+package it.tidalwave.util;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import it.tidalwave.util.As;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import static java.util.Collections.*;
+import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicReference;
+import it.tidalwave.util.impl.DefaultPreferencesHandler;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@NoArgsConstructor @ToString
-public class RoleBag
+public interface PreferencesHandler
   {
-    private final Map<Class<?>, List<Object>> map = new HashMap<>();
+    public static final String PROP_APP_NAME = PreferencesHandler.class.getPackage().getName() + ".appName";
 
-    public RoleBag (final @Nonnull As source, final @Nonnull List<Class<?>> roleTypes)
-      {
-        roleTypes.forEach(roleType -> copyRoles(source, roleType));
-      }
-
-    public <ROLE_TYPE> void put (final @Nonnull Class<ROLE_TYPE> roleClass, final @Nonnull ROLE_TYPE role)
-      {
-        putMany(roleClass, singletonList(role));
-      }
-
-    public <ROLE_TYPE> void putMany (final @Nonnull Class<ROLE_TYPE> roleClass,
-                                     final @Nonnull Collection<? extends ROLE_TYPE> roles)
-      {
-        map.put(roleClass, new ArrayList<>(roles));
-      }
+    // FIXME: make private as soon as the right Java version is required
+    public static AtomicReference<PreferencesHandler> __INSTANCE = new AtomicReference<>();
 
     @Nonnull
-    public <ROLE_TYPE> Optional<ROLE_TYPE> get (final @Nonnull Class<ROLE_TYPE> roleClass)
-      {
-        return getMany(roleClass).stream().findFirst();
-      }
+    public Path getAppFolder();
 
     @Nonnull
-    public <ROLE_TYPE> List<ROLE_TYPE> getMany (final @Nonnull Class<ROLE_TYPE> roleClass)
+    public Path getLogFolder();
+
+    public static void setAppName (final @Nonnull String name)
       {
-        return unmodifiableList((List<ROLE_TYPE>)map.getOrDefault(roleClass, emptyList()));
+        System.setProperty(PROP_APP_NAME, name);
       }
 
-    private <ROLE_TYPE> void copyRoles (final @Nonnull As item, final @Nonnull Class<ROLE_TYPE> roleClass)
+    /*******************************************************************************************************************
+     *
+     * main() probably needs it and Spring has not booted yet, so this class can be accessed also by this factory
+     * method. Note that Spring instantiates the bean by calling this method, so we really have a singleton.
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public static PreferencesHandler getInstance()
       {
-        putMany(roleClass, item.asMany(roleClass));
+        synchronized (PreferencesHandler.class)
+          {
+            if (__INSTANCE.get() == null)
+              {
+                __INSTANCE.set(new DefaultPreferencesHandler());
+              }
+
+            return __INSTANCE.get();
+          }
       }
   }

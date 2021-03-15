@@ -40,7 +40,6 @@ import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentati
  * the application.
  *
  * @author  Fabrizio Giudici
- * @version $Id$
  *
  **********************************************************************************************************************/
 public class Main extends JavaFXSpringApplication
