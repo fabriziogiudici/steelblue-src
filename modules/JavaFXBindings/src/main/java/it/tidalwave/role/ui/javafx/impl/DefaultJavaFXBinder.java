@@ -69,7 +69,7 @@ import it.tidalwave.role.ui.javafx.impl.tableview.TableViewBindings;
 import it.tidalwave.role.ui.javafx.impl.tree.TreeViewBindings;
 import it.tidalwave.role.ui.javafx.impl.treetable.TreeTableViewBindings;
 import it.tidalwave.role.ui.javafx.impl.util.PropertyAdapter;
-import lombok.Delegate;
+import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static java.util.Objects.*;

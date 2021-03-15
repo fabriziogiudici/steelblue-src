@@ -46,7 +46,7 @@ import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.role.ui.spi.DefaultUserActionProvider;
 import it.tidalwave.util.spi.AsDelegateProvider;
-import lombok.Delegate;
+import lombok.experimental.Delegate;
 import lombok.RequiredArgsConstructor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
