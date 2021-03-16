@@ -34,6 +34,7 @@ import javafx.application.Platform;
 import org.springframework.context.ApplicationContext;
 import it.tidalwave.ui.javafx.JavaFXSpringApplication;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
+import static it.tidalwave.util.PreferencesHandler.KEY_INITIAL_SIZE;
 
 /***********************************************************************************************************************
  *
@@ -64,6 +65,8 @@ public class Main extends JavaFXSpringApplication
           {
             System.setProperty(PreferencesHandler.PROP_APP_NAME, "LargeExample");
             Platform.setImplicitExit(true);
+            final PreferencesHandler preferencesHandler = PreferencesHandler.getInstance();
+            preferencesHandler.setDefaultProperty(KEY_INITIAL_SIZE, 0.8);
             launch(args);
           }
         catch (Throwable t)

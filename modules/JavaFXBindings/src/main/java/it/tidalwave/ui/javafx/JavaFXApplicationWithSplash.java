@@ -32,6 +32,9 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Executor;
 import java.io.IOException;
+import it.tidalwave.util.PreferencesHandler;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.Parent;
@@ -45,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.NodeAndDelegate;
 import lombok.Getter;
 import lombok.Setter;
+import static it.tidalwave.util.PreferencesHandler.*;
 
 /***********************************************************************************************************************
  *
@@ -134,6 +138,13 @@ public abstract class JavaFXApplicationWithSplash extends Application
                     stage.setOnCloseRequest(event -> onClosing());
                     stage.setScene(scene);
                     onStageCreated(stage, applicationNad);
+                    final PreferencesHandler preferencesHandler = PreferencesHandler.getInstance();
+
+                    stage.setFullScreen(preferencesHandler.getProperty(KEY_FULL_SCREEN).orElse(false));
+                    final double scale = preferencesHandler.getProperty(KEY_INITIAL_SIZE).orElse(0.65);
+                    final Rectangle2D screenSize = Screen.getPrimary().getBounds();
+                    stage.setWidth(scale * screenSize.getWidth());
+                    stage.setHeight(scale * screenSize.getHeight());
                     stage.show();
                     splashStage.toFront();
                     splash.dismiss();
