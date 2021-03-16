@@ -32,7 +32,6 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.beans.property.Property;
@@ -53,7 +52,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.application.Platform;
-import it.tidalwave.util.As;
 import it.tidalwave.util.AsException;
 import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.SimpleComposite;
@@ -316,9 +314,9 @@ public class DefaultJavaFXBinder implements JavaFXBinder
       {
         final ToggleButton button = new ToggleButton();
         button.setToggleGroup(group);
-        button.setText(asOptional(pm, Displayable).map(d -> d.getDisplayName()).orElse(""));
+        button.setText(pm.asOptional(Displayable).map(d -> d.getDisplayName()).orElse(""));
         button.getStyleClass().addAll(baseStyleClass);
-        button.getStyleClass().addAll(asOptional(pm, Styleable).map(s -> s.getStyles()).orElse(emptyList()));
+        button.getStyleClass().addAll(pm.asOptional(Styleable).map(s -> s.getStyles()).orElse(emptyList()));
 
         try
           {
@@ -335,28 +333,6 @@ public class DefaultJavaFXBinder implements JavaFXBinder
           }
 
         return button;
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private static <T> Optional<T> asOptional (final @Nonnull As asObject, final Class<T> roleClass)
-      {
-        // can't use asOptional() since PresentationModel is constrained to Java 7
-        // FIXME The shortest implementation doesn't work - see DefaultPresentationModel implementation of as()
-        // It doesn't call as() with NotFoundBehaviour - it's probably a bug
-//        return Optional.ofNullable(asObject.as(roleClass, throwable -> null));
-          try
-            {
-              return Optional.of(asObject.as(roleClass));
-            }
-          catch (AsException e)
-            {
-              return Optional.empty();
-            }
       }
 
     /*******************************************************************************************************************
