@@ -59,6 +59,14 @@ public interface PreferencesHandler
     @Nonnull
     public Path getLogFolder();
 
+    /*******************************************************************************************************************
+     *
+     * Sets the application name. This method must be called at boot from the {@code main} method before doing
+     * anything else.
+     *
+     * @param name    the property name
+     *
+     ******************************************************************************************************************/
     public static void setAppName (final @Nonnull String name)
       {
         System.setProperty(PROP_APP_NAME, name);

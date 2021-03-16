@@ -66,7 +66,7 @@ public class DefaultPreferencesHandler implements PreferencesHandler
           {
             final String appName = System.getProperty(PROP_APP_NAME);
             Objects.requireNonNull(appName,
-                                   "You must call System.setProperty(PROP_APP_NAME, \"...\") before getting here");
+                                   "You must call PreferencesHandler.setAppName(\"...\") before getting here");
 
             final String osName = System.getProperty("os.name").toLowerCase();
             String pattern = "";
@@ -112,7 +112,7 @@ public class DefaultPreferencesHandler implements PreferencesHandler
     public <T> void setProperty (@Nonnull Key<T> name, @Nonnull T value)
       {
         properties.put(name, value);
-        // FIXME: shouls be made persistent (JSON?)
+        // FIXME: should be made persistent (JSON?)
       }
 
     @Override
