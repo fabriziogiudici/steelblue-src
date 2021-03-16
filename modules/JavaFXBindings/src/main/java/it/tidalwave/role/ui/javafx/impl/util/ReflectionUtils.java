@@ -28,28 +28,37 @@
  */
 package it.tidalwave.role.ui.javafx.impl.util;
 
+import lombok.extern.slf4j.Slf4j;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
+import static java.util.stream.Collectors.toList;
+import static it.tidalwave.role.spi.impl.LogUtil.*;
 
 /***********************************************************************************************************************
  *
  * Just slightly adapted from http://www.artima.com/weblogs/viewpost.jsp?thread=208860
  *
- * @author Ian Robertson
+ * TODO: Consider incorporating this in TFT.
+ *
  * @author Fabrizio Giudici
+ * @author based on code of Ian Robertson
  *
  **********************************************************************************************************************/
+@Slf4j
 public class ReflectionUtils
   {
     /*******************************************************************************************************************
@@ -81,6 +90,42 @@ public class ReflectionUtils
                     throw new RuntimeException(e);
                   }
               }
+          }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Instantiates an object of the given class performing dependency injections through the constructor.
+     *
+     * @param <T>     the generic type of the object to instantiate
+     * @param type    the dynamic type of the object to instantiate; it is expected to have a single constructor
+     * @param beans   the pool of objects to instantiate
+     * @return        the new instance
+     * @throws        RuntimeException if something fails
+     *
+     ******************************************************************************************************************/
+    public static <T> T instantiateWithDependencies (final @Nonnull Class<T> type,
+                                                     final @Nonnull Map<Class<?>, Object> beans)
+      {
+        try
+          {
+            log.debug("instantiateWithDependencies({}, {})", shortName(type), shortIds(beans.values()));
+            final Constructor<?>[] constructors = type.getConstructors();
+
+            if (constructors.length > 1)
+              {
+                throw new RuntimeException("Multiple constructors in " + type);
+              }
+
+            final List<Object> parameters =
+                    Arrays.stream(constructors[0].getParameterTypes()).map(beans::get).collect(toList());
+
+            log.trace(">>>> ctor arguments: {}", shortIds(parameters));
+            return type.cast(constructors[0].newInstance(parameters.toArray()));
+          }
+        catch (InstantiationException | IllegalAccessException | InvocationTargetException e)
+          {
+            throw new RuntimeException(e);
           }
       }
 

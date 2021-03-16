@@ -179,7 +179,8 @@ public class JavaFXSafeProxyCreator
           {
             log.debug("NodeAndDelegate({}, {})", clazz, resource);
             assert Platform.isFxApplicationThread() : "Not in JavaFX UI Thread";
-            final FXMLLoader loader = new FXMLLoader(clazz.getResource(resource));
+            final FXMLLoader loader = new FXMLLoader(clazz.getResource(resource), null, null,
+                                                     type -> ReflectionUtils.instantiateWithDependencies(type, BEANS));
             final Node node = (Node)loader.load();
             final T jfxController = loader.getController();
             ReflectionUtils.injectDependencies(jfxController, BEANS);
