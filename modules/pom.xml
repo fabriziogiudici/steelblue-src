@@ -45,6 +45,9 @@
     <description>SteelBlue (modules)</description>
 
     <properties>
+        <tft.javac.source>1.8</tft.javac.source>
+        <tft.javac.target>1.8</tft.javac.target>
+
         <thesefoolishthings.version>3.2-ALPHA-1</thesefoolishthings.version>
         <tft.javafx.version>11.0.1</tft.javafx.version>
     </properties>
@@ -81,7 +84,6 @@
                 <artifactId>javafx-fxml</artifactId>
                 <version>${tft.javafx.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
@@ -115,35 +117,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-banned-dependencies</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <bannedDependencies>
-                                    <excludes>
-                                        <exclude>commons-logging:commons-logging</exclude>
-                                        <exclude>org.aspectj:aspectjweaver</exclude>
-                                        <exclude>com.kenai.nbpwr:org-slf4j-jdk14</exclude>
-                                    </excludes>
-                                </bannedDependencies>
-                            </rules>
-                            <fail>true</fail>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
     <modules>
         <module>JavaFXBindings</module>
