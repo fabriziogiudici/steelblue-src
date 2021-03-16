@@ -51,10 +51,18 @@
 
         <thesefoolishthings.version>3.2-ALPHA-1</thesefoolishthings.version>
         <tft.javafx.version>11.0.1</tft.javafx.version>
+        <tft.spring.version>4.3.30.RELEASE</tft.spring.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${tft.spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>it.tidalwave.thesefoolishthings</groupId>
                 <artifactId>thesefoolishthings</artifactId>
