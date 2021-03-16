@@ -125,7 +125,7 @@ import static lombok.AccessLevel.PRIVATE;
  * constructor, as per JavaFX requirements.
  *
  * A Presentation Delegate must not try to have dependency injection from Spring (for instance, by means of AOP),
- * otherwise a deadlock could be triggered.
+ * otherwise a deadlock could be triggered. Injection in constructors is safe.
  *
  * @author  Fabrizio Giudici
  *
