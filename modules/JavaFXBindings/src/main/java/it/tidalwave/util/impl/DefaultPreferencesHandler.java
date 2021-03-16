@@ -28,12 +28,19 @@
  */
 package it.tidalwave.util.impl;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import it.tidalwave.util.Key;
 import it.tidalwave.util.PreferencesHandler;
+import it.tidalwave.util.TypeSafeHashMap;
+import it.tidalwave.util.TypeSafeMap;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -51,13 +58,15 @@ public class DefaultPreferencesHandler implements PreferencesHandler
     @Getter
     private final Path logFolder;
 
-    public DefaultPreferencesHandler ()
+    private final Map<Key<?>, Object> properties = new HashMap<>();
+
+    public DefaultPreferencesHandler()
       {
         try
           {
             final String appName = System.getProperty(PROP_APP_NAME);
             Objects.requireNonNull(appName,
-                                   "You must call System.setProperty(PROP_APP_NAME, \"...\") before getting here");
+                                   "You must call PreferencesHandler.setAppName(\"...\") before getting here");
 
             final String osName = System.getProperty("os.name").toLowerCase();
             String pattern = "";
@@ -90,6 +99,28 @@ public class DefaultPreferencesHandler implements PreferencesHandler
         catch (IOException e)
           {
             throw new RuntimeException(e);
+          }
+      }
+
+    @Override
+    public <T> Optional<T> getProperty (@Nonnull Key<T> name)
+      {
+        return Optional.ofNullable((T)properties.get(name));
+      }
+
+    @Override
+    public <T> void setProperty (@Nonnull Key<T> name, @Nonnull T value)
+      {
+        properties.put(name, value);
+        // FIXME: should be made persistent (JSON?)
+      }
+
+    @Override
+    public <T> void setDefaultProperty (@Nonnull Key<T> name, @Nonnull T value)
+      {
+        if (!properties.containsKey(name))
+          {
+            setProperty(name, value);
           }
       }
   }

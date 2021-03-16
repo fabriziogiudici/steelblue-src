@@ -26,15 +26,16 @@
 *********************************************************************************************************************
 #L%
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>5.0-ALPHA-4</version>
-        <relativePath />
+        <version>5.0-ALPHA-5</version>
+        <relativePath/>
     </parent>
 
     <groupId>it.tidalwave.steelblue</groupId>
@@ -58,22 +59,20 @@
         <tag>HEAD</tag>
     </scm>
 
+    <distributionManagement>
+        <site>
+            <id>steelblue-site</id>
+            <url>http://tidalwave.it/projects/steelblue</url>
+        </site>
+    </distributionManagement>
+
     <properties>
+        <tft.maven.requiredJdk>[11, 12)</tft.maven.requiredJdk>
+        <tidalwave.ci.view>SteelBlue</tidalwave.ci.view>
+        <tidalwave.issues>STB</tidalwave.issues>
         <scm.repo.url>git@bitbucket.org:tidalwave/steelblue-src.git</scm.repo.url>
         <scm.repo.readonly.url>https://bitbucket.org/tidalwave/steelblue-src.git</scm.repo.readonly.url>
         <scm.repo.browse.url>https://bitbucket.org/tidalwave/steelblue-src/src</scm.repo.browse.url>
-
-        <tft.maven.requiredJdk>[11, 12)</tft.maven.requiredJdk>
-        <tft.javac.source>1.8</tft.javac.source>
-        <tft.javac.target>1.8</tft.javac.target>
-
-        <tidalwave.ci.view>SteelBlue</tidalwave.ci.view>
-        <netbeans.hint.license>Tidalwave-ASF</netbeans.hint.license>
-        <netbeans.compile.on.save>none</netbeans.compile.on.save>
-
-        <tidalwave.issues>STB</tidalwave.issues>
-
-        <tft.clirr.skip>true</tft.clirr.skip> <!-- FIXME Clirr makes the build fail -->
     </properties>
 
     <dependencyManagement>

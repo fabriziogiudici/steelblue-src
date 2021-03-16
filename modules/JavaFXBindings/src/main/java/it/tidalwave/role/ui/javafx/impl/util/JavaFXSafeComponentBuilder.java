@@ -147,15 +147,7 @@ public class JavaFXSafeComponentBuilder<I, T extends I>
     @Nonnull
     protected T createComponentInstance()
       {
-        try
-          {
-            return componentClass.newInstance();
-          }
-        catch (InstantiationException | IllegalAccessException e)
-          {
-            log.error("", e);
-            throw new RuntimeException(e);
-          }
+        return ReflectionUtils.instantiateWithDependencies(componentClass, JavaFXSafeProxyCreator.BEANS);
       }
 
     /*******************************************************************************************************************

@@ -125,7 +125,7 @@ import static lombok.AccessLevel.PRIVATE;
  * constructor, as per JavaFX requirements.
  *
  * A Presentation Delegate must not try to have dependency injection from Spring (for instance, by means of AOP),
- * otherwise a deadlock could be triggered.
+ * otherwise a deadlock could be triggered. Injection in constructors is safe.
  *
  * @author  Fabrizio Giudici
  *
@@ -179,7 +179,8 @@ public class JavaFXSafeProxyCreator
           {
             log.debug("NodeAndDelegate({}, {})", clazz, resource);
             assert Platform.isFxApplicationThread() : "Not in JavaFX UI Thread";
-            final FXMLLoader loader = new FXMLLoader(clazz.getResource(resource));
+            final FXMLLoader loader = new FXMLLoader(clazz.getResource(resource), null, null,
+                                                     type -> ReflectionUtils.instantiateWithDependencies(type, BEANS));
             final Node node = (Node)loader.load();
             final T jfxController = loader.getController();
             ReflectionUtils.injectDependencies(jfxController, BEANS);
