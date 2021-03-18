@@ -41,7 +41,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.application.Platform;
 import it.tidalwave.util.AsException;
-import it.tidalwave.util.VisibleForTesting;
+import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.javafx.impl.CellBinder;
@@ -80,7 +80,7 @@ public class TreeTableViewBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener = (ov,  oldItem, item) ->
+    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener = (ov, oldItem, item) ->
       {
         executor.execute(() ->
           {

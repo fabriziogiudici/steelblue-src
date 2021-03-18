@@ -31,7 +31,7 @@ package it.tidalwave.role.ui.javafx.impl.tableview;
 import javax.annotation.CheckForNull;
 import javafx.scene.control.cell.TextFieldTableCell;
 import it.tidalwave.util.As;
-import it.tidalwave.util.VisibleForTesting;
+import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.role.ui.javafx.impl.CellBinder;
 import lombok.AllArgsConstructor;
 

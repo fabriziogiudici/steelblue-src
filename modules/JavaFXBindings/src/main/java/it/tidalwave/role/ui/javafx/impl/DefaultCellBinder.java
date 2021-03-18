@@ -48,7 +48,7 @@ import javafx.scene.input.KeyCode;
 import it.tidalwave.util.As;
 import it.tidalwave.util.AsException;
 import it.tidalwave.util.NotFoundException;
-import it.tidalwave.util.VisibleForTesting;
+import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.ui.role.javafx.CustomGraphicProvider;
