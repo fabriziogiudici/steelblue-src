@@ -37,7 +37,7 @@ import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.util.AsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.ui.Selectable.Selectable;
+import static it.tidalwave.role.ui.Selectable._Selectable_;
 
 /***********************************************************************************************************************
  *
@@ -61,7 +61,7 @@ public class ChangeListenerSelectableAdapter implements ChangeListener<Presentat
               {
                 try
                   {
-                    item.as(Selectable).select();
+                    item.as(_Selectable_).select();
                   }
                 catch (AsException e)
                   {

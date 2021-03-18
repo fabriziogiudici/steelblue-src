@@ -55,10 +55,10 @@ import it.tidalwave.ui.role.javafx.CustomGraphicProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.toList;
-import static it.tidalwave.role.ui.Displayable.Displayable;
-import static it.tidalwave.role.ui.Styleable.Styleable;
-import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
-import static it.tidalwave.ui.role.javafx.CustomGraphicProvider.CustomGraphicProvider;
+import static it.tidalwave.role.ui.Displayable._Displayable_;
+import static it.tidalwave.role.ui.Styleable._Styleable_;
+import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
+import static it.tidalwave.ui.role.javafx.CustomGraphicProvider._CustomGraphicProvider_;
 
 /***********************************************************************************************************************
  *
@@ -71,7 +71,7 @@ import static it.tidalwave.ui.role.javafx.CustomGraphicProvider.CustomGraphicPro
 public class DefaultCellBinder implements CellBinder
   {
     private static final List<Class<?>> PRELOADING_ROLE_TYPES = Arrays.asList(
-            Displayable, UserActionProvider, Styleable, CustomGraphicProvider);
+            _Displayable_, _UserActionProvider_, _Styleable_, _CustomGraphicProvider_);
 
     private static final String ROLE_STYLE_PREFIX = "-rs-";
 
@@ -146,9 +146,9 @@ public class DefaultCellBinder implements CellBinder
      ******************************************************************************************************************/
     private void bindTextAndGraphic (final @Nonnull Cell<?> cell, final @Nonnull RoleBag roles)
       {
-        final Optional<CustomGraphicProvider> cgp = roles.get(CustomGraphicProvider);
+        final Optional<CustomGraphicProvider> cgp = roles.get(_CustomGraphicProvider_);
         cell.setGraphic(cgp.map(role -> role.getGraphic()).orElse(null));
-        cell.setText(cgp.map(c -> "").orElse(roles.get(Displayable).map(role -> role.getDisplayName()).orElse("")));
+        cell.setText(cgp.map(c -> "").orElse(roles.get(_Displayable_).map(role -> role.getDisplayName()).orElse("")));
       }
 
     /*******************************************************************************************************************
@@ -214,16 +214,16 @@ public class DefaultCellBinder implements CellBinder
 //            return roles.getMany(UserActionProvider).stream()
 //                                             .flatMap(uap -> uap.getActions().stream())
 //                                             .map(action -> MenuItemBuilder.create()
-//                                                                    .text(action.as(Displayable).getDisplayName())
+//                                                                    .text(action.as(_Displayable_).getDisplayName())
 //                                                                    .onAction(new EventHandlerUserActionAdapter(action))
 //                                                                    .build())
 //                                             .collect(toList());
 
-            roles.getMany(UserActionProvider).stream().forEach(userActionProvider ->
+            roles.getMany(_UserActionProvider_).stream().forEach(userActionProvider ->
               {
                 userActionProvider.getActions().stream().forEach(action ->
                   {
-                    final MenuItem menuItem = new MenuItem(action.as(Displayable).getDisplayName());
+                    final MenuItem menuItem = new MenuItem(action.as(_Displayable_).getDisplayName());
                     menuItem.setOnAction(new EventHandlerUserActionAdapter(action));
                     menuItems.add(menuItem);
                   });
@@ -253,7 +253,7 @@ public class DefaultCellBinder implements CellBinder
         final List<String> styles = styleClasses.stream().filter(s -> !s.startsWith(ROLE_STYLE_PREFIX))
                                                          .collect(toList());
         // FIXME: shouldn't reset them? In case of cell reuse, they get accumulated
-        styles.addAll(roles.getMany(Styleable).stream().flatMap(styleable -> styleable.getStyles().stream())
+        styles.addAll(roles.getMany(_Styleable_).stream().flatMap(styleable -> styleable.getStyles().stream())
                                                          .map(s -> ROLE_STYLE_PREFIX + s)
                                                          .collect(toList()));
         styleClasses.setAll(styles);
@@ -268,7 +268,7 @@ public class DefaultCellBinder implements CellBinder
     public static UserAction findDefaultUserAction (final @Nonnull RoleBag roles)
       throws NotFoundException
       {
-        final Collection<UserActionProvider> userActionProviders = roles.getMany(UserActionProvider);
+        final Collection<UserActionProvider> userActionProviders = roles.getMany(_UserActionProvider_);
         log.trace(">>>> userActionProviders: {}", userActionProviders);
 
         for (final UserActionProvider userActionProvider : userActionProviders)

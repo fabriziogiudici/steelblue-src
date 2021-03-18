@@ -48,8 +48,8 @@ import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import lombok.extern.slf4j.Slf4j;
 import static javafx.collections.FXCollections.observableArrayList;
 import static it.tidalwave.role.ui.javafx.impl.Logging.*;
-import static it.tidalwave.role.ui.Selectable.Selectable;
-import static it.tidalwave.role.SimpleComposite.SimpleComposite;
+import static it.tidalwave.role.ui.Selectable._Selectable_;
+import static it.tidalwave.role.SimpleComposite._SimpleComposite_;
 
 /***********************************************************************************************************************
  *
@@ -83,7 +83,7 @@ public class TableViewBindings extends DelegateSupport
           {
             try
               {
-                item.as(Selectable).select();
+                item.as(_Selectable_).select();
               }
             catch (AsException e)
               {
@@ -121,7 +121,7 @@ public class TableViewBindings extends DelegateSupport
 
         executor.execute(() ->
           {
-            final SimpleComposite<PresentationModel> composite = pm.as(SimpleComposite);
+            final SimpleComposite<PresentationModel> composite = pm.as(_SimpleComposite_);
             final ObservableList<PresentationModel> items = observableArrayList(composite.findChildren().results());
             log.debug(">>>> {}", composite);
             logObjects("", items);
