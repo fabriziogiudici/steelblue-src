@@ -38,6 +38,7 @@ import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.Displayable;
 import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.PresentationModelAggregate;
 import it.tidalwave.role.ui.Selectable;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
@@ -47,6 +48,7 @@ import it.tidalwave.role.ui.javafx.example.large.data.SimpleDciEntity;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation.Bindings;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
+import static it.tidalwave.util.Parameters.r;
 import static it.tidalwave.util.ui.UserNotificationWithFeedback.*;
 import static it.tidalwave.role.ui.spi.PresentationModelCollectors.toCompositePresentationModel;
 
@@ -160,10 +162,10 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     private PresentationModel pmFor (final @Nonnull SimpleDciEntity entity)
       {
         // FIXME: column names
-        final Aggregate<PresentationModel> aggregate = Aggregate.<PresentationModel>newInstance()
-             .with("C1", PresentationModel.of("", Displayable.of(entity.getName())))
-             .with("C2", PresentationModel.of("", Displayable.of("" + entity.getAttribute1())))
-             .with("C3", PresentationModel.of("", Displayable.of("" + entity.getAttribute2())));
+        final Aggregate<PresentationModel> aggregate = PresentationModelAggregate.newInstance()
+             .withPmOf("C1", r(Displayable.of(entity.getName())))
+             .withPmOf("C2", r(Displayable.of("" + entity.getAttribute1())))
+             .withPmOf("C3", r(Displayable.of("" + entity.getAttribute2())));
         final Selectable selectable = () -> onSelected(entity);
         final UserAction action1 = UserAction.of(() -> action1(entity), Displayable.of("Action 1"));
         final UserAction action2 = UserAction.of(() -> action2(entity), Displayable.of("Action 2"));
