@@ -314,9 +314,9 @@ public class DefaultJavaFXBinder implements JavaFXBinder
       {
         final ToggleButton button = new ToggleButton();
         button.setToggleGroup(group);
-        button.setText(pm.asOptional(_Displayable_).map(d -> d.getDisplayName()).orElse(""));
+        button.setText(pm.maybeAs(_Displayable_).map(d -> d.getDisplayName()).orElse(""));
         button.getStyleClass().addAll(baseStyleClass);
-        button.getStyleClass().addAll(pm.asOptional(_Styleable_).map(s -> s.getStyles()).orElse(emptyList()));
+        button.getStyleClass().addAll(pm.maybeAs(_Styleable_).map(s -> s.getStyles()).orElse(emptyList()));
 
         try
           {
