@@ -35,7 +35,6 @@ import java.util.Collection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import it.tidalwave.role.Aggregate;
-import it.tidalwave.role.ui.AggregatePresentationModelBuilder;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.Displayable;
 import it.tidalwave.role.ui.PresentationModel;
@@ -161,11 +160,10 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     private PresentationModel pmFor (final @Nonnull SimpleDciEntity entity)
       {
         // FIXME: column names
-        final Aggregate aggregate = AggregatePresentationModelBuilder.newInstance()
-                                        .with("C1", Displayable.of(entity.getName()))
-                                        .with("C2", Displayable.of("" + entity.getAttribute1()))
-                                        .with("C3", Displayable.of("" + entity.getAttribute2()))
-                                        .create();
+        final Aggregate<PresentationModel> aggregate = Aggregate.<PresentationModel>newInstance()
+             .with("C1", PresentationModel.of("", Displayable.of(entity.getName())))
+             .with("C2", PresentationModel.of("", Displayable.of("" + entity.getAttribute1())))
+             .with("C3", PresentationModel.of("", Displayable.of("" + entity.getAttribute2())));
         final Selectable selectable = () -> onSelected(entity);
         final UserAction action1 = UserAction.of(() -> action1(entity), Displayable.of("Action 1"));
         final UserAction action2 = UserAction.of(() -> action2(entity), Displayable.of("Action 2"));
