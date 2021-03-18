@@ -289,7 +289,9 @@ public class JavaFXSafeProxyCreator
 
         if (nad.get() == null)
           {
-            throw new RuntimeException("Likely deadlock in the JavaFX Thread: couldn't create NodeAndDelegate");
+            final String message = String.format("Likely deadlock in the JavaFX Thread: couldn't create " +
+                                                 "NodeAndDelegate: %s, %s", presentationClass, fxmlResourcePath);
+            throw new RuntimeException(message);
           }
 
         return nad.get();
