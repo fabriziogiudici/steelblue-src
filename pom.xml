@@ -33,7 +33,7 @@
     <parent>
         <groupId>it.tidalwave.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>5.0-ALPHA-5</version>
+        <version>5.0-ALPHA-6</version>
         <relativePath />
     </parent>
 
