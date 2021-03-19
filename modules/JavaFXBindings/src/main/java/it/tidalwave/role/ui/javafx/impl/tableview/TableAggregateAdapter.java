@@ -29,7 +29,6 @@
 package it.tidalwave.role.ui.javafx.impl.tableview;
 
 import javax.annotation.Nonnull;
-import it.tidalwave.role.ui.Displayable;
 import javafx.util.Callback;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ObservableValueBase;
@@ -46,8 +45,6 @@ import it.tidalwave.role.ui.javafx.impl.treetable.PresentationModelAsDelegateDec
 public class TableAggregateAdapter implements Callback<TableColumn.CellDataFeatures<PresentationModel, PresentationModel>,
                                               ObservableValue<PresentationModel>>
   {
-    private final static PresentationModel EMPTY = PresentationModel.of(Displayable.of("???"));
-
     @Override @Nonnull
     public ObservableValue<PresentationModel> call
         (final @Nonnull TableColumn.CellDataFeatures<PresentationModel, PresentationModel> cell)
@@ -64,7 +61,7 @@ public class TableAggregateAdapter implements Callback<TableColumn.CellDataFeatu
 
                 return aggregate.getByName(cell.getTableColumn().getText())
                                 .map(columnPm -> (PresentationModel)new PresentationModelAsDelegateDecorator(columnPm, rowPm))
-                                .orElse(EMPTY);
+                                .orElse(PresentationModel.empty());
               };
           };
       }
