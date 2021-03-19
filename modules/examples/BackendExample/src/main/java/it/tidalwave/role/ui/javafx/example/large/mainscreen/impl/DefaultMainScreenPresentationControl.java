@@ -147,10 +147,9 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
         final UserAction action1 = UserAction.of(() -> action1(entity), Displayable.of("Action 1"));
         final UserAction action2 = UserAction.of(() -> action2(entity), Displayable.of("Action 2"));
         final UserAction action3 = UserAction.of(() -> action3(entity), Displayable.of("Action 3"));
-        return PresentationModel.of(entity,
-                                    Displayable.of("Item #" + entity.getName()),
-                                    selectable,
-                                    UserActionProvider.of(action1, action2, action3));
+        return PresentationModel.of(entity, r(Displayable.of("Item #" + entity.getName()),
+                                              selectable,
+                                              UserActionProvider.of(action1, action2, action3)));
       }
 
     /*******************************************************************************************************************
@@ -171,10 +170,7 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
         final UserAction action2 = UserAction.of(() -> action2(entity), Displayable.of("Action 2"));
         final UserAction action3 = UserAction.of(() -> action3(entity), Displayable.of("Action 3"));
         // No explicit Displayable here, as the one inside SimpleDciEntity is used.
-        return PresentationModel.of(entity,
-                                    aggregate,
-                                    selectable,
-                                    UserActionProvider.of(action1, action2, action3));
+        return PresentationModel.of(entity, r(aggregate, selectable, UserActionProvider.of(action1, action2, action3)));
       }
 
     // Below simple business methonds, as per usual business.
