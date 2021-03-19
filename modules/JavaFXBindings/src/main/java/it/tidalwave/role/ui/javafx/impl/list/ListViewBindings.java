@@ -52,8 +52,8 @@ import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import lombok.extern.slf4j.Slf4j;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.scene.input.KeyCode.*;
-import static it.tidalwave.role.SimpleComposite.SimpleComposite;
-import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
+import static it.tidalwave.role.SimpleComposite._SimpleComposite_;
+import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
 
 /***********************************************************************************************************************
  *
@@ -109,7 +109,7 @@ public class ListViewBindings extends DelegateSupport
                     try
                       {
                         // FIXME: it would be nicer to retrieve the cell and its associated RoleBag?
-                        final RoleBag roleMap = new RoleBag(selectedPm, Arrays.asList(UserActionProvider));
+                        final RoleBag roleMap = new RoleBag(selectedPm, Arrays.asList(_UserActionProvider_));
                         DefaultCellBinder.findDefaultUserAction(roleMap).actionPerformed();
                       }
                     catch (NotFoundException e)
@@ -125,7 +125,7 @@ public class ListViewBindings extends DelegateSupport
         listView.setItems(observableArrayList()); // quick clear in case of long operations FIXME doesn't work
         executor.execute(() -> // TODO: use FXWorker
           {
-            final SimpleComposite<PresentationModel> composite = pm.as(SimpleComposite);
+            final SimpleComposite<PresentationModel> composite = pm.as(_SimpleComposite_);
             final ObservableList<PresentationModel> items = observableArrayList(composite.findChildren().results());
             Logging.logObjects("", items);
 

@@ -42,7 +42,7 @@ import javax.annotation.Nonnull;
  **********************************************************************************************************************/
 public interface CustomGraphicProvider 
   {
-    public static final Class<CustomGraphicProvider> CustomGraphicProvider = CustomGraphicProvider.class;
+    public static final Class<CustomGraphicProvider> _CustomGraphicProvider_ = CustomGraphicProvider.class;
     
     @Nonnull
     public Node getGraphic();

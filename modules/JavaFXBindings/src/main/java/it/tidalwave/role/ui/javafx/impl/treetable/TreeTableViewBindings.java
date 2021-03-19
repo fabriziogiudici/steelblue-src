@@ -41,7 +41,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.application.Platform;
 import it.tidalwave.util.AsException;
-import it.tidalwave.util.VisibleForTesting;
+import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.javafx.impl.CellBinder;
@@ -49,7 +49,7 @@ import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import it.tidalwave.role.ui.javafx.impl.tree.ObsoletePresentationModelDisposer;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.SimpleComposite.*;
-import static it.tidalwave.role.ui.Selectable.Selectable;
+import static it.tidalwave.role.ui.Selectable._Selectable_;
 
 /***********************************************************************************************************************
  *
@@ -80,13 +80,13 @@ public class TreeTableViewBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener = (ov,  oldItem, item) ->
+    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener = (ov, oldItem, item) ->
       {
         executor.execute(() ->
           {
             try
               {
-                item.getValue().as(Selectable).select();
+                item.getValue().as(_Selectable_).select();
               }
             catch (AsException e)
               {
@@ -165,7 +165,7 @@ public class TreeTableViewBindings extends DelegateSupport
       {
         try
           {
-            final SimpleComposite<PresentationModel> composite = pm.as(SimpleComposite);
+            final SimpleComposite<PresentationModel> composite = pm.as(_SimpleComposite_);
             final ObservableList<TreeItem<PresentationModel>> children = parentItem.getChildren();
             composite.findChildren().results().forEach(childPm -> children.add(createTreeItem(childPm)));
           }

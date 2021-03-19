@@ -55,7 +55,7 @@ import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import lombok.extern.slf4j.Slf4j;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.scene.input.KeyCode.*;
-import static it.tidalwave.role.SimpleComposite.SimpleComposite;
+import static it.tidalwave.role.SimpleComposite._SimpleComposite_;
 
 /***********************************************************************************************************************
  *
@@ -132,7 +132,7 @@ public class ComboBoxBindings extends DelegateSupport
         pmProperty.removeListener(changeListener);
         executor.execute(() -> // TODO: use FXWorker
           {
-            final SimpleComposite<PresentationModel> composite = pm.as(SimpleComposite);
+            final SimpleComposite<PresentationModel> composite = pm.as(_SimpleComposite_);
             final ObservableList<PresentationModel> items = observableArrayList(composite.findChildren().results());
             Platform.runLater(() ->
               {

@@ -72,10 +72,10 @@ import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
 import static java.util.Objects.*;
 import static java.util.stream.Collectors.toList;
-import static it.tidalwave.role.SimpleComposite.SimpleComposite;
-import static it.tidalwave.role.ui.Displayable.Displayable;
-import static it.tidalwave.role.ui.Styleable.Styleable;
-import static it.tidalwave.role.ui.UserActionProvider.UserActionProvider;
+import static it.tidalwave.role.SimpleComposite._SimpleComposite_;
+import static it.tidalwave.role.ui.Displayable._Displayable_;
+import static it.tidalwave.role.ui.Styleable._Styleable_;
+import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
 
 /***********************************************************************************************************************
  *
@@ -162,7 +162,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
 
         try
           {
-            button.setText(action.as(Displayable).getDisplayName());
+            button.setText(action.as(_Displayable_).getDisplayName());
           }
         catch (AsException e)
           {
@@ -185,7 +185,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
 
         try
           {
-            menuItem.setText(action.as(Displayable).getDisplayName());
+            menuItem.setText(action.as(_Displayable_).getDisplayName());
           }
         catch (AsException e)
           {
@@ -245,7 +245,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
         final ToggleGroup group = new ToggleGroup();
         final ObservableList<Node> children = pane.getChildren();
         final ObservableList<String> prototypeStyleClass = children.get(0).getStyleClass();
-        final SimpleComposite<PresentationModel> pmc = pm.as(SimpleComposite);
+        final SimpleComposite<PresentationModel> pmc = pm.as(_SimpleComposite_);
         children.setAll(pmc.findChildren().results().stream()
                                                     .map(cpm -> createToggleButton(cpm, prototypeStyleClass, group))
                                                     .collect(toList()));
@@ -314,13 +314,13 @@ public class DefaultJavaFXBinder implements JavaFXBinder
       {
         final ToggleButton button = new ToggleButton();
         button.setToggleGroup(group);
-        button.setText(pm.asOptional(Displayable).map(d -> d.getDisplayName()).orElse(""));
+        button.setText(pm.maybeAs(_Displayable_).map(d -> d.getDisplayName()).orElse(""));
         button.getStyleClass().addAll(baseStyleClass);
-        button.getStyleClass().addAll(pm.asOptional(Styleable).map(s -> s.getStyles()).orElse(emptyList()));
+        button.getStyleClass().addAll(pm.maybeAs(_Styleable_).map(s -> s.getStyles()).orElse(emptyList()));
 
         try
           {
-            bind(button, pm.as(UserActionProvider).getDefaultAction());
+            bind(button, pm.as(_UserActionProvider_).getDefaultAction());
           }
         catch (NotFoundException e)
           {

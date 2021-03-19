@@ -42,14 +42,14 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.application.Platform;
 import it.tidalwave.util.AsException;
-import it.tidalwave.util.VisibleForTesting;
+import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.javafx.impl.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.SimpleComposite.*;
-import static it.tidalwave.role.ui.Selectable.Selectable;
+import static it.tidalwave.role.ui.Selectable._Selectable_;
 import static it.tidalwave.role.ui.javafx.impl.Logging.*;
 
 /***********************************************************************************************************************
@@ -90,7 +90,7 @@ public class TreeViewBindings extends DelegateSupport
           {
             try
               {
-                item.getValue().as(Selectable).select();
+                item.getValue().as(_Selectable_).select();
               }
             catch (AsException e)
               {
@@ -166,7 +166,7 @@ public class TreeViewBindings extends DelegateSupport
       {
         assertIsFxApplicationThread();
         final String prefix = INDENT.substring(0, recursion * 8);
-        final SimpleComposite<PresentationModel> composite = pm.as(SimpleComposite);
+        final SimpleComposite<PresentationModel> composite = pm.as(_SimpleComposite_);
         logObject(prefix, composite);
 
         // FIXME: results() in bg thread

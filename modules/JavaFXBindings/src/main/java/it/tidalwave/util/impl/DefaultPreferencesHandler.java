@@ -39,8 +39,6 @@ import java.util.Objects;
 import java.util.Optional;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.PreferencesHandler;
-import it.tidalwave.util.TypeSafeHashMap;
-import it.tidalwave.util.TypeSafeMap;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
