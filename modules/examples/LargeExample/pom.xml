@@ -33,14 +33,14 @@
     <parent>
         <groupId>it.tidalwave.steelblue</groupId>
         <artifactId>it-tidalwave-steelblue-modules</artifactId>
-        <version>1.0-ALPHA-19</version>
+        <version>1.0-ALPHA-20-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.steelblue</groupId>
     <artifactId>it-tidalwave-steelblue-example-large</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-ALPHA-19</version>
+    <version>1.0-ALPHA-20-SNAPSHOT</version>
     <name>SteelBlue - Examples - Large</name>
 
     <properties>
