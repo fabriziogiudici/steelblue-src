@@ -26,7 +26,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl.util;
+package it.tidalwave.role.ui.javafx.impl.common;
 
 import javax.annotation.Nonnull;
 import java.beans.PropertyChangeListener;
@@ -47,6 +47,8 @@ import lombok.extern.slf4j.Slf4j;
  * Adapts a {@link BoundProperty} to a JavaFX {@link Property}. It also takes care of threaring issues, making sure that
  * the JavaFX {@code Property} is updated in the JavaFX UI thread. Conversely, updates on the JavaFX 
  * {@code BoundProperty} are executed in a separated thread provided by an {@link Executor}.
+ *
+ * TODO: javafx.beans.binding.BooleanExpression.booleanExpression(source)? Does it do threading?
  * 
  * @author  Fabrizio Giudici
  *

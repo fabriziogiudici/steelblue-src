@@ -37,8 +37,8 @@ import it.tidalwave.util.spi.AsDelegateProvider;
 import it.tidalwave.role.spi.DefaultContextManagerProvider;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.Selectable;
-import it.tidalwave.role.ui.javafx.impl.CellBinder;
-import it.tidalwave.role.ui.javafx.impl.DefaultCellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.DefaultCellBinder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.mockito.Mockito.mock;
@@ -53,7 +53,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
  **********************************************************************************************************************/
 public class TreeViewBindingsTest
   {
-    private TreeViewBindings fixture;
+    private TreeViewBindings underTest;
 
     private ExecutorService executor;
 
@@ -61,13 +61,13 @@ public class TreeViewBindingsTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setupunderTest()
       {
         AsDelegateProvider.Locator.set(AsDelegateProvider.empty());
         ContextManager.Locator.set(new DefaultContextManagerProvider());
         executor = Executors.newSingleThreadExecutor();
         final CellBinder cellBinder = new DefaultCellBinder(executor);
-        fixture = new TreeViewBindings(executor, cellBinder);
+        underTest = new TreeViewBindings(executor, cellBinder);
       }
 
     /*******************************************************************************************************************
@@ -83,7 +83,7 @@ public class TreeViewBindingsTest
         final PresentationModel oldPm = PresentationModel.of(datum, selectable);
         final PresentationModel pm = PresentationModel.of(datum, selectable);
         // when
-        fixture.treeItemChangeListener.changed(null, new TreeItem<>(oldPm), new TreeItem<>(pm));
+        underTest.changeListener.asTreeItemChangeListener().changed(null, new TreeItem<>(oldPm), new TreeItem<>(pm));
         // then
         executor.shutdown();
         executor.awaitTermination(5, TimeUnit.SECONDS);
@@ -102,7 +102,7 @@ public class TreeViewBindingsTest
         final PresentationModel oldPm = PresentationModel.of(datum);
         final PresentationModel pm = PresentationModel.of(datum);
         // when
-        fixture.treeItemChangeListener.changed(null, new TreeItem<>(oldPm), new TreeItem<>(pm));
+        underTest.changeListener.asTreeItemChangeListener().changed(null, new TreeItem<>(oldPm), new TreeItem<>(pm));
         // then
         // no exceptions are thrown
       }

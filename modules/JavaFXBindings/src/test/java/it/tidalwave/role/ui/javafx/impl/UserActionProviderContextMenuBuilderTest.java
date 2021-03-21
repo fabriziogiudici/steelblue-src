@@ -37,6 +37,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import it.tidalwave.role.ui.Displayable;
+import it.tidalwave.role.ui.javafx.impl.common.DefaultCellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.RoleBag;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.MenuItem;
@@ -91,7 +93,7 @@ public class UserActionProviderContextMenuBuilderTest
           }
       }
 
-    private DefaultCellBinder fixture;
+    private DefaultCellBinder underTest;
 
     private List<UserAction> actions;
 
@@ -110,7 +112,7 @@ public class UserActionProviderContextMenuBuilderTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       {
         AsDelegateProvider.Locator.set(AsDelegateProvider.empty());
         ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: possibly drop this
@@ -136,7 +138,7 @@ public class UserActionProviderContextMenuBuilderTest
 
         executorService = new TestExecutorService(Executors.newSingleThreadExecutor());
 
-        fixture = new DefaultCellBinder(executorService);
+        underTest = new DefaultCellBinder(executorService);
       }
 
     /*******************************************************************************************************************
@@ -145,7 +147,7 @@ public class UserActionProviderContextMenuBuilderTest
     @Test
     public void must_return_empty_list_when_UserActionProvider_is_not_present()
       {
-        final List<MenuItem> menuItems = fixture.createMenuItems(roleMapWithoutUserActionProvider);
+        final List<MenuItem> menuItems = underTest.createMenuItems(roleMapWithoutUserActionProvider);
 
         assertThat(menuItems, is(notNullValue()));
         assertThat(menuItems.isEmpty(), is(true));
@@ -157,7 +159,7 @@ public class UserActionProviderContextMenuBuilderTest
     @Test
     public void must_set_the_MenuItem_text_from_UserAction_Displayable()
       {
-        final List<MenuItem> menuItems = fixture.createMenuItems(roleMapWithUserActionProvider);
+        final List<MenuItem> menuItems = underTest.createMenuItems(roleMapWithUserActionProvider);
 
         assertThat(menuItems, is(not(nullValue())));
         assertThat(menuItems.size(), is(actions.size()));
@@ -177,7 +179,7 @@ public class UserActionProviderContextMenuBuilderTest
     public void must_invoke_callbacks_in_a_non_FX_thread()
       throws InterruptedException
       {
-        final List<MenuItem> menuItems = fixture.createMenuItems(roleMapWithUserActionProvider);
+        final List<MenuItem> menuItems = underTest.createMenuItems(roleMapWithUserActionProvider);
 
         assertThat(menuItems, is(not(nullValue())));
         assertThat(menuItems.size(), is(actions.size()));

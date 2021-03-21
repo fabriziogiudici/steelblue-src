@@ -60,8 +60,8 @@ public class JavaFXPresentationBuilderTest
     @Test(enabled = false)
     public void must_properly_create_a_presentation_instance()
       {
-        final MockProvider fixture = new MockProvider();
+        final MockProvider underTest = new MockProvider();
 
-        final MockInterface i = fixture.create(null);
+        final MockInterface i = underTest.create(null);
       }
 }

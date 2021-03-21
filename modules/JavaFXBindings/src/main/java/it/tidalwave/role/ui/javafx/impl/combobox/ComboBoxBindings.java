@@ -32,29 +32,27 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
-import it.tidalwave.role.ui.UserAction;
-import javafx.util.Callback;
 import javafx.collections.ObservableList;
+import javafx.util.Callback;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ComboBox;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.application.Platform;
-import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
-import it.tidalwave.role.ui.javafx.impl.CellBinder;
-import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
-import it.tidalwave.role.ui.javafx.impl.common.AsObjectListCell;
+import it.tidalwave.role.ui.javafx.impl.list.AsObjectListCell;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
+import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
+import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
-import static javafx.collections.FXCollections.observableArrayList;
+import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
 import static javafx.scene.input.KeyCode.*;
-import static it.tidalwave.role.SimpleComposite._SimpleComposite_;
+import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
 
 /***********************************************************************************************************************
  *
@@ -122,24 +120,29 @@ public class ComboBoxBindings extends DelegateSupport
               }
           });
 
-        final ReadOnlyObjectProperty<PresentationModel> pmProperty = comboBox.getSelectionModel().selectedItemProperty();
-        pmProperty.removeListener(changeListener);
-        executor.execute(() -> // TODO: use FXWorker
+        final ReadOnlyObjectProperty<PresentationModel> selectedProperty = comboBox.getSelectionModel().selectedItemProperty();
+        selectedProperty.removeListener(changeListener);
+        JavaFXWorker.run(executor,
+                         () -> childrenPm(pm),
+                         items -> finalize(comboBox, items, selectedProperty, callback));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void finalize (@Nonnull final ComboBox<PresentationModel> comboBox,
+                           @Nonnull final ObservableList<PresentationModel> items,
+                           @Nonnull final ReadOnlyObjectProperty<PresentationModel> selectedProperty,
+                           @Nonnull final Optional<Runnable> callback)
+      {
+        comboBox.setItems(items);
+
+        if (!items.isEmpty())
           {
-            final SimpleComposite<PresentationModel> composite = pm.as(_SimpleComposite_);
-            final ObservableList<PresentationModel> items = observableArrayList(composite.findChildren().results());
-            Platform.runLater(() ->
-              {
-                comboBox.setItems(items);
+            comboBox.getSelectionModel().select(items.get(0));
+          }
 
-                if (!items.isEmpty())
-                  {
-                    comboBox.getSelectionModel().select(items.get(0));
-                  }
-
-                pmProperty.addListener(changeListener);
-                callback.ifPresent(Runnable::run);
-              });
-          });
+        selectedProperty.addListener(changeListener);
+        callback.ifPresent(Runnable::run);
       }
   }

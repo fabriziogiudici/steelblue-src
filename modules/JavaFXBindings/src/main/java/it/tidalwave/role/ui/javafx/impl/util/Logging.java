@@ -26,7 +26,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl;
+package it.tidalwave.role.ui.javafx.impl.util;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -36,6 +36,7 @@ import it.tidalwave.util.Finder;
 import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.Composite;
 import it.tidalwave.role.ui.Displayable;
+import javafx.collections.ObservableList;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.toList;
@@ -50,6 +51,9 @@ public class Logging
   {
     public static final String INDENT = " ".repeat(100);
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     public static void logObjects (@Nonnull final String prefix, @Nonnull final Collection<?> objects)
       {
         if (!log.isDebugEnabled())
@@ -70,6 +74,9 @@ public class Logging
           }
       }
 
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
     public static void logObject (@Nonnull final String indent, @Nonnull final Object object)
       {
         if (!log.isDebugEnabled())

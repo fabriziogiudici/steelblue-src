@@ -126,8 +126,11 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
         presentation.showUp();
         final Collection<SimpleEntity> entities1 = dao.getSimpleEntities();
         final Collection<SimpleDciEntity> entities2 = dao.getDciEntities();
-        final PresentationModel pm1 = entities1.stream().map(this::pmFor).collect(toCompositePresentationModel());
-        final PresentationModel pm2 = entities2.stream().map(this::pmFor).collect(toCompositePresentationModel());
+        final Displayable root = Displayable.of("root");
+        final PresentationModel pm1 = entities1.stream().map(this::pmFor)
+                                                        .collect(toCompositePresentationModel(r(root)));
+        final PresentationModel pm2 = entities2.stream().map(this::pmFor)
+                                                        .collect(toCompositePresentationModel(r(root)));
         presentation.populate(pm1, pm2);
       }
 

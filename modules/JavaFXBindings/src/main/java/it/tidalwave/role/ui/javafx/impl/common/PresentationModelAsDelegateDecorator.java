@@ -28,54 +28,69 @@
  */
 package it.tidalwave.role.ui.javafx.impl.common;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.concurrent.Executor;
-import javafx.scene.control.TreeItem;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import it.tidalwave.role.ui.PresentationModel;
-import it.tidalwave.role.ui.Selectable;
+import it.tidalwave.util.As;
+import it.tidalwave.util.AsException;
+import lombok.AccessLevel;
+import lombok.experimental.Delegate;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.ui.Selectable._Selectable_;
+import lombok.ToString;
 
 /***********************************************************************************************************************
  *
+ * A decorator for {@link PresentationModel} that also searches for roles in a specified delegate as a fallback.
+ *
+ * FIME: move to TFT
+ *
+ * @stereotype Decorator
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
-public class ChangeListenerSelectableAdapter implements ChangeListener<PresentationModel>
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE) @ToString
+public class PresentationModelAsDelegateDecorator implements PresentationModel
   {
+    @Delegate(excludes = As.class) @Nonnull
+    private final PresentationModel pmDelegate;
+
+    private final As asDelegate;
+
     @Nonnull
-    protected final Executor executor;
-
-    private final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener =
-            // FIXME: test null oldValue, newValue?
-            (observable, oldValue, newValue) -> changed(null, safe(oldValue), safe(newValue));
-
-    @Override
-    public void changed (@Nonnull final ObservableValue<? extends PresentationModel> ov,
-                         @Nonnull final PresentationModel oldPm,
-                         @CheckForNull final PresentationModel newPm)
+    public static PresentationModel decorating (@Nonnull final PresentationModel pmDelegate,
+                                                @Nonnull final As asDelegate)
       {
-        if (newPm != null) // no selection
+        return new PresentationModelAsDelegateDecorator(pmDelegate, asDelegate);
+      }
+
+    @Override @Nonnull
+    public <T> T as (@Nonnull final Class<T> type)
+      {
+        try
           {
-            executor.execute(() -> newPm.maybeAs(_Selectable_).ifPresent(Selectable::select));
+            return pmDelegate.as(type);
+          }
+        catch (AsException e)
+          {
+            return asDelegate.as(type);
           }
       }
 
-    @Nonnull
-    public ChangeListener<TreeItem<PresentationModel>> asTreeItemChangeListener()
+    @Override @Nonnull
+    public <T> T as (@Nonnull final Class<T> type, @Nonnull final NotFoundBehaviour<T> notFoundBehaviour)
       {
-        return treeItemChangeListener;
+        throw new UnsupportedOperationException("Not implemented yet");
       }
 
-    @Nullable
-    private static PresentationModel safe (@Nullable final TreeItem<PresentationModel> value)
+    @Override @Nonnull
+    public <T> Collection<T> asMany (@Nonnull final Class<T> type)
       {
-        return (value != null) ? value.getValue() : null;
+        final List<T> results = new ArrayList<>();
+        results.addAll(pmDelegate.asMany(type));
+        results.addAll(asDelegate.asMany(type));
+
+        return results;
       }
   }

@@ -31,7 +31,7 @@ package it.tidalwave.role.ui.javafx.impl.treetable;
 import javax.annotation.CheckForNull;
 import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.util.As;
-import it.tidalwave.role.ui.javafx.impl.CellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
 import javafx.scene.control.TreeTableCell;
 import lombok.AllArgsConstructor;
 
@@ -42,7 +42,7 @@ import lombok.AllArgsConstructor;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 class AsObjectTreeTableCell<T extends As> extends TreeTableCell<T, T>
   {
     @VisibleForTesting final CellBinder cellBinder;

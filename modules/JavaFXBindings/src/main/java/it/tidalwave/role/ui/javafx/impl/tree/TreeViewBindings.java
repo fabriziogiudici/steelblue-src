@@ -29,28 +29,24 @@
 package it.tidalwave.role.ui.javafx.impl.tree;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.beans.PropertyChangeListener;
+import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import javafx.util.Callback;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.application.Platform;
-import it.tidalwave.util.AsException;
 import it.tidalwave.util.annotation.VisibleForTesting;
-import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
-import it.tidalwave.role.ui.javafx.impl.CellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
+import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.SimpleComposite.*;
-import static it.tidalwave.role.ui.Selectable._Selectable_;
-import static it.tidalwave.role.ui.javafx.impl.Logging.*;
+import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
 
 /***********************************************************************************************************************
  *
@@ -60,12 +56,11 @@ import static it.tidalwave.role.ui.javafx.impl.Logging.*;
 @Slf4j
 public class TreeViewBindings extends DelegateSupport
   {
-//    @Nonnull
-//    private final CellBinder cellBinder;
-//
     @VisibleForTesting final Callback<TreeView<PresentationModel>, TreeCell<PresentationModel>> treeCellFactory;
 
     private final ObsoletePresentationModelDisposer presentationModelDisposer = new ObsoletePresentationModelDisposer();
+
+    @VisibleForTesting final ChangeListenerSelectableAdapter changeListener = new ChangeListenerSelectableAdapter(executor);
 
     /*******************************************************************************************************************
      *
@@ -75,27 +70,8 @@ public class TreeViewBindings extends DelegateSupport
     public TreeViewBindings (@Nonnull final Executor executor, @Nonnull final CellBinder cellBinder)
       {
         super(executor);
-//        this.cellBinder = cellBinder;
         treeCellFactory = treeView -> new AsObjectTreeCell<>(cellBinder);
       }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener = (ov, oldItem, item) ->
-      executor.execute(() ->
-        {
-          try
-            {
-              item.getValue().as(_Selectable_).select();
-            }
-          catch (AsException e)
-            {
-              TreeViewBindings.log.debug("No Selectable role for {}", item); // ok, do nothing
-            }
-        });
 
     /*******************************************************************************************************************
      *
@@ -117,10 +93,10 @@ public class TreeViewBindings extends DelegateSupport
 
         treeView.setCellFactory(treeCellFactory);
 
-        final ReadOnlyObjectProperty<TreeItem<PresentationModel>> pmProperty =
+        final ReadOnlyObjectProperty<TreeItem<PresentationModel>> selectionProperty =
                 treeView.getSelectionModel().selectedItemProperty();
-        pmProperty.removeListener(treeItemChangeListener);
-        pmProperty.addListener(treeItemChangeListener);
+        selectionProperty.removeListener(changeListener.asTreeItemChangeListener());
+        selectionProperty.addListener(changeListener.asTreeItemChangeListener());
      }
 
     /*******************************************************************************************************************
@@ -161,17 +137,8 @@ public class TreeViewBindings extends DelegateSupport
                                  final int recursion)
       {
         assertIsFxApplicationThread();
-        final String prefix = INDENT.substring(0, recursion * 8);
-        final SimpleComposite<PresentationModel> composite = pm.as(_SimpleComposite_);
-        logObject(prefix, composite);
-
-        // FIXME: results() in bg thread
-        final List<? extends PresentationModel> childPMs = composite.findChildren().results();
-        logObjects(prefix, childPMs);
-
-        for (final PresentationModel childPm : childPMs)
-          {
-            parentItem.getChildren().add(createTreeItem(childPm, recursion));
-          }
+        JavaFXWorker.run(executor,
+                         () -> JavaFXWorker.childrenPm(pm, recursion),
+                         items -> items.forEach(item -> parentItem.getChildren().add(createTreeItem(item, recursion))));
       }
   }

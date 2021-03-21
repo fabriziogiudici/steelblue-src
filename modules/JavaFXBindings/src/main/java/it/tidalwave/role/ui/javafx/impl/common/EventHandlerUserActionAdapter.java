@@ -26,63 +26,33 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl.treetable;
+package it.tidalwave.role.ui.javafx.impl.common;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import it.tidalwave.role.ui.PresentationModel;
-import it.tidalwave.util.As;
-import it.tidalwave.util.AsException;
-import lombok.experimental.Delegate;
+import java.util.concurrent.Executor;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import it.tidalwave.role.ui.UserAction;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 /***********************************************************************************************************************
- *
- * A decorator for {@link PresentationModel} that also searches for roles in a specified delegate as a fallback.
- *
- * @stereotype Decorator
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @ToString
-public class PresentationModelAsDelegateDecorator implements PresentationModel
+@RequiredArgsConstructor
+public class EventHandlerUserActionAdapter implements EventHandler<ActionEvent>
   {
-    @Delegate(excludes = As.class) @Nonnull
-    private final PresentationModel pmDelegate;
+    @Nonnull
+    private final Executor executor;
 
+    @Nonnull
+    private final UserAction action;
 
-    private final As asDelegate;
-
-    @Override @Nonnull
-    public <T> T as (@Nonnull final Class<T> type)
+    @Override
+    public void handle (@Nonnull final ActionEvent event)
       {
-        try
-          {
-            return pmDelegate.as(type);
-          }
-        catch (AsException e)
-          {
-            return asDelegate.as(type);
-          }
-      }
-
-    @Override @Nonnull
-    public <T> T as (@Nonnull final Class<T> type, @Nonnull final NotFoundBehaviour<T> notFoundBehaviour)
-      {
-        throw new UnsupportedOperationException("Not implemented yet");
-      }
-
-    @Override @Nonnull
-    public <T> Collection<T> asMany (@Nonnull final Class<T> type)
-      {
-        final List<T> results = new ArrayList<>();
-        results.addAll(pmDelegate.asMany(type));
-        results.addAll(asDelegate.asMany(type));
-
-        return results;
+        executor.execute(action::actionPerformed);
       }
   }
+

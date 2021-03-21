@@ -28,30 +28,20 @@
  */
 package it.tidalwave.role.ui.javafx.impl.common;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import javafx.scene.control.cell.TextFieldListCell;
+import javax.annotation.Nullable;
+import javafx.scene.control.Cell;
 import it.tidalwave.util.As;
-import it.tidalwave.role.ui.javafx.impl.CellBinder;
-import lombok.AllArgsConstructor;
 
 /***********************************************************************************************************************
  *
- * A specialisation of {@link TextFieldListCell} which binds to an {@link As}-capable item.
+ * A service that binds text, graphic, default action, context menu and css style to a {@link Cell} extracting data from
+ * an {@link As}-capable item.
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@AllArgsConstructor
-public class AsObjectListCell<T extends As> extends TextFieldListCell<T>
+public interface CellBinder
   {
-    @Nonnull
-    private final CellBinder cellBinder;
-
-    @Override
-    public void updateItem (@CheckForNull final T item, final boolean empty)
-      {
-        super.updateItem(item, empty);
-        cellBinder.bind(this, item, empty);
-      }
+    public void bind (@Nonnull Cell<?> cell, @Nullable As item, final boolean empty);
   }

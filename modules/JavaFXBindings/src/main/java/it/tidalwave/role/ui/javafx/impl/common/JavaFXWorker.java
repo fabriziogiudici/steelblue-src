@@ -26,14 +26,25 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl.util;
+package it.tidalwave.role.ui.javafx.impl.common;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import it.tidalwave.role.SimpleComposite;
+import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.javafx.impl.util.Logging;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import lombok.experimental.UtilityClass;
+import static it.tidalwave.role.SimpleComposite._SimpleComposite_;
+import static it.tidalwave.role.ui.javafx.impl.util.Logging.INDENT;
+import static java.util.Collections.emptyList;
+import static javafx.collections.FXCollections.observableArrayList;
 
 /***********************************************************************************************************************
  *
@@ -52,6 +63,24 @@ public class JavaFXWorker
                            final T value = backgroundSupplier.get();
                            Platform.runLater(() -> javaFxFinalizer.accept(value));
                          });
+      }
+
+    @Nonnull
+    public static ObservableList<PresentationModel> childrenPm (@Nonnull final PresentationModel pm)
+      {
+        return childrenPm(pm, 0);
+      }
+
+    @Nonnull
+    public static ObservableList<PresentationModel> childrenPm (@Nonnull final PresentationModel pm,
+                                                                @Nonnegative int recursion)
+      {
+        final String indent = INDENT.substring(0, recursion * 8);
+        final Optional<SimpleComposite> composite = pm.maybeAs(_SimpleComposite_);
+        composite.ifPresent(c -> Logging.logObject(indent, composite));
+        final List items = composite.map(c -> c.findChildren().results()).orElse(emptyList());
+        Logging.logObjects(indent, items);
+        return observableArrayList(items);
       }
   }
 

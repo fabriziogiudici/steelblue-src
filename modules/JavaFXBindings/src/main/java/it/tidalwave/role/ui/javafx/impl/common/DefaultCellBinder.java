@@ -26,7 +26,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl;
+package it.tidalwave.role.ui.javafx.impl.common;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,8 +45,6 @@ import it.tidalwave.role.ui.Displayable;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.ui.role.javafx.CustomGraphicProvider;
-import it.tidalwave.role.ui.javafx.impl.util.EventHandlerUserActionAdapter;
-import it.tidalwave.role.ui.javafx.impl.util.JavaFXWorker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.toList;
@@ -208,7 +206,7 @@ public class DefaultCellBinder implements CellBinder
      *
      ******************************************************************************************************************/
     @Nonnull
-    @VisibleForTesting List<MenuItem> createMenuItems (@Nonnull final RoleBag roles)
+    @VisibleForTesting public List<MenuItem> createMenuItems (@Nonnull final RoleBag roles)
       {
         return roles.getMany(_UserActionProvider_).stream()
                     .flatMap(uap -> uap.getActions().stream())

@@ -26,7 +26,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl;
+package it.tidalwave.role.ui.javafx.impl.common;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class RoleBag
         defaultUserAction = Optional.empty();
       }
 
-    public RoleBag (@Nonnull final As source, @Nonnull final List<Class<?>> roleTypes)
+    public RoleBag (@Nonnull final As source, @Nonnull final Collection<Class<?>> roleTypes)
       {
         // TODO: assert not FX thread
         roleTypes.forEach(roleType -> copyRoles(source, roleType));

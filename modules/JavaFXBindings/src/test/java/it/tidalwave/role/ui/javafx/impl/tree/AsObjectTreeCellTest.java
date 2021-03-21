@@ -30,7 +30,7 @@ package it.tidalwave.role.ui.javafx.impl.tree;
 
 import it.tidalwave.util.As;
 import it.tidalwave.role.ui.Displayable;
-import it.tidalwave.role.ui.javafx.impl.CellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.hamcrest.CoreMatchers.is;
@@ -54,7 +54,7 @@ public class AsObjectTreeCellTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       {
         cellBinder = mock(CellBinder.class);
         underTest = new AsObjectTreeCell<>(cellBinder);
