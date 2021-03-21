@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Cell;
 import javafx.scene.control.ContextMenu;
@@ -47,6 +46,7 @@ import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.ui.role.javafx.CustomGraphicProvider;
 import it.tidalwave.role.ui.javafx.impl.util.EventHandlerUserActionAdapter;
+import it.tidalwave.role.ui.javafx.impl.util.JavaFXWorker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.toList;
@@ -65,6 +65,7 @@ import static it.tidalwave.ui.role.javafx.CustomGraphicProvider._CustomGraphicPr
 @RequiredArgsConstructor @Slf4j
 public class DefaultCellBinder implements CellBinder
   {
+    /** Roles to preload, so they are computed in the background thread. */
     private static final List<Class<?>> PRELOADING_ROLE_TYPES = List.of(
             _Displayable_, _UserActionProvider_, _Styleable_, _CustomGraphicProvider_);
 
@@ -82,24 +83,30 @@ public class DefaultCellBinder implements CellBinder
     public void bind (@Nonnull final Cell<?> cell, @Nullable final As item, final boolean empty)
       {
         log.trace("bind({}, {}, {})", cell, item, empty);
-
         clearBindings(cell);
 
         if (!empty && (item != null))
           {
-            executor.execute(() ->
-              {
-                final RoleBag roles = new RoleBag(item, PRELOADING_ROLE_TYPES);
-
-                Platform.runLater(() ->
-                  {
-                    bindTextAndGraphic(cell, roles);
-                    bindDefaultAction(cell, roles);
-                    bindContextMenu(cell, roles);
-                    bindStyles(cell.getStyleClass(), roles);
-                  });
-              });
+            JavaFXWorker.run(executor,
+                             () -> new RoleBag(item, PRELOADING_ROLE_TYPES),
+                             roles -> bindAll(cell, roles));
           }
+      }
+
+    /*******************************************************************************************************************
+     *
+     * Binds everything provided by the given {@link RoleBag} to the given {@link Cell}.
+     *
+     * @param     cell            the {@code Cell}
+     * @param     roles           the role bag
+     *
+     ******************************************************************************************************************/
+    private void bindAll (@Nonnull final Cell<?> cell, @Nonnull final RoleBag roles)
+      {
+        bindTextAndGraphic(cell, roles);
+        bindDefaultAction(cell, roles);
+        bindContextMenu(cell, roles);
+        bindStyles(cell.getStyleClass(), roles);
       }
 
     /*******************************************************************************************************************

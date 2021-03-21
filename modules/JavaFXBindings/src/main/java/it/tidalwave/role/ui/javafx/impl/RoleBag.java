@@ -37,24 +37,40 @@ import java.util.Map;
 import java.util.Optional;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.util.As;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.ToString;
-import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
 import static java.util.Collections.*;
+import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@NoArgsConstructor @ToString
+@ToString
 public class RoleBag
   {
     private final Map<Class<?>, List<Object>> map = new HashMap<>();
 
+    /** The default user action, which is he first action of the first
+     *  {@link it.tidalwave.role.ui.UserActionProvider}. */
+    @Getter
+    private final Optional<UserAction> defaultUserAction;
+
+    public RoleBag()
+      {
+        defaultUserAction = Optional.empty();
+      }
+
     public RoleBag (@Nonnull final As source, @Nonnull final List<Class<?>> roleTypes)
       {
+        // TODO: assert not FX thread
         roleTypes.forEach(roleType -> copyRoles(source, roleType));
+        // computed NOW because we are in the background thread
+        // TODO: perhaps it could be associated to a dummy key, instead of being returned by a getter?
+        defaultUserAction = getMany(_UserActionProvider_).stream()
+                                            .flatMap(a -> a.getOptionalDefaultAction().stream())
+                                            .findFirst();
       }
 
     public <ROLE_TYPE> void put (@Nonnull final Class<ROLE_TYPE> roleClass, @Nonnull final ROLE_TYPE role)
@@ -80,21 +96,6 @@ public class RoleBag
         return unmodifiableList((List<ROLE_TYPE>)map.getOrDefault(roleClass, emptyList()));
       }
 
-    /*******************************************************************************************************************
-     *
-     * Returns the default user action, which is he first action of the first
-     * {@link it.tidalwave.role.ui.UserActionProvider}.
-     *
-     * @return    the user action
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public Optional<UserAction> getDefaultUserAction()
-      {
-        return getMany(_UserActionProvider_).stream()
-                                            .flatMap(a -> a.getOptionalDefaultAction().stream())
-                                            .findFirst();
-      }
 
     private <ROLE_TYPE> void copyRoles (@Nonnull final As item, @Nonnull final Class<ROLE_TYPE> roleClass)
       {
