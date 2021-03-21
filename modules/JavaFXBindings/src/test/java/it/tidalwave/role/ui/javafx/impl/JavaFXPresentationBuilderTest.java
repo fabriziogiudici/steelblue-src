@@ -31,7 +31,6 @@ package it.tidalwave.role.ui.javafx.impl;
 import javafx.application.Platform;
 import it.tidalwave.role.ui.javafx.impl.util.JavaFXPresentationBuilder;
 import org.testng.annotations.Test;
-import static org.testng.Assert.*;
 
 /***********************************************************************************************************************
  *

@@ -29,9 +29,10 @@
 package it.tidalwave.role.ui.javafx.impl.list;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
+import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.javafx.impl.Logging;
 import javafx.util.Callback;
 import javafx.collections.ObservableList;
@@ -40,7 +41,6 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.application.Platform;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.javafx.impl.CellBinder;
@@ -74,7 +74,7 @@ public class ListViewBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    public ListViewBindings (final @Nonnull Executor executor, final @Nonnull CellBinder cellBinder)
+    public ListViewBindings (@Nonnull final Executor executor, @Nonnull final CellBinder cellBinder)
       {
         super(executor);
         cellFactory = listView -> new AsObjectListCell<>(cellBinder);
@@ -85,9 +85,9 @@ public class ListViewBindings extends DelegateSupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void bind (final @Nonnull ListView<PresentationModel> listView,
-                      final @Nonnull PresentationModel pm,
-                      final @Nonnull Optional<Runnable> callback)
+    public void bind (@Nonnull final ListView<PresentationModel> listView,
+                      @Nonnull final PresentationModel pm,
+                      @Nonnull final Optional<Runnable> callback)
       {
         listView.setCellFactory(cellFactory);
 
@@ -97,7 +97,7 @@ public class ListViewBindings extends DelegateSupport
         // TODO: try by having CEC selection emulating RETURN and optionally accepting RETURN here
         listView.setOnKeyPressed(event ->
           {
-            if (Arrays.asList(SPACE, ENTER).contains(event.getCode()))
+            if (List.of(SPACE, ENTER).contains(event.getCode()))
               {
                 final PresentationModel selectedPm = listView.getSelectionModel().getSelectedItem();
                 // TODO: must call the default action - but should we look up it again?
@@ -106,16 +106,9 @@ public class ListViewBindings extends DelegateSupport
 
                 executor.execute(() ->
                   {
-                    try
-                      {
-                        // FIXME: it would be nicer to retrieve the cell and its associated RoleBag?
-                        final RoleBag roleMap = new RoleBag(selectedPm, Arrays.asList(_UserActionProvider_));
-                        DefaultCellBinder.findDefaultUserAction(roleMap).actionPerformed();
-                      }
-                    catch (NotFoundException e)
-                      {
-                        // ok no action
-                      }
+                    // FIXME: it would be nicer to retrieve the cell and its associated RoleBag?
+                    final RoleBag roles = new RoleBag(selectedPm, List.of(_UserActionProvider_));
+                    roles.getDefaultUserAction().ifPresent(UserAction::actionPerformed);
                   });
               }
           });

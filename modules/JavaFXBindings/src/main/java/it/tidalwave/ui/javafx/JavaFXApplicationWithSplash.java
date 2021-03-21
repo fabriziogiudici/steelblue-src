@@ -103,8 +103,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
      *
      ******************************************************************************************************************/
     @Override
-    public void start (final @Nonnull Stage stage)
-      throws Exception
+    public void start (@Nonnull final Stage stage)
       {
         log.info("start({})", stage);
         final Stage splashStage = new Stage(StageStyle.TRANSPARENT);
@@ -162,7 +161,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
      *
      *
      ******************************************************************************************************************/
-    protected void onStageCreated (final @Nonnull Stage stage, final @Nonnull NodeAndDelegate applicationNad)
+    protected void onStageCreated (@Nonnull final Stage stage, @Nonnull final NodeAndDelegate applicationNad)
       {
       }
 
@@ -207,7 +206,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
      *
      *
      ******************************************************************************************************************/
-    private void setMacOSXLookAndFeel (final @Nonnull Scene scene)
+    private void setMacOSXLookAndFeel (@Nonnull final Scene scene)
       {
         log.info("Setting Aqua style");
         AquaFx.style();
@@ -227,7 +226,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
      *
      *
      ******************************************************************************************************************/
-    private void configureFullScreen (final @Nonnull Stage stage)
+    private void configureFullScreen (@Nonnull final Stage stage)
       {
         stage.setFullScreen(fullScreen);
 

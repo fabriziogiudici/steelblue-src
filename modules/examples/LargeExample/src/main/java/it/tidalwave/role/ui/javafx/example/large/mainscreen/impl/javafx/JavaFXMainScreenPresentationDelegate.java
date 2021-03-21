@@ -43,7 +43,6 @@ import javafx.scene.control.TreeView;
 import it.tidalwave.util.ui.UserNotificationWithFeedback;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.PresentationModel;
-import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation;
 import lombok.extern.slf4j.Slf4j;
@@ -106,7 +105,7 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
      *
      ******************************************************************************************************************/
     @Override
-    public void bind (final @Nonnull Bindings bindings)
+    public void bind (@Nonnull final Bindings bindings)
       {
         binder.bind(btButton, bindings.buttonAction);
         binder.bind(btDialogOk, bindings.actionDialogOk);
@@ -132,7 +131,7 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
      *
      ******************************************************************************************************************/
     @Override
-    public void populate (final @Nonnull PresentationModel listPm,final @Nonnull PresentationModel arrayPm)
+    public void populate (@Nonnull final PresentationModel listPm, @Nonnull final PresentationModel arrayPm)
       {
         binder.bind(lvListView, listPm, () -> log.info("Finished setup of lvListView"));
         binder.bind(cbComboBox, listPm, () -> log.info("Finished setup of cbComboBox"));
@@ -147,7 +146,7 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
      *
      ******************************************************************************************************************/
     @Override
-    public void notify (final @Nonnull UserNotificationWithFeedback notification)
+    public void notify (@Nonnull final UserNotificationWithFeedback notification)
       {
         binder.showInModalDialog(notification);
       }
@@ -158,7 +157,7 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
      *
      ******************************************************************************************************************/
     @Override
-    public void notify (final @Nonnull String message)
+    public void notify (@Nonnull final String message)
       {
         taLog.appendText(message + "\n");
       }
@@ -169,8 +168,8 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
      *
      ******************************************************************************************************************/
     @Override
-    public void pickFile (final @Nonnull BoundProperty<Path> selectedFile,
-                          final @Nonnull UserNotificationWithFeedback notification)
+    public void pickFile (@Nonnull final BoundProperty<Path> selectedFile,
+                          @Nonnull final UserNotificationWithFeedback notification)
       {
         binder.openFileChooserFor(notification, selectedFile);
       }
@@ -181,8 +180,8 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
      *
      ******************************************************************************************************************/
     @Override
-    public void pickDirectory (final @Nonnull BoundProperty<Path> selectedFolder,
-                               final @Nonnull UserNotificationWithFeedback notification)
+    public void pickDirectory (@Nonnull final BoundProperty<Path> selectedFolder,
+                               @Nonnull final UserNotificationWithFeedback notification)
       {
         binder.openDirectoryChooserFor(notification, selectedFolder);
       }

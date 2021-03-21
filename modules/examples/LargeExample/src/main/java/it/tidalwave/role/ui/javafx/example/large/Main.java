@@ -59,7 +59,7 @@ public class Main extends JavaFXSpringApplication
      * </ul>
      *
      ******************************************************************************************************************/
-    public static void main (final @Nonnull String ... args)
+    public static void main (@Nonnull final String ... args)
       {
         try
           {
@@ -99,7 +99,7 @@ public class Main extends JavaFXSpringApplication
      *
      ******************************************************************************************************************/
     @Override
-    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
+    protected void onStageCreated (@Nonnull final ApplicationContext applicationContext)
       {
         applicationContext.getBean(MainScreenPresentationControl.class).start();
       }

@@ -30,28 +30,23 @@ package it.tidalwave.role.ui.javafx.impl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Cell;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import it.tidalwave.util.As;
-import it.tidalwave.util.AsException;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.util.annotation.VisibleForTesting;
+import it.tidalwave.role.ui.Displayable;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.ui.role.javafx.CustomGraphicProvider;
+import it.tidalwave.role.ui.javafx.impl.util.EventHandlerUserActionAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.toList;
@@ -70,28 +65,10 @@ import static it.tidalwave.ui.role.javafx.CustomGraphicProvider._CustomGraphicPr
 @RequiredArgsConstructor @Slf4j
 public class DefaultCellBinder implements CellBinder
   {
-    private static final List<Class<?>> PRELOADING_ROLE_TYPES = Arrays.asList(
+    private static final List<Class<?>> PRELOADING_ROLE_TYPES = List.of(
             _Displayable_, _UserActionProvider_, _Styleable_, _CustomGraphicProvider_);
 
     private static final String ROLE_STYLE_PREFIX = "-rs-";
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @RequiredArgsConstructor
-    class EventHandlerUserActionAdapter implements EventHandler<ActionEvent>
-      {
-        @Nonnull
-        private final UserAction action;
-
-        @Override
-        public void handle (final @Nonnull ActionEvent event)
-          {
-            executor.execute(action::actionPerformed);
-          }
-      }
 
     @Nonnull
     private final Executor executor;
@@ -102,7 +79,7 @@ public class DefaultCellBinder implements CellBinder
      *
      ******************************************************************************************************************/
     @Override
-    public void bind (final @Nonnull Cell<?> cell, final @Nullable As item, final boolean empty)
+    public void bind (@Nonnull final Cell<?> cell, @Nullable final As item, final boolean empty)
       {
         log.trace("bind({}, {}, {})", cell, item, empty);
 
@@ -127,45 +104,38 @@ public class DefaultCellBinder implements CellBinder
 
     /*******************************************************************************************************************
      *
+     * Binds the text and eventual custom {@link javafx.scene.Node} provided by the given {@link RoleBag} to the given
+     * {@link Cell}.
      *
-     *
-     ******************************************************************************************************************/
-    private void clearBindings (final @Nonnull Cell<?> cell)
-      {
-        cell.setText("");
-        cell.setGraphic(null);
-        cell.setContextMenu(null);
-        cell.setOnKeyPressed(null);
-        cell.setOnMouseClicked(null);
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
+     * @param     cell            the {@code Cell}
+     * @param     roles           the role bag
      *
      ******************************************************************************************************************/
-    private void bindTextAndGraphic (final @Nonnull Cell<?> cell, final @Nonnull RoleBag roles)
+    private void bindTextAndGraphic (@Nonnull final Cell<?> cell, @Nonnull final RoleBag roles)
       {
         final Optional<CustomGraphicProvider> cgp = roles.get(_CustomGraphicProvider_);
-        cell.setGraphic(cgp.map(role -> role.getGraphic()).orElse(null));
-        cell.setText(cgp.map(c -> "").orElse(roles.get(_Displayable_).map(role -> role.getDisplayName()).orElse("")));
+        cell.setGraphic(cgp.map(CustomGraphicProvider::getGraphic).orElse(null));
+        cell.setText(cgp.map(c -> "").orElse(roles.get(_Displayable_).map(Displayable::getDisplayName).orElse("")));
       }
 
     /*******************************************************************************************************************
      *
+     * Binds the default {@link UserAction}s provided by the given {@link RoleBag} as the default action of the given
+     * {@link Cell} (activated by double click or key pressure).
      *
+     * @param     cell            the {@code Cell}
+     * @param     roles           the role bag
      *
      ******************************************************************************************************************/
-    private void bindDefaultAction (final @Nonnull Cell<?> cell, final @Nonnull RoleBag roles)
+    private void bindDefaultAction (@Nonnull final Cell<?> cell, @Nonnull final RoleBag roles)
       {
-        try
+        roles.getDefaultUserAction().ifPresent(defaultAction ->
           {
-            final UserAction defaultAction = findDefaultUserAction(roles);
-
             // FIXME: doesn't work - keyevents are probably handled by ListView
             cell.setOnKeyPressed(event ->
               {
                 log.debug("onKeyPressed: {}", event);
+
                 if (event.getCode().equals(KeyCode.SPACE))
                   {
                     executor.execute(defaultAction::actionPerformed);
@@ -180,19 +150,19 @@ public class DefaultCellBinder implements CellBinder
                     executor.execute(defaultAction::actionPerformed);
                   }
               });
-          }
-        catch (NotFoundException e)
-          {
-            log.trace("No default UserAction for {}", cell);
-          }
+          });
       }
 
     /*******************************************************************************************************************
      *
+     * Binds the {@link UserAction}s provided by the given {@link RoleBag} as items of the contextual menu of a
+     * {@link Cell}.
      *
+     * @param     cell            the {@code Cell}
+     * @param     roles           the role bag
      *
      ******************************************************************************************************************/
-    private void bindContextMenu (final @Nonnull Cell<?> cell, final @Nonnull RoleBag roles)
+    private void bindContextMenu (@Nonnull final Cell<?> cell, @Nonnull final RoleBag roles)
       {
         final List<MenuItem> menuItems = createMenuItems(roles);
         cell.setContextMenu(menuItems.isEmpty() ? null : new ContextMenu(menuItems.toArray(new MenuItem[0])));
@@ -200,89 +170,72 @@ public class DefaultCellBinder implements CellBinder
 
     /*******************************************************************************************************************
      *
-     * Don't directly return a ContextMenu otherwise it will be untestable.
+     * Adds all the styles provided by the given {@link RoleBag} to a {@link ObservableList} of styles.
+     *
+     * @param     styleClasses    the destination where to add styles
+     * @param     roles           the role bag
      *
      ******************************************************************************************************************/
     @Nonnull
-    @VisibleForTesting List<MenuItem> createMenuItems (final @Nonnull RoleBag roles)
+    private void bindStyles (@Nonnull final ObservableList<String> styleClasses, @Nonnull final RoleBag roles)
       {
-        try
-          {
-            final List<MenuItem> menuItems = new ArrayList<>();
-
-            // FIXME: use flatMap() & collector as below - but doesn't work, I think it throws an uncaught Exception
-//            return roles.getMany(UserActionProvider).stream()
-//                                             .flatMap(uap -> uap.getActions().stream())
-//                                             .map(action -> MenuItemBuilder.create()
-//                                                                    .text(action.as(_Displayable_).getDisplayName())
-//                                                                    .onAction(new EventHandlerUserActionAdapter(action))
-//                                                                    .build())
-//                                             .collect(toList());
-
-            roles.getMany(_UserActionProvider_).stream().forEach(userActionProvider ->
-              {
-                userActionProvider.getActions().stream().forEach(action ->
-                  {
-                    final MenuItem menuItem = new MenuItem(action.as(_Displayable_).getDisplayName());
-                    menuItem.setOnAction(new EventHandlerUserActionAdapter(action));
-                    menuItems.add(menuItem);
-                  });
-              });
-
-            return menuItems;
-          }
-        catch (AsException e)
-          {
-            return Collections.emptyList(); // ok, no context actions
-          }
-        catch (Exception e)
-          {
-            log.error("createMenuItems()", e);
-            return Collections.emptyList();
-          }
-      }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    public void bindStyles (final @Nonnull ObservableList<String> styleClasses, final @Nonnull RoleBag roles)
-      {
-        final List<String> styles = styleClasses.stream().filter(s -> !s.startsWith(ROLE_STYLE_PREFIX))
-                                                         .collect(toList());
+        final List<String> styles = styleClasses.stream()
+                                                .filter(s -> !s.startsWith(ROLE_STYLE_PREFIX))
+                                                .collect(toList());
         // FIXME: shouldn't reset them? In case of cell reuse, they get accumulated
-        styles.addAll(roles.getMany(_Styleable_).stream().flatMap(styleable -> styleable.getStyles().stream())
-                                                         .map(s -> ROLE_STYLE_PREFIX + s)
-                                                         .collect(toList()));
+        styles.addAll(roles.getMany(_Styleable_)
+                           .stream()
+                           .flatMap(styleable -> styleable.getStyles().stream())
+                           .map(s -> ROLE_STYLE_PREFIX + s)
+                           .collect(toList()));
         styleClasses.setAll(styles);
       }
 
     /*******************************************************************************************************************
      *
+     * Create a list of {@link MenuItem}s for each action provided by the given {@link RoleBag}.
+     * Don't directly return a ContextMenu otherwise it will be untestable.
      *
+     * @param     roles           the role bag
+     * @return                    the list of {@MenuItem}s
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static UserAction findDefaultUserAction (final @Nonnull RoleBag roles)
-      throws NotFoundException
+    @VisibleForTesting List<MenuItem> createMenuItems (@Nonnull final RoleBag roles)
       {
-        final Collection<UserActionProvider> userActionProviders = roles.getMany(_UserActionProvider_);
-        log.trace(">>>> userActionProviders: {}", userActionProviders);
+        return roles.getMany(_UserActionProvider_).stream()
+                    .flatMap(uap -> uap.getActions().stream())
+                    .map(this::createMenuItem)
+                    .collect(Collectors.toList());
+      }
 
-        for (final UserActionProvider userActionProvider : userActionProviders)
-          {
-           try
-             {
-               return userActionProvider.getDefaultAction();
-             }
-           catch (NotFoundException e)
-             {
-               // ok go on
-             }
-          }
+    /*******************************************************************************************************************
+     *
+     *
+     *
+     ******************************************************************************************************************/
+    private void clearBindings (@Nonnull final Cell<?> cell)
+      {
+        cell.setText("");
+        cell.setGraphic(null);
+        cell.setContextMenu(null);
+        cell.setOnKeyPressed(null);
+        cell.setOnMouseClicked(null);
+      }
 
-        throw new NotFoundException();
+    /*******************************************************************************************************************
+     *
+     * Creates a {@link MenuItem} bound to the given action.
+     *
+     * @param     action          the action
+     * @return                    the bound {@code MenuItem}
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    private MenuItem createMenuItem (@Nonnull final UserAction action)
+      {
+        final MenuItem menuItem = new MenuItem(action.as(_Displayable_).getDisplayName());
+        menuItem.setOnAction(new EventHandlerUserActionAdapter(executor, action));
+        return menuItem;
       }
   }

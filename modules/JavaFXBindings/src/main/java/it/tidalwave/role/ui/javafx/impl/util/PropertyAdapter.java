@@ -86,7 +86,7 @@ public class PropertyAdapter<T> implements Property<T>
           }
     };
 
-    public PropertyAdapter (final @Nonnull Executor executor, final @Nonnull BoundProperty<T> delegate)
+    public PropertyAdapter (@Nonnull final Executor executor, @Nonnull final BoundProperty<T> delegate)
       {
         this.executor = executor;
         this.delegate = delegate;
@@ -113,31 +113,31 @@ public class PropertyAdapter<T> implements Property<T>
       }
 
     @Override
-    public void addListener (final @Nonnull ChangeListener<? super T> listener)
+    public void addListener (@Nonnull final ChangeListener<? super T> listener)
       {
         changeListeners.add(listener);
       }
 
     @Override
-    public void removeListener (final @Nonnull ChangeListener<? super T> listener)
+    public void removeListener (@Nonnull final ChangeListener<? super T> listener)
       {
         changeListeners.remove(listener);
       }
 
     @Override
-    public void addListener (final @Nonnull InvalidationListener listener)
+    public void addListener (@Nonnull final InvalidationListener listener)
       {
         invalidationListeners.add(listener);
       }
 
     @Override
-    public void removeListener (final @Nonnull InvalidationListener listener)
+    public void removeListener (@Nonnull final InvalidationListener listener)
       {
         invalidationListeners.remove(listener);
       }
 
     @Override
-    public void bind(ObservableValue<? extends T> observable)
+    public void bind (final ObservableValue<? extends T> observable)
       {
         log.warn("bind({})", observable);
         throw new UnsupportedOperationException("Not supported yet.");
@@ -158,14 +158,14 @@ public class PropertyAdapter<T> implements Property<T>
       }
 
     @Override
-    public void bindBidirectional(Property<T> other)
+    public void bindBidirectional (final Property<T> other)
       {
         log.warn("bindBidirectional({})", other);
         throw new UnsupportedOperationException("Not supported yet.");
       }
 
     @Override
-    public void unbindBidirectional(Property<T> other)
+    public void unbindBidirectional (final Property<T> other)
       {
         log.warn("unbindBidirectional({})", other);
         throw new UnsupportedOperationException("Not supported yet.");

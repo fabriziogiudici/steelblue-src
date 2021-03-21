@@ -51,9 +51,9 @@ public class ChangeListenerSelectableAdapter implements ChangeListener<Presentat
     protected final Executor executor;
 
     @Override
-    public void changed (final @Nonnull ObservableValue<? extends PresentationModel> ov,
-                         final @Nonnull PresentationModel oldItem,
-                         final @CheckForNull PresentationModel item)
+    public void changed (@Nonnull final ObservableValue<? extends PresentationModel> ov,
+                         @Nonnull final PresentationModel oldItem,
+                         @CheckForNull final PresentationModel item)
       {
         if (item != null) // no selection
           {

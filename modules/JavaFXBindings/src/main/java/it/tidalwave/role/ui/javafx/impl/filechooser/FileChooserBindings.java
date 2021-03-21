@@ -54,7 +54,7 @@ public class FileChooserBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    public FileChooserBindings (final @Nonnull Executor executor)
+    public FileChooserBindings (@Nonnull final Executor executor)
       {
         super(executor);
       }
@@ -64,8 +64,8 @@ public class FileChooserBindings extends DelegateSupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void openFileChooserFor (final @Nonnull UserNotificationWithFeedback notification,
-                                    final @Nonnull BoundProperty<Path> selectedFile)
+    public void openFileChooserFor (@Nonnull final UserNotificationWithFeedback notification,
+                                    @Nonnull final BoundProperty<Path> selectedFile)
       {
         log.debug("openFileChooserFor({}, {})", notification, selectedFile);
         assertIsFxApplicationThread();
@@ -85,8 +85,8 @@ public class FileChooserBindings extends DelegateSupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void openDirectoryChooserFor (final @Nonnull UserNotificationWithFeedback notification,
-                                         final @Nonnull BoundProperty<Path> selectedFolder)
+    public void openDirectoryChooserFor (@Nonnull final UserNotificationWithFeedback notification,
+                                         @Nonnull final BoundProperty<Path> selectedFolder)
       {
         log.debug("openDirectoryChooserFor({}, {})", notification, selectedFolder);
         assertIsFxApplicationThread();
@@ -106,31 +106,27 @@ public class FileChooserBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    private void notifyFile (final @Nullable File file,
-                             final @Nonnull UserNotificationWithFeedback notification,
-                             final @Nonnull BoundProperty<Path> selectedFile)
+    private void notifyFile (@Nullable final File file,
+                             @Nonnull final UserNotificationWithFeedback notification,
+                             @Nonnull final BoundProperty<Path> selectedFile)
       {
-        Platform.runLater(new Runnable()
+        Platform.runLater(() ->
           {
-            @Override
-            public void run()
+            try
               {
-                try
+                if (file == null)
                   {
-                    if (file == null)
-                      {
-                        notification.cancel();
-                      }
-                    else
-                      {
-                        selectedFile.set(file.toPath());
-                        notification.confirm();
-                      }
+                    notification.cancel();
                   }
-                catch (Exception e)
+                else
                   {
-                    log.warn("", e);
+                    selectedFile.set(file.toPath());
+                    notification.confirm();
                   }
+              }
+            catch (Exception e)
+              {
+                log.warn("", e);
               }
           });
       }

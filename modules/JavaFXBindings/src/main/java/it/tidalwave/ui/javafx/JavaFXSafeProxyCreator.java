@@ -133,10 +133,10 @@ import static lombok.AccessLevel.PRIVATE;
 @Slf4j
 public class JavaFXSafeProxyCreator
   {
-    private final static String P_TIMEOUT = JavaFXSafeProxyCreator.class.getName() + ".initTimeout";
+    private static final String P_TIMEOUT = JavaFXSafeProxyCreator.class.getName() + ".initTimeout";
     private static final int initializerTimeout = Integer.getInteger(P_TIMEOUT, 10);
 
-    public final static Map<Class<?>, Object> BEANS = new HashMap<>();
+    public static final Map<Class<?>, Object> BEANS = new HashMap<>();
 
     @Getter
     private static final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -156,13 +156,15 @@ public class JavaFXSafeProxyCreator
         BEANS.put(Executor.class, executor);
       }
 
+    private JavaFXSafeProxyCreator () {}
+
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
     @RequiredArgsConstructor(access = PRIVATE)
-    public static class NodeAndDelegate
+    public static final class NodeAndDelegate
       {
         @Getter @Nonnull
         private final Node node;
@@ -177,7 +179,7 @@ public class JavaFXSafeProxyCreator
           }
 
         @Nonnull
-        public static <T> NodeAndDelegate load (final @Nonnull Class<T> clazz, final @Nonnull String resource)
+        public static <T> NodeAndDelegate load (@Nonnull final Class<T> clazz, @Nonnull final String resource)
           throws IOException
           {
             log.debug("NodeAndDelegate({}, {})", clazz, resource);
@@ -219,7 +221,7 @@ public class JavaFXSafeProxyCreator
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static <T> NodeAndDelegate createNodeAndDelegate (final @Nonnull Class<?> presentationClass)
+    public static <T> NodeAndDelegate createNodeAndDelegate (@Nonnull final Class<?> presentationClass)
       {
         final String resource = presentationClass.getSimpleName().replaceAll("^JavaFX", "")
                                                                  .replaceAll("^JavaFx", "")
@@ -237,8 +239,8 @@ public class JavaFXSafeProxyCreator
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static <T> NodeAndDelegate createNodeAndDelegate (final @Nonnull Class<?> presentationClass,
-                                                             final @Nonnull String fxmlResourcePath)
+    public static <T> NodeAndDelegate createNodeAndDelegate (@Nonnull final Class<?> presentationClass,
+                                                             @Nonnull final String fxmlResourcePath)
       {
         log.debug("createNodeAndDelegate({}, {})", presentationClass, fxmlResourcePath);
 
@@ -309,7 +311,7 @@ public class JavaFXSafeProxyCreator
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static <T> T createSafeProxy (final @Nonnull T target, final Class<T> interfaceClass)
+    public static <T> T createSafeProxy (@Nonnull final T target, final Class<T> interfaceClass)
       {
         return (T)Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                                          new Class[] { interfaceClass },

@@ -62,7 +62,7 @@ public class TableViewBindings extends DelegateSupport
     @Nonnull
     private final CellBinder cellBinder;
 
-    private Callback<TableColumn<PresentationModel, PresentationModel>,
+    private final Callback<TableColumn<PresentationModel, PresentationModel>,
                      TableCell<PresentationModel, PresentationModel>> cellFactory;
 
     /*******************************************************************************************************************
@@ -97,7 +97,7 @@ public class TableViewBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    public TableViewBindings (final @Nonnull Executor executor, final @Nonnull CellBinder cellBinder)
+    public TableViewBindings (@Nonnull final Executor executor, @Nonnull final CellBinder cellBinder)
       {
         super(executor);
         this.cellBinder = cellBinder;
@@ -109,9 +109,9 @@ public class TableViewBindings extends DelegateSupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void bind (final @Nonnull TableView<PresentationModel> tableView,
-                      final @Nonnull PresentationModel pm,
-                      final @Nonnull Optional<Runnable> callback)
+    public void bind (@Nonnull final TableView<PresentationModel> tableView,
+                      @Nonnull final PresentationModel pm,
+                      @Nonnull final Optional<Runnable> callback)
       {
         assertIsFxApplicationThread();
         log.debug("bind({}, {}, {})", tableView, pm, callback);
@@ -133,7 +133,7 @@ public class TableViewBindings extends DelegateSupport
 
                 final TableAggregateAdapter tableAggregateAdapter = new TableAggregateAdapter();
                 final ObservableList rawColumns = tableView.getColumns(); // FIXME
-                ((ObservableList<TableColumn<PresentationModel, PresentationModel>>)rawColumns).stream().forEach(column ->
+                ((ObservableList<TableColumn<PresentationModel, PresentationModel>>)rawColumns).forEach(column ->
                   {
                     column.setCellValueFactory(tableAggregateAdapter);
                     column.setCellFactory(cellFactory);

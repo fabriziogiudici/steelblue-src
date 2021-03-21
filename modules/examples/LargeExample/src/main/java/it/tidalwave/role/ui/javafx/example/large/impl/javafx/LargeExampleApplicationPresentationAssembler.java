@@ -45,7 +45,7 @@ public class LargeExampleApplicationPresentationAssembler
     private JavaFXMainScreenPresentation mainScreenPresentation;
 
     @Override
-    public void assemble (final @Nonnull JavaFXApplicationPresentationDelegate delegate)
+    public void assemble (@Nonnull final JavaFXApplicationPresentationDelegate delegate)
       {
         delegate.assemble(mainScreenPresentation.getNad().getNode());
       }

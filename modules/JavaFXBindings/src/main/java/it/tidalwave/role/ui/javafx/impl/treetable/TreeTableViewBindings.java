@@ -69,7 +69,7 @@ public class TreeTableViewBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    public TreeTableViewBindings (final @Nonnull Executor executor, final @Nonnull CellBinder cellBinder)
+    public TreeTableViewBindings (@Nonnull final Executor executor, @Nonnull final CellBinder cellBinder)
       {
         super(executor);
         this.cellBinder = cellBinder;
@@ -81,7 +81,6 @@ public class TreeTableViewBindings extends DelegateSupport
      *
      ******************************************************************************************************************/
     @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener = (ov, oldItem, item) ->
-      {
         executor.execute(() ->
           {
             try
@@ -93,16 +92,15 @@ public class TreeTableViewBindings extends DelegateSupport
                 log.debug("No Selectable role for {}", item); // ok, do nothing
               }
           });
-      };
 
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void bind (final @Nonnull TreeTableView<PresentationModel> treeTableView,
-                      final @Nonnull PresentationModel pm,
-                      final @Nonnull Optional<Runnable> callback)
+    public void bind (@Nonnull final TreeTableView<PresentationModel> treeTableView,
+                      @Nonnull final PresentationModel pm,
+                      @Nonnull final Optional<Runnable> callback)
       {
         assertIsFxApplicationThread();
 
@@ -134,19 +132,17 @@ public class TreeTableViewBindings extends DelegateSupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    private TreeItem<PresentationModel> createTreeItem (final @Nonnull PresentationModel pm)
+    private TreeItem<PresentationModel> createTreeItem (@Nonnull final PresentationModel pm)
       {
         final TreeItem<PresentationModel> item = new TreeItem<>(pm);
 
-        final PropertyChangeListener recreateChildrenOnUpdateListener = event ->
-          {
-            Platform.runLater(() ->
-              {
-                item.getChildren().clear(); // FIXME: should update it incrementally
-                createChildren(item, pm);
-                item.setExpanded(true);
-              });
-          };
+        final PropertyChangeListener recreateChildrenOnUpdateListener = __ ->
+          Platform.runLater(() ->
+            {
+              item.getChildren().clear(); // FIXME: should update it incrementally
+              createChildren(item, pm);
+              item.setExpanded(true);
+            });
 
         pm.addPropertyChangeListener(PresentationModel.PROPERTY_CHILDREN, recreateChildrenOnUpdateListener);
         createChildren(item, pm); // FIXME: only if already expanded, otherwise defer the call when expanded
@@ -160,8 +156,8 @@ public class TreeTableViewBindings extends DelegateSupport
      *
      ******************************************************************************************************************/
     // FIXME: add on demand, upon node expansion
-    private void createChildren (final @Nonnull TreeItem<PresentationModel> parentItem,
-                                 final @Nonnull PresentationModel pm)
+    private void createChildren (@Nonnull final TreeItem<PresentationModel> parentItem,
+                                 @Nonnull final PresentationModel pm)
       {
         try
           {

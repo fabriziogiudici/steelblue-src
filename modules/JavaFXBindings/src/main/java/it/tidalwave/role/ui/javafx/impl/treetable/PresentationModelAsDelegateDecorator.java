@@ -58,7 +58,7 @@ public class PresentationModelAsDelegateDecorator implements PresentationModel
     private final As asDelegate;
 
     @Override @Nonnull
-    public <T> T as (final @Nonnull Class<T> type)
+    public <T> T as (@Nonnull final Class<T> type)
       {
         try
           {
@@ -71,13 +71,13 @@ public class PresentationModelAsDelegateDecorator implements PresentationModel
       }
 
     @Override @Nonnull
-    public <T> T as (final @Nonnull Class<T> type, final @Nonnull NotFoundBehaviour<T> notFoundBehaviour)
+    public <T> T as (@Nonnull final Class<T> type, @Nonnull final NotFoundBehaviour<T> notFoundBehaviour)
       {
         throw new UnsupportedOperationException("Not implemented yet");
       }
 
     @Override @Nonnull
-    public <T> Collection<T> asMany (final @Nonnull Class<T> type)
+    public <T> Collection<T> asMany (@Nonnull final Class<T> type)
       {
         final List<T> results = new ArrayList<>();
         results.addAll(pmDelegate.asMany(type));

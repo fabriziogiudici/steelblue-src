@@ -58,7 +58,7 @@ public class SimpleDciEntity implements As
 
     private final int attribute2;
 
-    public SimpleDciEntity (final @Nonnull String id, final int attribute1, final int attribute2)
+    public SimpleDciEntity (@Nonnull final String id, final int attribute1, final int attribute2)
       {
         this.name = id;
         this.attribute1 = attribute1;

@@ -28,6 +28,7 @@
  */
 package it.tidalwave.role.ui.javafx.impl.util;
 
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -58,7 +59,7 @@ import static it.tidalwave.role.spi.impl.LogUtil.*;
  * @author based on code of Ian Robertson
  *
  **********************************************************************************************************************/
-@Slf4j
+@Slf4j @UtilityClass
 public class ReflectionUtils
   {
     /*******************************************************************************************************************
@@ -66,7 +67,7 @@ public class ReflectionUtils
      *
      *
      ******************************************************************************************************************/
-    public static void injectDependencies (final @Nonnull Object object, final @Nonnull Map<Class<?>, Object> beans)
+    public static void injectDependencies (@Nonnull final Object object, @Nonnull final Map<Class<?>, Object> beans)
       {
         for (final Field field : object.getClass().getDeclaredFields())
           {
@@ -104,8 +105,8 @@ public class ReflectionUtils
      * @throws        RuntimeException if something fails
      *
      ******************************************************************************************************************/
-    public static <T> T instantiateWithDependencies (final @Nonnull Class<T> type,
-                                                     final @Nonnull Map<Class<?>, Object> beans)
+    public static <T> T instantiateWithDependencies (@Nonnull final Class<T> type,
+                                                     @Nonnull final Map<Class<?>, Object> beans)
       {
         try
           {
@@ -138,8 +139,8 @@ public class ReflectionUtils
      * @return a list of the raw classes for the actual type arguments.
      *
      ******************************************************************************************************************/
-    public static <T> List<Class<?>> getTypeArguments (final @Nonnull Class<T> baseClass,
-                                                       final @Nonnull Class<? extends T> childClass)
+    public static <T> List<Class<?>> getTypeArguments (@Nonnull final Class<T> baseClass,
+                                                       @Nonnull final Class<? extends T> childClass)
       {
         final Map<Type, Type> resolvedTypes = new HashMap<>();
         Type type = childClass;
@@ -173,7 +174,7 @@ public class ReflectionUtils
 
         // finally, for each actual type argument provided to baseClass, determine (if possible)
         // the raw class for that type argument.
-        Type[] actualTypeArguments;
+        final Type[] actualTypeArguments;
 
         if (type instanceof Class)
           {
@@ -205,7 +206,7 @@ public class ReflectionUtils
      *
      ******************************************************************************************************************/
     @CheckForNull
-    public static Class<?> getClass (final @Nonnull Type type)
+    public static Class<?> getClass (@Nonnull final Type type)
       {
         if (type instanceof Class<?>)
           {

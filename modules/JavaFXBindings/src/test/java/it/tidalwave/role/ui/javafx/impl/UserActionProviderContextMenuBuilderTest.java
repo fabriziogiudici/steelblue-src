@@ -77,21 +77,17 @@ public class UserActionProviderContextMenuBuilderTest
         @Override @Nonnull
         public Future<?> submit (final Runnable task)
           {
-            return delegate.submit(new Runnable()
-              {
-                @Override
-                public void run()
-                  {
-                    try
-                      {
-                        task.run();
-                      }
-                    catch (AssertionError e)
-                      {
-                        assertionErrors.add(e);
-                      }
-                  }
-            }  );
+            return delegate.submit(() ->
+               {
+                 try
+                   {
+                     task.run();
+                   }
+                 catch (AssertionError e)
+                   {
+                     assertionErrors.add(e);
+                   }
+               });
           }
       }
 
@@ -160,7 +156,6 @@ public class UserActionProviderContextMenuBuilderTest
      ******************************************************************************************************************/
     @Test
     public void must_set_the_MenuItem_text_from_UserAction_Displayable()
-      throws InterruptedException
       {
         final List<MenuItem> menuItems = fixture.createMenuItems(roleMapWithUserActionProvider);
 
@@ -187,9 +182,8 @@ public class UserActionProviderContextMenuBuilderTest
         assertThat(menuItems, is(not(nullValue())));
         assertThat(menuItems.size(), is(actions.size()));
 
-        for (int i = 0; i < menuItems.size(); i++)
+        for (final MenuItem menuItem : menuItems)
           {
-            final MenuItem menuItem = menuItems.get(i);
             menuItem.getOnAction().handle(new ActionEvent());
           }
 

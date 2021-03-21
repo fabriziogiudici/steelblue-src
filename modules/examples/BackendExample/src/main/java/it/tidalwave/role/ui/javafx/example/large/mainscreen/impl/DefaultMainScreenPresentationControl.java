@@ -126,8 +126,8 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
         presentation.showUp();
         final Collection<SimpleEntity> entities1 = dao.getSimpleEntities();
         final Collection<SimpleDciEntity> entities2 = dao.getDciEntities();
-        final PresentationModel pm1 = entities1.stream().map(e -> pmFor(e)).collect(toCompositePresentationModel());
-        final PresentationModel pm2 = entities2.stream().map(e -> pmFor(e)).collect(toCompositePresentationModel());
+        final PresentationModel pm1 = entities1.stream().map(this::pmFor).collect(toCompositePresentationModel());
+        final PresentationModel pm2 = entities2.stream().map(this::pmFor).collect(toCompositePresentationModel());
         presentation.populate(pm1, pm2);
       }
 
@@ -141,7 +141,7 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
      *
      ******************************************************************************************************************/
     @Nonnull
-    private PresentationModel pmFor (final @Nonnull SimpleEntity entity)
+    private PresentationModel pmFor (@Nonnull final SimpleEntity entity)
       {
         final Selectable selectable = () -> onSelected(entity);
         final UserAction action1 = UserAction.of(() -> action1(entity), Displayable.of("Action 1"));
@@ -158,7 +158,7 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
      *
      ******************************************************************************************************************/
     @Nonnull
-    private PresentationModel pmFor (final @Nonnull SimpleDciEntity entity)
+    private PresentationModel pmFor (@Nonnull final SimpleDciEntity entity)
       {
         // FIXME: column names
         final Aggregate<PresentationModel> aggregate = PresentationModelAggregate.newInstance()
@@ -241,7 +241,7 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void onSelected (final @Nonnull Object object)
+    private void onSelected (@Nonnull final Object object)
       {
         presentation.notify("Selected " + object);
       }
@@ -249,7 +249,7 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void action1 (final @Nonnull Object object)
+    private void action1 (@Nonnull final Object object)
       {
         presentation.notify("Action 1 on " + object);
       }
@@ -257,7 +257,7 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void action2 (final @Nonnull Object object)
+    private void action2 (@Nonnull final Object object)
       {
         presentation.notify("Action 2 on " + object);
       }
@@ -265,7 +265,7 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
-    private void action3 (final @Nonnull Object object)
+    private void action3 (@Nonnull final Object object)
       {
         presentation.notify("Action 3 on " + object);
       }

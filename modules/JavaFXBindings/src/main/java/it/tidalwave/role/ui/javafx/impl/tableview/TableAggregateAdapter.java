@@ -47,9 +47,9 @@ public class TableAggregateAdapter implements Callback<TableColumn.CellDataFeatu
   {
     @Override @Nonnull
     public ObservableValue<PresentationModel> call
-        (final @Nonnull TableColumn.CellDataFeatures<PresentationModel, PresentationModel> cell)
+        (@Nonnull final TableColumn.CellDataFeatures<PresentationModel, PresentationModel> cell)
       {
-        return new ObservableValueBase<PresentationModel>() // FIXME: use a concrete specialization?
+        return new ObservableValueBase<>() // FIXME: use a concrete specialization?
           {
             @Override @Nonnull
             public PresentationModel getValue()
@@ -60,9 +60,10 @@ public class TableAggregateAdapter implements Callback<TableColumn.CellDataFeatu
 //                    final PresentationModel columnPm =
 
                 return aggregate.getByName(cell.getTableColumn().getText())
-                                .map(columnPm -> (PresentationModel)new PresentationModelAsDelegateDecorator(columnPm, rowPm))
+                                .map(columnPm -> (PresentationModel)new PresentationModelAsDelegateDecorator(columnPm,
+                                                                                                             rowPm))
                                 .orElse(PresentationModel.empty());
-              };
+              }
           };
       }
   }

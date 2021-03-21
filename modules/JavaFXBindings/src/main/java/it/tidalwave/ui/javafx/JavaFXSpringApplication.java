@@ -122,8 +122,8 @@ public class JavaFXSpringApplication extends JavaFXApplicationWithSplash
      *
      ******************************************************************************************************************/
     @Override
-    protected void onStageCreated (final @Nonnull Stage stage,
-                                   final @Nonnull NodeAndDelegate applicationNad)
+    protected void onStageCreated (@Nonnull final Stage stage,
+                                   @Nonnull final NodeAndDelegate applicationNad)
       {
         assert Platform.isFxApplicationThread();
         JavaFXSafeProxyCreator.getJavaFxBinder().setMainWindow(stage);
@@ -140,7 +140,7 @@ public class JavaFXSpringApplication extends JavaFXApplicationWithSplash
      * @param   applicationContext  the application context
      *
      ******************************************************************************************************************/
-    protected void onStageCreated (final @Nonnull ApplicationContext applicationContext)
+    protected void onStageCreated (@Nonnull final ApplicationContext applicationContext)
       {
       }
 
@@ -160,11 +160,10 @@ public class JavaFXSpringApplication extends JavaFXApplicationWithSplash
      *
      *
      ******************************************************************************************************************/
-    private void runApplicationAssemblers (final @Nonnull NodeAndDelegate applicationNad)
+    private void runApplicationAssemblers (@Nonnull final NodeAndDelegate applicationNad)
       {
         Objects.requireNonNull(applicationContext, "applicationContext is null");
         applicationContext.getBeansOfType(ApplicationPresentationAssembler.class).values()
-                .stream()
                 .forEach(a -> a.assemble(applicationNad.getDelegate()));
       }
 

@@ -82,7 +82,7 @@ public class Splash
      *
      *
      ******************************************************************************************************************/
-    public void show (final @Nonnull Stage splashStage)
+    public void show (@Nonnull final Stage splashStage)
       {
         this.splashStage = splashStage;
         final Scene splashScene = new Scene(splashPane);

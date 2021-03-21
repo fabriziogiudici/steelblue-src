@@ -45,12 +45,12 @@ import it.tidalwave.role.ui.PresentationModel;
  **********************************************************************************************************************/
 class TreeTableAggregateAdapter implements Callback<TreeTableColumn.CellDataFeatures<PresentationModel, PresentationModel>, ObservableValue<PresentationModel>>
   {
-    private final static PresentationModel EMPTY = PresentationModel.of("???", Displayable.of("???"));
+    private static final PresentationModel EMPTY = PresentationModel.of("???", Displayable.of("???"));
 
     @Override
-    public ObservableValue<PresentationModel> call(TreeTableColumn.CellDataFeatures<PresentationModel, PresentationModel> cell)
+    public ObservableValue<PresentationModel> call(final TreeTableColumn.CellDataFeatures<PresentationModel, PresentationModel> cell)
       {
-        return new ObservableValueBase<PresentationModel>() // FIXME: use a concrete specialization?
+        return new ObservableValueBase<>() // FIXME: use a concrete specialization?
           {
             @Override @Nonnull
             public PresentationModel getValue()
@@ -61,14 +61,16 @@ class TreeTableAggregateAdapter implements Callback<TreeTableColumn.CellDataFeat
                     final Aggregate<PresentationModel> aggregate = rowPm.as(Aggregate.class);
                     // FIXME: uses the column header names, should be an internal id instead
                     return aggregate.getByName(cell.getTreeTableColumn().getText())
-                                    .map(columnPm -> (PresentationModel)new PresentationModelAsDelegateDecorator(columnPm, rowPm))
+                                    .map(columnPm -> (PresentationModel)new PresentationModelAsDelegateDecorator(
+                                            columnPm,
+                                            rowPm))
                                     .orElse(EMPTY);
                   }
                 catch (AsException e)
                   {
                     return EMPTY;
                   }
-              };
+              }
           };
       }
   }

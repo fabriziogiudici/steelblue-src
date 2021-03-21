@@ -35,9 +35,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.util.As;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
 import static java.util.Collections.*;
 
 /***********************************************************************************************************************
@@ -50,35 +52,51 @@ public class RoleBag
   {
     private final Map<Class<?>, List<Object>> map = new HashMap<>();
 
-    public RoleBag (final @Nonnull As source, final @Nonnull List<Class<?>> roleTypes)
+    public RoleBag (@Nonnull final As source, @Nonnull final List<Class<?>> roleTypes)
       {
         roleTypes.forEach(roleType -> copyRoles(source, roleType));
       }
 
-    public <ROLE_TYPE> void put (final @Nonnull Class<ROLE_TYPE> roleClass, final @Nonnull ROLE_TYPE role)
+    public <ROLE_TYPE> void put (@Nonnull final Class<ROLE_TYPE> roleClass, @Nonnull final ROLE_TYPE role)
       {
         putMany(roleClass, singletonList(role));
       }
 
-    public <ROLE_TYPE> void putMany (final @Nonnull Class<ROLE_TYPE> roleClass,
-                                     final @Nonnull Collection<? extends ROLE_TYPE> roles)
+    public <ROLE_TYPE> void putMany (@Nonnull final Class<ROLE_TYPE> roleClass,
+                                     @Nonnull final Collection<? extends ROLE_TYPE> roles)
       {
         map.put(roleClass, new ArrayList<>(roles));
       }
 
     @Nonnull
-    public <ROLE_TYPE> Optional<ROLE_TYPE> get (final @Nonnull Class<ROLE_TYPE> roleClass)
+    public <ROLE_TYPE> Optional<ROLE_TYPE> get (@Nonnull final Class<ROLE_TYPE> roleClass)
       {
         return getMany(roleClass).stream().findFirst();
       }
 
     @Nonnull
-    public <ROLE_TYPE> List<ROLE_TYPE> getMany (final @Nonnull Class<ROLE_TYPE> roleClass)
+    public <ROLE_TYPE> List<ROLE_TYPE> getMany (@Nonnull final Class<ROLE_TYPE> roleClass)
       {
         return unmodifiableList((List<ROLE_TYPE>)map.getOrDefault(roleClass, emptyList()));
       }
 
-    private <ROLE_TYPE> void copyRoles (final @Nonnull As item, final @Nonnull Class<ROLE_TYPE> roleClass)
+    /*******************************************************************************************************************
+     *
+     * Returns the default user action, which is he first action of the first
+     * {@link it.tidalwave.role.ui.UserActionProvider}.
+     *
+     * @return    the user action
+     *
+     ******************************************************************************************************************/
+    @Nonnull
+    public Optional<UserAction> getDefaultUserAction()
+      {
+        return getMany(_UserActionProvider_).stream()
+                                            .flatMap(a -> a.getOptionalDefaultAction().stream())
+                                            .findFirst();
+      }
+
+    private <ROLE_TYPE> void copyRoles (@Nonnull final As item, @Nonnull final Class<ROLE_TYPE> roleClass)
       {
         putMany(roleClass, item.asMany(roleClass));
       }

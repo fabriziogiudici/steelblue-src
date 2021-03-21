@@ -47,7 +47,7 @@ public class AsObjectTreeCell<T extends As> extends TextFieldTreeCell<T>
     private final CellBinder cellBinder;
 
     @Override
-    public void updateItem (final @CheckForNull T item, final boolean empty)
+    public void updateItem (@CheckForNull final T item, final boolean empty)
       {
         super.updateItem(item, empty);
         cellBinder.bind(this, item, empty);

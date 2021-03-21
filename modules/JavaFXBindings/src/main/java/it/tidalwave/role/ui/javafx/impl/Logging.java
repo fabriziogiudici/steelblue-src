@@ -36,6 +36,7 @@ import it.tidalwave.util.Finder;
 import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.Composite;
 import it.tidalwave.role.ui.Displayable;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.toList;
 
@@ -44,24 +45,12 @@ import static java.util.stream.Collectors.toList;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Slf4j
-public final class Logging
+@Slf4j @UtilityClass
+public class Logging
   {
-    public static final String INDENT;
+    public static final String INDENT = " ".repeat(100);
 
-    static
-      {
-        final StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < 100; i++)
-          {
-            sb.append(" ");
-          }
-
-        INDENT = sb.toString();
-      }
-
-    public static void logObjects (final @Nonnull String prefix, final @Nonnull Collection<?> objects)
+    public static void logObjects (@Nonnull final String prefix, @Nonnull final Collection<?> objects)
       {
         if (!log.isDebugEnabled())
           {
@@ -74,14 +63,14 @@ public final class Logging
           }
         else
           {
-            for (Object object : objects)
+            for (final Object object : objects)
               {
                 logObject(prefix, object);
               }
           }
       }
 
-    public static void logObject (final @Nonnull String indent, final @Nonnull Object object)
+    public static void logObject (@Nonnull final String indent, @Nonnull final Object object)
       {
         if (!log.isDebugEnabled())
           {

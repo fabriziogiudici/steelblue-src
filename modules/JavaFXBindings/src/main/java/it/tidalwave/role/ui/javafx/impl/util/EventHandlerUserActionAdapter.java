@@ -5,7 +5,7 @@
  * SteelBlue
  * http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
  * %%
- * Copyright (C) 2015 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2015 - 2021 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  *
  * *********************************************************************************************************************
@@ -29,28 +29,30 @@
 package it.tidalwave.role.ui.javafx.impl.util;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-import static it.tidalwave.role.ui.javafx.impl.util.JavaFXSafeComponentBuilder.*;
+import java.util.concurrent.Executor;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import it.tidalwave.role.ui.UserAction;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public abstract class JavaFXPresentationBuilder<I, T extends I>
+@RequiredArgsConstructor
+public class EventHandlerUserActionAdapter implements EventHandler<ActionEvent>
   {
     @Nonnull
-    private final JavaFXSafeComponentBuilder<I, T> builder;
-
-    public JavaFXPresentationBuilder()
-      {
-        final List<Class<?>> t = ReflectionUtils.getTypeArguments(JavaFXPresentationBuilder.class, getClass());
-        builder = builderFor((Class<I>)t.get(0), (Class<T>)t.get(1));
-      }
+    private final Executor executor;
 
     @Nonnull
-    public final synchronized I create (@Nonnull final Object referenceHolder)
+    private final UserAction action;
+
+    @Override
+    public void handle (@Nonnull final ActionEvent event)
       {
-        return builder.createInstance(referenceHolder);
+        executor.execute(action::actionPerformed);
       }
   }
+

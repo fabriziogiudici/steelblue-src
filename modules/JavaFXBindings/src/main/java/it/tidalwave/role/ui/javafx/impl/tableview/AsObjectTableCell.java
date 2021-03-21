@@ -48,7 +48,7 @@ public class AsObjectTableCell<T extends As> extends TextFieldTableCell<T, T>
     @VisibleForTesting final CellBinder cellBinder;
 
     @Override
-    public void updateItem (final @CheckForNull T item, final boolean empty)
+    public void updateItem (@CheckForNull final T item, final boolean empty)
       {
         super.updateItem(item, empty);
         cellBinder.bind(this, item, empty);

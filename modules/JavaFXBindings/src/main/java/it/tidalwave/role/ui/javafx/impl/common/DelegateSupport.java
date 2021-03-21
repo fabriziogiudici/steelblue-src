@@ -62,7 +62,7 @@ public abstract class DelegateSupport
      * @return           the (@code Callable} result
      *
      ******************************************************************************************************************/
-    protected <T> T runWhileDisabling (final @Nonnull Window window, final @Nonnull Callable<T> callable)
+    protected <T> T runWhileDisabling (@Nonnull final Window window, @Nonnull final Callable<T> callable)
       {
         final Parent root = window.getScene().getRoot();
         final Effect effect = root.getEffect();

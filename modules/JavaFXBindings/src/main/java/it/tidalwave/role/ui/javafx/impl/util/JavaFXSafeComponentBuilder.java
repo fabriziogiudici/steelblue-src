@@ -54,7 +54,7 @@ import static lombok.AccessLevel.PRIVATE;
  *
  **********************************************************************************************************************/
 @RequiredArgsConstructor(access = PRIVATE) @Slf4j
-public class JavaFXSafeComponentBuilder<I, T extends I>
+public final class JavaFXSafeComponentBuilder<I, T extends I>
   {
     @Nonnull
     private final Class<T> componentClass;
@@ -65,15 +65,15 @@ public class JavaFXSafeComponentBuilder<I, T extends I>
     private WeakReference<T> presentationRef = new WeakReference<>(null);
 
     @Nonnull
-    public static <J, X extends J> JavaFXSafeComponentBuilder<J, X> builderFor (final @Nonnull Class<X> componentClass)
+    public static <J, X extends J> JavaFXSafeComponentBuilder<J, X> builderFor (@Nonnull final Class<X> componentClass)
       {
         final Class<J> interfaceClass = (Class<J>)componentClass.getInterfaces()[0]; // FIXME: guess
         return new JavaFXSafeComponentBuilder<>(componentClass, interfaceClass);
       }
 
     @Nonnull
-    public static <J, X extends J> JavaFXSafeComponentBuilder<J, X> builderFor (final @Nonnull Class<J> interfaceClass,
-                                                                                final @Nonnull Class<X> componentClass)
+    public static <J, X extends J> JavaFXSafeComponentBuilder<J, X> builderFor (@Nonnull final Class<J> interfaceClass,
+                                                                                @Nonnull final Class<X> componentClass)
       {
         return new JavaFXSafeComponentBuilder<>(componentClass, interfaceClass);
       }
@@ -91,8 +91,8 @@ public class JavaFXSafeComponentBuilder<I, T extends I>
      *
      ******************************************************************************************************************/
     @Nonnull
-    public static <J, X extends J> X createInstance (final @Nonnull Class<X> componentClass,
-                                                     final @Nonnull Object fxmlFieldsSource)
+    public static <J, X extends J> X createInstance (@Nonnull final Class<X> componentClass,
+                                                     @Nonnull final Object fxmlFieldsSource)
       {
         final JavaFXSafeComponentBuilder<J, X> builder = builderFor(componentClass);
         return builder.createInstance(fxmlFieldsSource);
@@ -110,7 +110,7 @@ public class JavaFXSafeComponentBuilder<I, T extends I>
      *
      ******************************************************************************************************************/
     @Nonnull
-    public synchronized T createInstance (final @Nonnull Object fxmlFieldsSource)
+    public synchronized T createInstance (@Nonnull final Object fxmlFieldsSource)
       {
         log.trace("createInstance({})", fxmlFieldsSource);
         T presentation = presentationRef.get();
@@ -161,14 +161,10 @@ public class JavaFXSafeComponentBuilder<I, T extends I>
         final AtomicReference<T> reference = new AtomicReference<>();
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        Platform.runLater(new Runnable()
+        Platform.runLater(() ->
           {
-            @Override
-            public void run()
-              {
-                reference.set(createComponentInstance());
-                countDownLatch.countDown();
-              }
+            reference.set(createComponentInstance());
+            countDownLatch.countDown();
           });
 
         try
@@ -192,7 +188,7 @@ public class JavaFXSafeComponentBuilder<I, T extends I>
      * @param   source  the source object
      *
      ******************************************************************************************************************/
-    private void copyFxmlFields (final @Nonnull Object target, final @Nonnull Object source)
+    private void copyFxmlFields (@Nonnull final Object target, @Nonnull final Object source)
       {
         log.debug("injecting {} with fields from {}", target, source);
         final Map<String, Object> valuesMapByFieldName = new HashMap<>();
