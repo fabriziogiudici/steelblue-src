@@ -46,7 +46,6 @@ import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
 
 /***********************************************************************************************************************
  *

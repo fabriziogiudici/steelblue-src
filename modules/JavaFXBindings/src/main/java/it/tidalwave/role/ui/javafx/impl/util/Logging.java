@@ -36,7 +36,6 @@ import it.tidalwave.util.Finder;
 import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.Composite;
 import it.tidalwave.role.ui.Displayable;
-import javafx.collections.ObservableList;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.toList;
