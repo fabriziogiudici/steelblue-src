@@ -45,6 +45,7 @@ import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -56,9 +57,13 @@ import lombok.extern.slf4j.Slf4j;
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
  *
  **********************************************************************************************************************/
-@Slf4j
+@RequiredArgsConstructor @Slf4j
 public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentation
   {
+    // This facility provides all the methods to bind JavaFX controls to DCI roles.
+    @Nonnull
+    private final JavaFXBinder binder;
+
     @FXML
     private Button btButton;
 
@@ -94,10 +99,6 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
 
     @FXML
     private TextArea taLog;
-
-    // This facility provides all the methods to bind JavaFX controls to DCI roles.
-    @Inject
-    private JavaFXBinder binder;
 
     /*******************************************************************************************************************
      *
@@ -136,7 +137,8 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
         binder.bind(lvListView, listPm, () -> log.info("Finished setup of lvListView"));
         binder.bind(cbComboBox, listPm, () -> log.info("Finished setup of cbComboBox"));
         binder.bind(tvTableView, arrayPm, () -> log.info("Finished setup of tvTableView"));
-//        binder.bind(tvTreeView, arrayPm, () -> log.info("Finished setup of tvTreeView"));
+        // Requires fix of TFT-248
+        binder.bind(tvTreeView, arrayPm, () -> log.info("Finished setup of tvTreeView"));
         binder.bind(ttvTreeTableView, arrayPm, () -> log.info("Finished setup of ttvTreeTableView"));
       }
 
