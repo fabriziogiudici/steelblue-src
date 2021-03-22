@@ -61,7 +61,7 @@ public class TreeViewBindingsTest
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupunderTest()
+    public void setup()
       {
         AsDelegateProvider.Locator.set(AsDelegateProvider.empty());
         ContextManager.Locator.set(new DefaultContextManagerProvider());
