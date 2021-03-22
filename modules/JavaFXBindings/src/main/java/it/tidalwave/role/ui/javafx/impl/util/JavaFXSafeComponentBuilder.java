@@ -39,7 +39,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import it.tidalwave.role.ui.javafx.Widget;
 import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator;
 import javafx.fxml.FXMLLoader;
 import lombok.RequiredArgsConstructor;
@@ -215,12 +214,11 @@ public final class JavaFXSafeComponentBuilder<I, T extends I>
 
         for (final Field field : target.getClass().getDeclaredFields())
           {
-            final Widget widget = field.getAnnotation(Widget.class);
             final FXML fxml = field.getAnnotation(FXML.class);
 
-            if ((widget != null) || (fxml != null))
+            if (fxml != null)
               {
-                final String name = (widget != null) ? widget.value() : field.getName();
+                final String name = field.getName();
                 final Object value = valuesMapByFieldName.get(name);
 
                 if (value == null)
