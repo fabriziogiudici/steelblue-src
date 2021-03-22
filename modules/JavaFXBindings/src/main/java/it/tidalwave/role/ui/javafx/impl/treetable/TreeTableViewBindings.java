@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.beans.PropertyChangeListener;
+import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.ObservableList;
@@ -154,6 +155,8 @@ public class TreeTableViewBindings extends DelegateSupport
       {
         final PresentationModel parentPm = parentItem.getValue();
         final ObservableList<TreeItem<PresentationModel>> children = parentItem.getChildren();
-        childrenPm(parentPm, depth).forEach(childPm -> children.add(createTreeItem(childPm, depth)));
+        JavaFXWorker.run(executor,
+                         () -> childrenPm(parentPm, depth),
+                         items -> items.forEach(childPm -> children.add(createTreeItem(childPm, depth))));
       }
   }
