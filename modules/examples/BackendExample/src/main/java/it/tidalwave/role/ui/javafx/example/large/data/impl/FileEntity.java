@@ -34,9 +34,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributeView;
@@ -79,7 +80,7 @@ public class FileEntity implements As, Displayable
           {
             try
               {
-                return Files.list(path).map(FileEntity::of).collect(toList());
+                return Files.list(path).sorted(Comparator.comparing(Path::toString)).map(FileEntity::of).collect(toList());
               }
             catch (Exception e)
               {
@@ -118,7 +119,7 @@ public class FileEntity implements As, Displayable
     @Override @Nonnull
     public String getDisplayName()
       {
-        return path.getFileName().toString();
+        return Optional.ofNullable(path.getFileName()).map(Path::toString).orElse("/");
       }
 
     @Nonnull

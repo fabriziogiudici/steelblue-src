@@ -42,6 +42,7 @@ import it.tidalwave.role.ui.PresentationModelAggregate;
 import it.tidalwave.role.ui.Selectable;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
+import it.tidalwave.role.ui.Visible;
 import it.tidalwave.role.ui.javafx.example.large.data.Dao;
 import it.tidalwave.role.ui.javafx.example.large.data.SimpleEntity;
 import it.tidalwave.role.ui.javafx.example.large.data.SimpleDciEntity;
@@ -49,7 +50,6 @@ import it.tidalwave.role.ui.javafx.example.large.data.impl.FileEntity;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation.Bindings;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
-import it.tidalwave.util.As;
 import static it.tidalwave.role.ui.Presentable._Presentable_;
 import static it.tidalwave.util.Parameters.r;
 import static it.tidalwave.util.ui.UserNotificationWithFeedback.*;
@@ -130,14 +130,13 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
         final Collection<SimpleEntity> entities1 = dao.getSimpleEntities();
         final Collection<SimpleDciEntity> entities2 = dao.getDciEntities();
         final Collection<FileEntity> files = dao.getFiles();
-        final Displayable root = Displayable.of("root");
         final PresentationModel pm1 = entities1.stream().map(this::pmFor)
-                                                        .collect(toCompositePresentationModel(r(root)));
-//        final PresentationModel pm2 = entities2.stream().map(this::pmFor)
-//                                                        .collect(toCompositePresentationModel(r(root)));
-        final PresentationModel pm2 = files.stream().map(item -> item.as(_Presentable_).createPresentationModel())
-                                               .collect(toCompositePresentationModel(r(root)));
-        presentation.populate(pm1, pm2);
+                                                        .collect(toCompositePresentationModel());
+        final PresentationModel pm2 = entities2.stream().map(this::pmFor)
+                                                        .collect(toCompositePresentationModel());
+        final PresentationModel pm3 = files.stream().map(item -> item.as(_Presentable_).createPresentationModel())
+                                               .collect(toCompositePresentationModel(r(Visible.INVISIBLE)));
+        presentation.populate(pm1, pm2, pm3);
       }
 
     /*******************************************************************************************************************

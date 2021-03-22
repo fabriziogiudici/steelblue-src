@@ -29,7 +29,6 @@
 package it.tidalwave.role.ui.javafx.example.large.mainscreen.impl.javafx;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.nio.file.Path;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -132,14 +131,16 @@ public class JavaFXMainScreenPresentationDelegate implements MainScreenPresentat
      *
      ******************************************************************************************************************/
     @Override
-    public void populate (@Nonnull final PresentationModel listPm, @Nonnull final PresentationModel arrayPm)
+    public void populate (@Nonnull final PresentationModel listPm,
+                          @Nonnull final PresentationModel arrayPm,
+                          @Nonnull final PresentationModel compositePm)
       {
         binder.bind(lvListView, listPm, () -> log.info("Finished setup of lvListView"));
         binder.bind(cbComboBox, listPm, () -> log.info("Finished setup of cbComboBox"));
         binder.bind(tvTableView, arrayPm, () -> log.info("Finished setup of tvTableView"));
         // Requires fix of TFT-248
-        binder.bind(tvTreeView, arrayPm, () -> log.info("Finished setup of tvTreeView"));
-        binder.bind(ttvTreeTableView, arrayPm, () -> log.info("Finished setup of ttvTreeTableView"));
+        binder.bind(tvTreeView, compositePm, () -> log.info("Finished setup of tvTreeView"));
+        binder.bind(ttvTreeTableView, compositePm, () -> log.info("Finished setup of ttvTreeTableView"));
       }
 
     /*******************************************************************************************************************

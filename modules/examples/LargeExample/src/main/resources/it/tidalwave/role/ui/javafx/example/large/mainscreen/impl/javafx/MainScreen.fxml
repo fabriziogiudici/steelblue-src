@@ -57,9 +57,10 @@
                         <TreeView fx:id="tvTreeView" maxWidth="1.7976931348623157E308"/>
                         <TreeTableView fx:id="ttvTreeTableView" maxWidth="1.7976931348623157E308">
                             <columns>
-                                <TreeTableColumn prefWidth="100.0" text="C1"/>
-                                <TreeTableColumn prefWidth="100.0" text="C2"/>
-                                <TreeTableColumn prefWidth="100.0" text="C3"/>
+                                <TreeTableColumn prefWidth="100.0" text="name"/>
+                                <TreeTableColumn prefWidth="100.0" text="size"/>
+                                <TreeTableColumn prefWidth="100.0" text="creationDate"/>
+                                <TreeTableColumn prefWidth="100.0" text="latestModificationDate"/>
                             </columns>
                         </TreeTableView>
                     </HBox>

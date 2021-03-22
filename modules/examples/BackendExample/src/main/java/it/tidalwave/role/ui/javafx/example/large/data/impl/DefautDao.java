@@ -63,10 +63,9 @@ public class DefautDao implements Dao // FIXME: rename to Model
           }).collect(toList());
       }
 
-    @Nonnull
-    @Override
+    @Override @Nonnull
     public Collection<FileEntity> getFiles()
       {
-        return List.of(FileEntity.of(Path.of(System.getProperty("user.home")).resolve("scripts")));
+        return List.of(FileEntity.of(Path.of("/")));
       }
   }

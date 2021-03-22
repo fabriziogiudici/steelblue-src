@@ -26,15 +26,24 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large.impl.javafx;
+package it.tidalwave.role.ui.javafx.example.large.mainscreen.impl;
 
 import javax.annotation.Nonnull;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Collection;
+import java.io.IOException;
+import java.util.Locale;
+import it.tidalwave.dci.annotation.DciRole;
+import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.ui.Displayable;
 import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.PresentationModelAggregate;
+import it.tidalwave.role.ui.Styleable;
 import it.tidalwave.role.ui.javafx.example.large.data.impl.FileEntity;
-import it.tidalwave.dci.annotation.DciRole;
 import it.tidalwave.role.ui.spi.SimpleCompositePresentable;
+import it.tidalwave.util.LocalizedDateTimeFormatters;
+import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.util.Parameters.r;
 
 /***********************************************************************************************************************
@@ -42,7 +51,7 @@ import static it.tidalwave.util.Parameters.r;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@DciRole(datumType = FileEntity.class)
+@DciRole(datumType = FileEntity.class) @Slf4j
 public class FileEntityPresentable extends SimpleCompositePresentable<FileEntity>
   {
     @Nonnull
@@ -57,7 +66,29 @@ public class FileEntityPresentable extends SimpleCompositePresentable<FileEntity
     @Override @Nonnull
     public PresentationModel createPresentationModel (@Nonnull final Collection<Object> roles)
       {
-        final Displayable displayable = Displayable.of(() -> "XX " + owner.getDisplayName());
-        return super.createPresentationModel(r(displayable, roles));
+        try
+          {
+            // TODO: add roles such as Removable, present only if permissions allow
+            // TODO: iconprovider
+            final DateTimeFormatter formatter =
+                    LocalizedDateTimeFormatters.getDateTimeFormatterFor(FormatStyle.SHORT, Locale.getDefault());
+            final Aggregate<PresentationModel> aggregate = PresentationModelAggregate.newInstance()
+               .withPmOf("name",
+                         r(Displayable.of(owner.getDisplayName())))
+               .withPmOf("size",
+                         r(Displayable.of("" + owner.getSize()), Styleable.of("right-aligned")))
+               .withPmOf("creationDate",
+                         r(Displayable.of(formatter.format(owner.getCreationDateTime()))))
+               .withPmOf("latestModificationDate",
+                         r(Displayable.of(formatter.format(owner.getLastModifiedDateTime()))));
+            return super.createPresentationModel(r(aggregate, roles));
+          }
+        catch (IOException e)
+          {
+            log.error("While creating a PresentationModel: ", e);
+            return PresentationModel.of(owner, Displayable.of(e.toString()));
+          }
+//        final Selectable selectable = () -> onSelected(entity);
+
       }
   }
