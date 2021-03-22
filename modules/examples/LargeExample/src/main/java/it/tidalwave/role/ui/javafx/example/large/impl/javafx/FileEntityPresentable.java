@@ -26,25 +26,38 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.example.large.data;
+package it.tidalwave.role.ui.javafx.example.large.impl.javafx;
 
-import it.tidalwave.role.ui.javafx.example.large.data.impl.FileEntity;
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import it.tidalwave.role.ui.Displayable;
+import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.javafx.example.large.data.impl.FileEntity;
+import it.tidalwave.dci.annotation.DciRole;
+import it.tidalwave.role.ui.spi.SimpleCompositePresentable;
+import static it.tidalwave.util.Parameters.r;
 
 /***********************************************************************************************************************
  *
- * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface Dao
+@DciRole(datumType = FileEntity.class)
+public class FileEntityPresentable extends SimpleCompositePresentable<FileEntity>
   {
     @Nonnull
-    public Collection<SimpleEntity> getSimpleEntities();
+    private final FileEntity owner;
 
-    @Nonnull
-    public Collection<SimpleDciEntity> getDciEntities();
+    public FileEntityPresentable (@Nonnull final FileEntity owner)
+      {
+        super(owner);
+        this.owner = owner;
+      }
 
-    @Nonnull
-    public Collection<FileEntity> getFiles();
+    @Override @Nonnull
+    public PresentationModel createPresentationModel (@Nonnull final Collection<Object> roles)
+      {
+        final Displayable displayable = Displayable.of(() -> "XX " + owner.getDisplayName());
+        return super.createPresentationModel(r(displayable, roles));
+      }
   }

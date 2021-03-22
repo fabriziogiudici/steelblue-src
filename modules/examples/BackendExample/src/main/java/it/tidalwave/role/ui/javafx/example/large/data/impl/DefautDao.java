@@ -29,7 +29,9 @@
 package it.tidalwave.role.ui.javafx.example.large.data.impl;
 
 import javax.annotation.Nonnull;
+import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import it.tidalwave.role.ui.javafx.example.large.data.*;
@@ -40,7 +42,7 @@ import static java.util.stream.Collectors.toList;
  * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
  *
  **********************************************************************************************************************/
-public class DefautDao implements Dao
+public class DefautDao implements Dao // FIXME: rename to Model
   {
     @Override @Nonnull
     public Collection<SimpleEntity> getSimpleEntities()
@@ -51,7 +53,7 @@ public class DefautDao implements Dao
     @Override @Nonnull
     public Collection<SimpleDciEntity> getDciEntities()
       {
-        final AtomicInteger sequence = new AtomicInteger(3); // I know it's bad, it's just an example
+        final AtomicInteger sequence = new AtomicInteger(1); // I know it's bad, it's just an example
         return IntStream.rangeClosed(1, 1000).mapToObj(row ->
           {
             final int attr1 = sequence.getAndIncrement();
@@ -59,5 +61,12 @@ public class DefautDao implements Dao
             final String name = String.format("(%d ; %d)", attr1, attr2);
             return new SimpleDciEntity(name, attr1, attr2);
           }).collect(toList());
+      }
+
+    @Nonnull
+    @Override
+    public Collection<FileEntity> getFiles()
+      {
+        return List.of(FileEntity.of(Path.of(System.getProperty("user.home")).resolve("scripts")));
       }
   }
