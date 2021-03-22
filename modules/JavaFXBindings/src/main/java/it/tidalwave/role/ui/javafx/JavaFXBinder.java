@@ -174,7 +174,7 @@ public interface JavaFXBinder
 
     /*******************************************************************************************************************
      *
-     * Binds a {@link TableView} to a {@link PresentationModel} and a callback.
+     * Binds a {@link TreeView} to a {@link PresentationModel} and a callback.
      *
      * The {@code PresentationModel} is used to populate the table. The following roles are used:
      *
@@ -187,6 +187,7 @@ public interface JavaFXBinder
      * <li>A {@link Styleable} (optional) is used to provide the rendering style for each item.</li>
      * <li>A {@link UserActionProvider} (optional) is used to provide the actions for creating a context menu;
      *     the default action is also bound to the double click or SPACE gesture.</li>
+     * <li>A {@link Visible} (optional) is used to decide whether the root node should be visible or not.</li>
      * </ul>
      *
      * The process of populating data is performed in background threads, so this method quickly returns also in case
@@ -251,6 +252,7 @@ public interface JavaFXBinder
      * <li>A {@link Styleable} (optional) is used to provide the rendering style for each item.</li>
      * <li>A {@link UserActionProvider} (optional) is used to provide the actions for creating a context menu;
      *     the default action is also bound to the double click or SPACE gesture.</li>
+     * <li>A {@link Visible} (optional) is used to decide whether the root node should be visible or not.</li>
      * </ul>
      *
      * The process of populating data is performed in background threads, so this method quickly returns also in case

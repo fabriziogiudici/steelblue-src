@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.beans.PropertyChangeListener;
+import it.tidalwave.role.ui.Visible;
 import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -50,6 +51,7 @@ import it.tidalwave.role.ui.javafx.impl.common.PresentationModelObservable;
 import it.tidalwave.role.ui.javafx.impl.tree.ObsoletePresentationModelDisposer;
 import javafx.util.Callback;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.role.ui.Visible._Visible_;
 import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
 
 /***********************************************************************************************************************
@@ -94,6 +96,8 @@ public class TreeTableViewBindings extends DelegateSupport
         rootProperty.removeListener(presentationModelDisposer);
         rootProperty.addListener(presentationModelDisposer);
         rootProperty.set(createTreeItem(pm, 0));
+
+        treeTableView.setShowRoot(pm.maybeAs(_Visible_).map(Visible::isVisible).orElse(true));
 
         final ObservableList rawColumns = treeTableView.getColumns(); // FIXME cast
         final ObservableList<TreeTableColumn<PresentationModel, PresentationModel>> columns =

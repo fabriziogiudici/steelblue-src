@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.beans.PropertyChangeListener;
+import it.tidalwave.role.ui.Visible;
 import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import javafx.util.Callback;
 import javafx.beans.property.ObjectProperty;
@@ -46,6 +47,7 @@ import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.role.ui.Visible._Visible_;
 
 /***********************************************************************************************************************
  *
@@ -91,6 +93,7 @@ public class TreeViewBindings extends DelegateSupport
         callback.ifPresent(Runnable::run);
 
         treeView.setCellFactory(treeCellFactory);
+        treeView.setShowRoot(pm.maybeAs(_Visible_).map(Visible::isVisible).orElse(true));
 
         final ReadOnlyObjectProperty<TreeItem<PresentationModel>> selectionProperty =
                 treeView.getSelectionModel().selectedItemProperty();
