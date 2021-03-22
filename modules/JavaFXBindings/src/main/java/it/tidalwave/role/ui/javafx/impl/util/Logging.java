@@ -50,6 +50,8 @@ public class Logging
   {
     public static final String INDENT = " ".repeat(100);
 
+    public static final boolean logChildren = Boolean.valueOf(Logging.class.getName() + ".logCompositeChildren");
+
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
@@ -112,8 +114,13 @@ public class Logging
         if (object instanceof Composite)
           {
             final Finder<?> finder = ((Composite<?, ?>)object).findChildren();
-            log.debug(">>>>    {} Composite children", indent);
-            logObjects(indent + "    ", finder.results().stream().filter(o -> o != object).collect(toList()));
+
+            // this is optional because it would jeopardize incremental loading of tress and probably cause troubles
+            if (logChildren)
+              {
+                log.debug(">>>>    {} Composite children", indent);
+                logObjects(indent + "    ", finder.results().stream().filter(o -> o != object).collect(toList()));
+              }
           }
       }
   }

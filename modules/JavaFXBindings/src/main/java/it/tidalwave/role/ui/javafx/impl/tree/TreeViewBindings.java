@@ -32,15 +32,16 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.beans.PropertyChangeListener;
+import javafx.application.Platform;
 import it.tidalwave.role.ui.Visible;
 import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
+import it.tidalwave.role.ui.javafx.impl.common.PresentationModelTreeItem;
 import javafx.util.Callback;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.application.Platform;
 import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
@@ -107,23 +108,29 @@ public class TreeViewBindings extends DelegateSupport
      *
      ******************************************************************************************************************/
     @Nonnull
-    private TreeItem<PresentationModel> createTreeItem (@Nonnull final PresentationModel pm, final int recursion)
+    private TreeItem<PresentationModel> createTreeItem (@Nonnull final PresentationModel pm, final int depth)
       {
         assertIsFxApplicationThread();
-        final TreeItem<PresentationModel> item = new TreeItem<>(pm);
+        final TreeItem<PresentationModel> item = new PresentationModelTreeItem(pm);
 
         final PropertyChangeListener recreateChildrenOnUpdateListener = __ ->
           Platform.runLater(() ->
             {
               log.debug("On recreateChildrenOnUpdateListener");
               item.getChildren().clear(); // FIXME: should update it incrementally
-              createChildren(item, pm, recursion + 1);
+              createChildren(item, pm, depth + 1);
               item.setExpanded(true);
             });
 
         pm.addPropertyChangeListener(PresentationModel.PROPERTY_CHILDREN, recreateChildrenOnUpdateListener);
-        // FIXME: only if already expanded, otherwise defer the call when expanded
-        createChildren(item, pm, recursion + 1);
+
+        item.expandedProperty().addListener(((observable, oldValue, newValue) ->
+          {
+            if (newValue)
+              {
+                createChildren(item, pm, depth + 1);
+              }
+          }));
 
         return item;
       }

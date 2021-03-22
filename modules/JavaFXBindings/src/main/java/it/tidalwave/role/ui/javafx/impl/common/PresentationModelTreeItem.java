@@ -5,7 +5,7 @@
  * SteelBlue
  * http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
  * %%
- * Copyright (C) 2015 - 2021 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2015 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  *
  * *********************************************************************************************************************
@@ -26,23 +26,29 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx;
+package it.tidalwave.role.ui.javafx.impl.common;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import javafx.scene.control.TreeItem;
+import javax.annotation.Nonnull;
+import it.tidalwave.role.ui.PresentationModel;
+import static it.tidalwave.role.Composite._Composite_;
 
 /***********************************************************************************************************************
- *
- * @deprecated  Use @FXML instead
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Deprecated
-public @interface Widget
+public class PresentationModelTreeItem extends TreeItem<PresentationModel>
   {
-    String value();
+    public PresentationModelTreeItem (@Nonnull final PresentationModel pm)
+      {
+        super(pm);
+      }
+
+    @Override
+    public boolean isLeaf()
+      {
+        return getValue().maybeAs(_Composite_).isEmpty();
+      }
   }
+
