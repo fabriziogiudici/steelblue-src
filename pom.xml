@@ -39,7 +39,7 @@
 
     <groupId>it.tidalwave.steelblue</groupId>
     <artifactId>steelblue</artifactId>
-    <version>1.1-ALPHA-1</version>
+    <version>1.1-ALPHA-2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SteelBlue</name>
     <url>http://steelblue.tidalwave.it</url>
@@ -55,7 +55,7 @@
         <connection>scm:git:${scm.repo.readonly.url}</connection>
         <developerConnection>scm:git:${scm.repo.effective.url}</developerConnection>
         <url>${scm.repo.browse.url}</url>
-        <tag>1.1-ALPHA-1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
@@ -79,17 +79,17 @@
             <dependency>
                 <groupId>it.tidalwave.steelblue</groupId>
                 <artifactId>it-tidalwave-role-ui-javafx</artifactId>
-                <version>1.1-ALPHA-1</version>
+                <version>1.1-ALPHA-2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.steelblue</groupId>
                 <artifactId>it-tidalwave-steelblue-example-backend</artifactId>
-                <version>1.1-ALPHA-1</version>
+                <version>1.1-ALPHA-2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>it.tidalwave.steelblue</groupId>
                 <artifactId>it-tidalwave-steelblue-example-large</artifactId>
-                <version>1.1-ALPHA-1</version>
+                <version>1.1-ALPHA-2-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
