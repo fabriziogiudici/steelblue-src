@@ -47,15 +47,15 @@ import static org.mockito.Mockito.*;
  **********************************************************************************************************************/
 public class ObsoletePresentationModelDisposerTest
   {
-    private ObsoletePresentationModelDisposer fixture;
+    private ObsoletePresentationModelDisposer underTest;
 
     private List<PresentationModel> allPMs;
 
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       {
         AsDelegateProvider.Locator.set(AsDelegateProvider.empty());
-        fixture = new ObsoletePresentationModelDisposer();
+        underTest = new ObsoletePresentationModelDisposer();
         allPMs = new ArrayList<>();
       }
 
@@ -66,7 +66,7 @@ public class ObsoletePresentationModelDisposerTest
         final TreeItem<PresentationModel> treeItem = createTreeItemWithChildren(0);
         assertThat(allPMs.size(), is(85));
         // when
-        fixture.changed(null, treeItem, null);
+        underTest.changed(null, treeItem, null);
         // then
         for (final PresentationModel pm : allPMs)
           {

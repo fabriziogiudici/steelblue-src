@@ -5,7 +5,7 @@
  * SteelBlue
  * http://steelblue.tidalwave.it - git clone git@bitbucket.org:tidalwave/steelblue-src.git
  * %%
- * Copyright (C) 2015 - 2021 Tidalwave s.a.s. (http://tidalwave.it)
+ * Copyright (C) 2015 - 2015 Tidalwave s.a.s. (http://tidalwave.it)
  * %%
  *
  * *********************************************************************************************************************
@@ -28,30 +28,27 @@
  */
 package it.tidalwave.role.ui.javafx.impl.common;
 
-import javax.annotation.CheckForNull;
+import javafx.scene.control.TreeItem;
 import javax.annotation.Nonnull;
-import javafx.scene.control.cell.TextFieldListCell;
-import it.tidalwave.util.As;
-import it.tidalwave.role.ui.javafx.impl.CellBinder;
-import lombok.AllArgsConstructor;
+import it.tidalwave.role.ui.PresentationModel;
+import static it.tidalwave.role.Composite._Composite_;
 
 /***********************************************************************************************************************
- *
- * A specialisation of {@link TextFieldListCell} which binds to an {@link As}-capable item.
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@AllArgsConstructor
-public class AsObjectListCell<T extends As> extends TextFieldListCell<T>
+public class PresentationModelTreeItem extends TreeItem<PresentationModel>
   {
-    @Nonnull
-    private final CellBinder cellBinder;
+    public PresentationModelTreeItem (@Nonnull final PresentationModel pm)
+      {
+        super(pm);
+      }
 
     @Override
-    public void updateItem (final @CheckForNull T item, final boolean empty)
+    public boolean isLeaf()
       {
-        super.updateItem(item, empty);
-        cellBinder.bind(this, item, empty);
+        return getValue().maybeAs(_Composite_).isEmpty();
       }
   }
+

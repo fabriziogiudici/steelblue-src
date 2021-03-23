@@ -31,7 +31,6 @@ package it.tidalwave.role.ui.javafx.impl;
 import javafx.application.Platform;
 import it.tidalwave.role.ui.javafx.impl.util.JavaFXPresentationBuilder;
 import org.testng.annotations.Test;
-import static org.testng.Assert.*;
 
 /***********************************************************************************************************************
  *
@@ -61,8 +60,8 @@ public class JavaFXPresentationBuilderTest
     @Test(enabled = false)
     public void must_properly_create_a_presentation_instance()
       {
-        final MockProvider fixture = new MockProvider();
+        final MockProvider underTest = new MockProvider();
 
-        final MockInterface i = fixture.create(null);
+        final MockInterface i = underTest.create(null);
       }
 }

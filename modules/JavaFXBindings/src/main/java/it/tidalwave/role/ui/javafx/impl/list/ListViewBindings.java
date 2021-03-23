@@ -29,30 +29,26 @@
 package it.tidalwave.role.ui.javafx.impl.list;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
-import it.tidalwave.role.ui.javafx.impl.Logging;
-import javafx.util.Callback;
 import javafx.collections.ObservableList;
+import javafx.util.Callback;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.application.Platform;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.SimpleComposite;
+import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.PresentationModel;
-import it.tidalwave.role.ui.javafx.impl.CellBinder;
-import it.tidalwave.role.ui.javafx.impl.DefaultCellBinder;
-import it.tidalwave.role.ui.javafx.impl.RoleBag;
-import it.tidalwave.role.ui.javafx.impl.common.AsObjectListCell;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.RoleBag;
 import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
+import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.scene.input.KeyCode.*;
-import static it.tidalwave.role.SimpleComposite._SimpleComposite_;
 import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
 
 /***********************************************************************************************************************
@@ -63,8 +59,6 @@ import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
 @Slf4j
 public class ListViewBindings extends DelegateSupport
   {
-//    private final CellBinder cellBinder;
-//
     private final Callback<ListView<PresentationModel>, ListCell<PresentationModel>> cellFactory;
 
     private final ChangeListener<PresentationModel> changeListener = new ChangeListenerSelectableAdapter(executor);
@@ -74,7 +68,7 @@ public class ListViewBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    public ListViewBindings (final @Nonnull Executor executor, final @Nonnull CellBinder cellBinder)
+    public ListViewBindings (@Nonnull final Executor executor, @Nonnull final CellBinder cellBinder)
       {
         super(executor);
         cellFactory = listView -> new AsObjectListCell<>(cellBinder);
@@ -85,9 +79,9 @@ public class ListViewBindings extends DelegateSupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void bind (final @Nonnull ListView<PresentationModel> listView,
-                      final @Nonnull PresentationModel pm,
-                      final @Nonnull Optional<Runnable> callback)
+    public void bind (@Nonnull final ListView<PresentationModel> listView,
+                      @Nonnull final PresentationModel pm,
+                      @Nonnull final Optional<Runnable> callback)
       {
         listView.setCellFactory(cellFactory);
 
@@ -97,44 +91,40 @@ public class ListViewBindings extends DelegateSupport
         // TODO: try by having CEC selection emulating RETURN and optionally accepting RETURN here
         listView.setOnKeyPressed(event ->
           {
-            if (Arrays.asList(SPACE, ENTER).contains(event.getCode()))
+            if (List.of(SPACE, ENTER).contains(event.getCode()))
               {
                 final PresentationModel selectedPm = listView.getSelectionModel().getSelectedItem();
                 // TODO: must call the default action - but should we look up it again?
                 // Otherwise emulate mouse double click on the cell
-                log.debug("ListView onKeyPressed: {}", selectedPm);
+                ListViewBindings.log.debug("ListView onKeyPressed: {}", selectedPm);
 
                 executor.execute(() ->
                   {
-                    try
-                      {
-                        // FIXME: it would be nicer to retrieve the cell and its associated RoleBag?
-                        final RoleBag roleMap = new RoleBag(selectedPm, Arrays.asList(_UserActionProvider_));
-                        DefaultCellBinder.findDefaultUserAction(roleMap).actionPerformed();
-                      }
-                    catch (NotFoundException e)
-                      {
-                        // ok no action
-                      }
+                    // FIXME: it would be nicer to retrieve the cell and its associated RoleBag?
+                    final RoleBag roles = new RoleBag(selectedPm, List.of(_UserActionProvider_));
+                    roles.getDefaultUserAction().ifPresent(UserAction::actionPerformed);
                   });
               }
           });
 
-        final ReadOnlyObjectProperty<PresentationModel> pmProperty = listView.getSelectionModel().selectedItemProperty();
-        pmProperty.removeListener(changeListener);
+        final ReadOnlyObjectProperty<PresentationModel> selectedProperty = listView.getSelectionModel().selectedItemProperty();
+        selectedProperty.removeListener(changeListener);
         listView.setItems(observableArrayList()); // quick clear in case of long operations FIXME doesn't work
-        executor.execute(() -> // TODO: use FXWorker
-          {
-            final SimpleComposite<PresentationModel> composite = pm.as(_SimpleComposite_);
-            final ObservableList<PresentationModel> items = observableArrayList(composite.findChildren().results());
-            Logging.logObjects("", items);
+        JavaFXWorker.run(executor,
+                         () -> childrenPm(pm),
+                         items -> finalize(listView, items, selectedProperty, callback));
+      }
 
-            Platform.runLater(() ->
-              {
-                listView.setItems(items);
-                pmProperty.addListener(changeListener);
-                callback.ifPresent(Runnable::run);
-              });
-          });
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void finalize (@Nonnull final ListView<PresentationModel> listView,
+                           @Nonnull final ObservableList<PresentationModel> items,
+                           @Nonnull final ReadOnlyObjectProperty<PresentationModel> selectedProperty,
+                           @Nonnull final Optional<Runnable> callback)
+      {
+        listView.setItems(items);
+        selectedProperty.addListener(changeListener);
+        callback.ifPresent(Runnable::run);
       }
   }

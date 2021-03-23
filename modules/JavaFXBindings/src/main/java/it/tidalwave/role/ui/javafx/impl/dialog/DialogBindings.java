@@ -57,7 +57,7 @@ public class DialogBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    public DialogBindings (final @Nonnull Executor executor)
+    public DialogBindings (@Nonnull final Executor executor)
       {
         super(executor);
       }
@@ -67,65 +67,62 @@ public class DialogBindings extends DelegateSupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void showInModalDialog (final @Nonnull UserNotificationWithFeedback notification,
-                                   final @Nonnull Optional<Node> node)
+    public void showInModalDialog (@Nonnull final UserNotificationWithFeedback notification,
+                                   @Nonnull final Optional<Node> node)
       {
-        Platform.runLater(new Runnable() // FIXME: should not be needed
+        // FIXME: should not be needed
+        Platform.runLater(() ->
           {
-            @Override
-            public void run()
-              {
-                log.debug("modalDialog({}, {})", node, notification);
+            log.debug("modalDialog({}, {})", node, notification);
 
 //                final Dialog<ButtonType> dialog = new Dialog<>();
-                final Dialog<ButtonType> dialog = new Alert(Alert.AlertType.NONE);
-                dialog.initOwner(mainWindow);
-                dialog.setTitle(notification.getCaption());
-                dialog.setResizable(false);
-                dialog.setContentText(notification.getText());
-                node.ifPresent(n -> dialog.getDialogPane().setContent(n));
+            final Dialog<ButtonType> dialog = new Alert(Alert.AlertType.NONE);
+            dialog.initOwner(mainWindow);
+            dialog.setTitle(notification.getCaption());
+            dialog.setResizable(false);
+            dialog.setContentText(notification.getText());
+            node.ifPresent(n -> dialog.getDialogPane().setContent(n));
 
-                final Feedback feedback = notification.getFeedback();
-                final boolean hasOnCancel = feedback.canCancel();
+            final Feedback feedback = notification.getFeedback();
+            final boolean hasOnCancel = feedback.canCancel();
 
-                final ObservableList<ButtonType> buttonTypes = dialog.getDialogPane().getButtonTypes();
-                buttonTypes.clear();
-                buttonTypes.add(ButtonType.OK);
+            final ObservableList<ButtonType> buttonTypes = dialog.getDialogPane().getButtonTypes();
+            buttonTypes.clear();
+            buttonTypes.add(ButtonType.OK);
 
-                if (hasOnCancel)
-                  {
-                    buttonTypes.add(ButtonType.CANCEL);
-                  }
+            if (hasOnCancel)
+              {
+                buttonTypes.add(ButtonType.CANCEL);
+              }
 
 //                okButton.disableProperty().bind(new PropertyAdapter<>(valid)); // FIXME: doesn't work
 
-                final Optional<ButtonType> result = dialog.showAndWait();
+            final Optional<ButtonType> result = dialog.showAndWait();
 
-                if (!result.isPresent())
+            if (!result.isPresent())
+              {
+                if (hasOnCancel)
                   {
-                    if (hasOnCancel)
-                      {
-                        wrap(notification::cancel);
-                      }
-                    else
-                      {
-                        wrap(notification::confirm);
-                      }
+                    wrap(notification::cancel);
                   }
                 else
                   {
-                    if (result.get() == ButtonType.OK)
-                      {
-                        wrap(notification::confirm);
-                      }
-                    else if (result.get() == ButtonType.CANCEL)
-                      {
-                        wrap(notification::cancel);
-                      }
-                    else
-                      {
-                        throw new IllegalStateException("Unexpected button pressed: " + result.get());
-                      }
+                    wrap(notification::confirm);
+                  }
+              }
+            else
+              {
+                if (result.get() == ButtonType.OK)
+                  {
+                    wrap(notification::confirm);
+                  }
+                else if (result.get() == ButtonType.CANCEL)
+                  {
+                    wrap(notification::cancel);
+                  }
+                else
+                  {
+                    throw new IllegalStateException("Unexpected button pressed: " + result.get());
                   }
               }
           });
@@ -137,7 +134,7 @@ public class DialogBindings extends DelegateSupport
      *
      ******************************************************************************************************************/
     @SneakyThrows(Throwable.class)
-    private static void wrap (final @Nonnull Callback callback)
+    private static void wrap (@Nonnull final Callback callback)
       {
         callback.call();
       }

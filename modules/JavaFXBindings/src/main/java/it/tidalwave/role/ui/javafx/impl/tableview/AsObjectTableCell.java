@@ -32,7 +32,7 @@ import javax.annotation.CheckForNull;
 import javafx.scene.control.cell.TextFieldTableCell;
 import it.tidalwave.util.As;
 import it.tidalwave.util.annotation.VisibleForTesting;
-import it.tidalwave.role.ui.javafx.impl.CellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
 import lombok.AllArgsConstructor;
 
 /***********************************************************************************************************************
@@ -42,13 +42,13 @@ import lombok.AllArgsConstructor;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 public class AsObjectTableCell<T extends As> extends TextFieldTableCell<T, T>
   {
     @VisibleForTesting final CellBinder cellBinder;
 
     @Override
-    public void updateItem (final @CheckForNull T item, final boolean empty)
+    public void updateItem (@CheckForNull final T item, final boolean empty)
       {
         super.updateItem(item, empty);
         cellBinder.bind(this, item, empty);

@@ -33,23 +33,23 @@
     <parent>
         <groupId>it.tidalwave.steelblue</groupId>
         <artifactId>steelblue</artifactId>
-        <version>1.0-ALPHA-20-SNAPSHOT</version>
+        <version>1.1-ALPHA-1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.steelblue</groupId>
     <artifactId>it-tidalwave-steelblue-modules</artifactId>
-    <version>1.0-ALPHA-20-SNAPSHOT</version>
+    <version>1.1-ALPHA-1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SteelBlue (modules)</name>
     <description>SteelBlue (modules)</description>
 
     <properties>
-        <tft.javac.source>1.8</tft.javac.source>
-        <tft.javac.target>1.8</tft.javac.target>
-        <tft.javac.release>8</tft.javac.release>
+        <tft.javac.source>11</tft.javac.source>
+        <tft.javac.target>11</tft.javac.target>
+        <tft.javac.release>11</tft.javac.release>
 
-        <thesefoolishthings.version>3.2-ALPHA-4</thesefoolishthings.version>
+        <thesefoolishthings.version>3.2-ALPHA-7</thesefoolishthings.version>
         <tft.javafx.version>11.0.1</tft.javafx.version>
         <tft.spring.version>4.3.30.RELEASE</tft.spring.version>
     </properties>

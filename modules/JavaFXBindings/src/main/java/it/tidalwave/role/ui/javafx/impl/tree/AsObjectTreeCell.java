@@ -31,7 +31,7 @@ package it.tidalwave.role.ui.javafx.impl.tree;
 import javax.annotation.CheckForNull;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import it.tidalwave.util.As;
-import it.tidalwave.role.ui.javafx.impl.CellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
 import lombok.AllArgsConstructor;
 
 /***********************************************************************************************************************
@@ -47,7 +47,7 @@ public class AsObjectTreeCell<T extends As> extends TextFieldTreeCell<T>
     private final CellBinder cellBinder;
 
     @Override
-    public void updateItem (final @CheckForNull T item, final boolean empty)
+    public void updateItem (@CheckForNull final T item, final boolean empty)
       {
         super.updateItem(item, empty);
         cellBinder.bind(this, item, empty);

@@ -99,7 +99,9 @@ public interface MainScreenPresentation
      * method.
      *
      ******************************************************************************************************************/
-    public void populate (@Nonnull PresentationModel pm1, @Nonnull PresentationModel pm2);
+    public void populate (@Nonnull PresentationModel pm1,
+                          @Nonnull PresentationModel pm2,
+                          @Nonnull PresentationModel pm3);
 
     /*******************************************************************************************************************
      *

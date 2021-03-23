@@ -56,7 +56,7 @@ public class StackPaneSelector // FIXME: rename, introduce interface
      * @param   stackPane   the {@code StackPane}
      *
      ******************************************************************************************************************/
-    public void registerArea (final @Nonnull String area, final @Nonnull StackPane stackPane)
+    public void registerArea (@Nonnull final String area, @Nonnull final StackPane stackPane)
       {
         log.debug("registerArea({}, {})", area, stackPane);
         stackPaneMapByArea.put(area, stackPane);
@@ -70,7 +70,7 @@ public class StackPaneSelector // FIXME: rename, introduce interface
      * @param   node        the {@code Node}
      *
      ******************************************************************************************************************/
-    public void add (final @Nonnull String area, final @Nonnull Node node)
+    public void add (@Nonnull final String area, @Nonnull final Node node)
       {
         node.setVisible(false);
         findStackPaneFor(area).getChildren().add(node);
@@ -83,7 +83,7 @@ public class StackPaneSelector // FIXME: rename, introduce interface
      * @param   node        the {@code Node}
      *
      ******************************************************************************************************************/
-    public void setShownNode (final @Nonnull Node node)
+    public void setShownNode (@Nonnull final Node node)
       {
         log.info("setShownNode({})", node);
 
@@ -93,7 +93,7 @@ public class StackPaneSelector // FIXME: rename, introduce interface
 
             if (children.contains(node))
               {
-                children.stream().forEach(child -> child.setVisible(false));
+                children.forEach(child -> child.setVisible(false));
                 node.setVisible(true); // at last
                 return;
               }
@@ -107,7 +107,7 @@ public class StackPaneSelector // FIXME: rename, introduce interface
      *
      ******************************************************************************************************************/
     @Nonnull
-    private StackPane findStackPaneFor (final @Nonnull String area)
+    private StackPane findStackPaneFor (@Nonnull final String area)
       {
         final StackPane stackPane = stackPaneMapByArea.get(area);
 

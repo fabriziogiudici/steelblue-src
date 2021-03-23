@@ -41,17 +41,17 @@ import org.testng.annotations.BeforeMethod;
  **********************************************************************************************************************/
 public class DefaultJavaFXBinderTest
   {
-    private DefaultJavaFXBinder fixture;
+    private DefaultJavaFXBinder underTest;
 
     /*******************************************************************************************************************
      *
      ******************************************************************************************************************/
     @BeforeMethod
-    public void setupFixture()
+    public void setup()
       {
         AsDelegateProvider.Locator.set(AsDelegateProvider.empty());
         ContextManager.Locator.set(new DefaultContextManagerProvider());
-        fixture = new DefaultJavaFXBinder(Executors.newSingleThreadExecutor());
+        underTest = new DefaultJavaFXBinder(Executors.newSingleThreadExecutor());
       }
 
     // TODO: tests

@@ -32,24 +32,28 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.beans.PropertyChangeListener;
+import javafx.util.Callback;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.application.Platform;
-import it.tidalwave.util.AsException;
 import it.tidalwave.util.annotation.VisibleForTesting;
-import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
-import it.tidalwave.role.ui.javafx.impl.CellBinder;
+import it.tidalwave.role.ui.Visible;
+import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
+import it.tidalwave.role.ui.javafx.impl.common.PresentationModelTreeItem;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
+import it.tidalwave.role.ui.javafx.impl.common.PresentationModelObservable;
 import it.tidalwave.role.ui.javafx.impl.tree.ObsoletePresentationModelDisposer;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.SimpleComposite.*;
-import static it.tidalwave.role.ui.Selectable._Selectable_;
+import static it.tidalwave.role.ui.Visible._Visible_;
+import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
 
 /***********************************************************************************************************************
  *
@@ -59,119 +63,111 @@ import static it.tidalwave.role.ui.Selectable._Selectable_;
 @Slf4j
 public class TreeTableViewBindings extends DelegateSupport
   {
-    @Nonnull
-    private final CellBinder cellBinder;
-
     private final ObsoletePresentationModelDisposer presentationModelDisposer = new ObsoletePresentationModelDisposer();
 
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    public TreeTableViewBindings (final @Nonnull Executor executor, final @Nonnull CellBinder cellBinder)
-      {
-        super(executor);
-        this.cellBinder = cellBinder;
-      }
+    private final Callback<TreeTableColumn<PresentationModel, PresentationModel>,
+            TreeTableCell<PresentationModel, PresentationModel>> cellFactory;
+
+    @VisibleForTesting final ChangeListenerSelectableAdapter changeListener =
+            new ChangeListenerSelectableAdapter(executor);
 
     /*******************************************************************************************************************
      *
      *
      *
      ******************************************************************************************************************/
-    @VisibleForTesting final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener = (ov, oldItem, item) ->
+    public TreeTableViewBindings (@Nonnull final Executor executor, @Nonnull final CellBinder cellBinder)
       {
-        executor.execute(() ->
-          {
-            try
-              {
-                item.getValue().as(_Selectable_).select();
-              }
-            catch (AsException e)
-              {
-                log.debug("No Selectable role for {}", item); // ok, do nothing
-              }
-          });
-      };
+        super(executor);
+        cellFactory = __ -> AsObjectTreeTableCell.of(cellBinder);
+      }
 
     /*******************************************************************************************************************
      *
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void bind (final @Nonnull TreeTableView<PresentationModel> treeTableView,
-                      final @Nonnull PresentationModel pm,
-                      final @Nonnull Optional<Runnable> callback)
+    public void bind (@Nonnull final TreeTableView<PresentationModel> treeTableView,
+                      @Nonnull final PresentationModel pm,
+                      @Nonnull final Optional<Runnable> callback)
       {
         assertIsFxApplicationThread();
 
         final ObjectProperty<TreeItem<PresentationModel>> rootProperty = treeTableView.rootProperty();
         rootProperty.removeListener(presentationModelDisposer);
         rootProperty.addListener(presentationModelDisposer);
-        rootProperty.set(createTreeItem(pm));
+        rootProperty.set(createTreeItem(pm, 0));
 
-        final ObservableList rawColumns = treeTableView.getColumns(); // FIXME
+        treeTableView.setShowRoot(pm.maybeAs(_Visible_).map(Visible::isVisible).orElse(true));
+
+        final ObservableList rawColumns = treeTableView.getColumns(); // FIXME cast
         final ObservableList<TreeTableColumn<PresentationModel, PresentationModel>> columns =
                 (ObservableList<TreeTableColumn<PresentationModel, PresentationModel>>)rawColumns;
 
         for (final TreeTableColumn<PresentationModel, PresentationModel> column : columns)
           {
-            column.setCellValueFactory(new TreeTableAggregateAdapter());
-            column.setCellFactory(c -> new AsObjectTreeTableCell(cellBinder));
+            column.setCellValueFactory(PresentationModelObservable::of);
+            column.setCellFactory(cellFactory);
           }
 
         final ReadOnlyObjectProperty<TreeItem<PresentationModel>> selectedItemProperty =
                 treeTableView.getSelectionModel().selectedItemProperty();
-        selectedItemProperty.removeListener(treeItemChangeListener);
-        selectedItemProperty.addListener(treeItemChangeListener);
-        callback.ifPresent(Runnable::run);
+        selectedItemProperty.removeListener(changeListener.asTreeItemChangeListener());
+        selectedItemProperty.addListener(changeListener.asTreeItemChangeListener());
+        callback.ifPresent(Runnable::run); // FIXME: thread?
      }
 
     /*******************************************************************************************************************
      *
+     * Creates a single {@link TreeItem} for the given the {@link PresentationModel}. When the {@code PresentationModel}
+     * fires the {@link PresentationModel#PROPERTY_CHILDREN} property change event, children are recreated.
      *
+     * @param   pm        the {@code PresentationModel}
+     * @param   depth     the depth level (used only for logging)
+     * @return            the
      *
      ******************************************************************************************************************/
     @Nonnull
-    private TreeItem<PresentationModel> createTreeItem (final @Nonnull PresentationModel pm)
+    private TreeItem<PresentationModel> createTreeItem (@Nonnull final PresentationModel pm, final int depth)
       {
-        final TreeItem<PresentationModel> item = new TreeItem<>(pm);
+        final TreeItem<PresentationModel> item = new PresentationModelTreeItem(pm);
 
-        final PropertyChangeListener recreateChildrenOnUpdateListener = event ->
-          {
-            Platform.runLater(() ->
-              {
-                item.getChildren().clear(); // FIXME: should update it incrementally
-                createChildren(item, pm);
-                item.setExpanded(true);
-              });
-          };
+        final PropertyChangeListener recreateChildrenOnUpdateListener = __ ->
+          Platform.runLater(() ->
+            {
+              item.getChildren().clear();
+              createChildren(item, depth + 1);
+              item.setExpanded(true);
+            });
 
         pm.addPropertyChangeListener(PresentationModel.PROPERTY_CHILDREN, recreateChildrenOnUpdateListener);
-        createChildren(item, pm); // FIXME: only if already expanded, otherwise defer the call when expanded
+
+        item.expandedProperty().addListener(((observable, oldValue, newValue) ->
+          {
+            if (newValue)
+              {
+                createChildren(item, depth + 1);
+              }
+          }));
 
         return item;
       }
 
     /*******************************************************************************************************************
      *
+     * Creates the children for a {@link TreeItem}.
      *
+     * @param   parentItem  the {@code TreeItem}
+     * @param   depth       the depth level (used only for logging)
      *
      ******************************************************************************************************************/
     // FIXME: add on demand, upon node expansion
-    private void createChildren (final @Nonnull TreeItem<PresentationModel> parentItem,
-                                 final @Nonnull PresentationModel pm)
+    private void createChildren (@Nonnull final TreeItem<PresentationModel> parentItem, final int depth)
       {
-        try
-          {
-            final SimpleComposite<PresentationModel> composite = pm.as(_SimpleComposite_);
-            final ObservableList<TreeItem<PresentationModel>> children = parentItem.getChildren();
-            composite.findChildren().results().forEach(childPm -> children.add(createTreeItem(childPm)));
-          }
-        catch (AsException e)
-          {
-            // ok, no Composite
-          }
+        final PresentationModel parentPm = parentItem.getValue();
+        final ObservableList<TreeItem<PresentationModel>> children = parentItem.getChildren();
+        JavaFXWorker.run(executor,
+                         () -> childrenPm(parentPm, depth),
+                         items -> items.forEach(childPm -> children.add(createTreeItem(childPm, depth))));
       }
   }

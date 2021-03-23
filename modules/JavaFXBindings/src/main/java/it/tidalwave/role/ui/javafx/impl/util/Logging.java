@@ -26,7 +26,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl;
+package it.tidalwave.role.ui.javafx.impl.util;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -36,7 +36,9 @@ import it.tidalwave.util.Finder;
 import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.Composite;
 import it.tidalwave.role.ui.Displayable;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.role.spi.impl.LogUtil.shortName;
 import static java.util.stream.Collectors.toList;
 
 /***********************************************************************************************************************
@@ -44,24 +46,19 @@ import static java.util.stream.Collectors.toList;
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Slf4j
-public final class Logging
+@Slf4j @UtilityClass
+public class Logging
   {
-    public static final String INDENT;
+    public static final String INDENT = " ".repeat(100);
 
-    static
-      {
-        final StringBuilder sb = new StringBuilder();
+    public static final String P_LOG_CHILDREN = Logging.class.getName() + ".logCompositeChildren";
 
-        for (int i = 0; i < 100; i++)
-          {
-            sb.append(" ");
-          }
+    public static final boolean logChildren = Boolean.valueOf(P_LOG_CHILDREN);
 
-        INDENT = sb.toString();
-      }
-
-    public static void logObjects (final @Nonnull String prefix, final @Nonnull Collection<?> objects)
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    public static void logObjects (@Nonnull final String prefix, @Nonnull final Collection<?> objects)
       {
         if (!log.isDebugEnabled())
           {
@@ -74,14 +71,17 @@ public final class Logging
           }
         else
           {
-            for (Object object : objects)
+            for (final Object object : objects)
               {
                 logObject(prefix, object);
               }
           }
       }
 
-    public static void logObject (final @Nonnull String indent, final @Nonnull Object object)
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    public static void logObject (@Nonnull final String indent, @Nonnull final Object object)
       {
         if (!log.isDebugEnabled())
           {
@@ -90,7 +90,8 @@ public final class Logging
 
         if (object instanceof Displayable)
           {
-            log.debug(">>>>     {}{}: {}", indent, object.getClass().getName(), ((Displayable)object).getDisplayName());
+            log.debug(">>>>     {}{}: {}", indent, shortName(object.getClass()),
+                      ((Displayable)object).getDisplayName());
           }
         else
           {
@@ -100,25 +101,31 @@ public final class Logging
         if (object instanceof Aggregate)
           {
             final Aggregate<?> aggregate = (Aggregate<?>)object;
-            // FIXME: should iterate on all values
-            final Optional<?> name = aggregate.getByName("Name");
-            final Optional<?> value = aggregate.getByName("Value");
-            name.ifPresent(n -> logObject(indent + "    name  ", n));
-            value.ifPresent(v -> logObject(indent + "    value ", v));
-          }
-
-        if (object instanceof As)
-          {
-            log.debug(">>>>    {} Composite roles", indent);
-            logObjects(indent + "    ",
-                       ((As)object).asMany(Object.class).stream().filter(o -> o != object).collect(toList()));
+            aggregate.getNames().forEach(name ->
+              {
+                logObject(indent + "    " + name + ": ", aggregate.getByName(name).get());
+              });
           }
 
         if (object instanceof Composite)
           {
             final Finder<?> finder = ((Composite<?, ?>)object).findChildren();
-            log.debug(">>>>    {} Composite children", indent);
-            logObjects(indent + "    ", finder.results().stream().filter(o -> o != object).collect(toList()));
+
+            // this is optional because it would jeopardize incremental loading of tress and probably cause troubles
+            if (!logChildren)
+              {
+                log.debug(">>>>     {}    to see children, set system property to true: " + P_LOG_CHILDREN, indent);
+              }
+            else
+              {
+                logObjects(indent + "    ", finder.results().stream().filter(o -> o != object).collect(toList()));
+              }
+          }
+
+        if (object instanceof As)
+          {
+            logObjects(indent + "    Role: ",
+                       ((As)object).asMany(Object.class).stream().filter(o -> o != object).collect(toList()));
           }
       }
   }

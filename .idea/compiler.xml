@@ -13,10 +13,10 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="it-tidalwave-role-ui-javafx" target="1.8" />
-      <module name="it-tidalwave-steelblue-example-backend" target="1.8" />
-      <module name="it-tidalwave-steelblue-example-large" target="1.8" />
-      <module name="it-tidalwave-steelblue-modules" target="1.8" />
+      <module name="it-tidalwave-role-ui-javafx" target="11" />
+      <module name="it-tidalwave-steelblue-example-backend" target="11" />
+      <module name="it-tidalwave-steelblue-example-large" target="11" />
+      <module name="it-tidalwave-steelblue-modules" target="11" />
       <module name="steelblue" target="1.8" />
     </bytecodeTargetLevel>
   </component>

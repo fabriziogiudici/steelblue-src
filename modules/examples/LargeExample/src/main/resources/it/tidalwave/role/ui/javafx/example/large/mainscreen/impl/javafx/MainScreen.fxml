@@ -18,69 +18,57 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.tidalwave.role.ui.javafx.example.large.mainscreen.impl.javafx.JavaFXMainScreenPresentationDelegate">
-   <children>
-      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="mainFxmlClass">
-          <bottom>
-              <TextArea fx:id="taLog" BorderPane.alignment="CENTER" />
-          </bottom>
-          <center>
+<AnchorPane xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.tidalwave.role.ui.javafx.example.large.mainscreen.impl.javafx.JavaFXMainScreenPresentationDelegate">
+    <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="mainFxmlClass">
+        <bottom>
+            <TextArea fx:id="taLog" BorderPane.alignment="CENTER"/>
+        </bottom>
+        <center>
             <AnchorPane BorderPane.alignment="CENTER">
-               <children>
-                    <VBox maxWidth="1.7976931348623157E308" spacing="16.0">
-                        <children>
-                            <HBox alignment="BASELINE_LEFT" spacing="8.0" VBox.vgrow="ALWAYS">
-                                <children>
-                                    <Button fx:id="btButton" mnemonicParsing="false" prefHeight="24.0" text="Button" />
-                                    <TextField fx:id="tfTextField" prefHeight="24.0" />
-                                    <CheckBox mnemonicParsing="false" text="CheckBox" />
-                                </children>
-                            </HBox>
-                            <HBox spacing="8.0">
-                                <children>
-                                    <Button fx:id="btDialogOk" mnemonicParsing="false" text="Button" />
-                                    <Button fx:id="btDialogOkCancel" mnemonicParsing="false" text="Button" />
-                                    <Button fx:id="btPickFile" mnemonicParsing="false" text="Button" />
-                                    <Button fx:id="btPickDirectory" mnemonicParsing="false" text="Button" />
-                                </children>
-                            </HBox>
-                            <HBox spacing="8.0" VBox.vgrow="ALWAYS">
-                                <children>
-                                    <VBox spacing="16.0">
-                                        <children>
-                                            <ComboBox fx:id="cbComboBox" maxWidth="1.7976931348623157E308" />
-                                            <ChoiceBox maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" />
-                                            <ListView fx:id="lvListView" maxWidth="1.7976931348623157E308" />
-                                        </children>
-                                    </VBox>
-                                    <TableView fx:id="tvTableView" maxWidth="1.7976931348623157E308">
-                                        <columns>
-                                            <TableColumn maxWidth="1.7976931348623157E308" prefWidth="100.0" text="C1" />
-                                            <TableColumn maxWidth="1.7976931348623157E308" prefWidth="100.0" text="C2" />
-                                            <TableColumn prefWidth="100.0" text="C3" />
-                                        </columns>
-                                    </TableView>
-                                    <TreeView fx:id="tvTreeView" maxWidth="1.7976931348623157E308" />
-                                    <TreeTableView fx:id="ttvTreeTableView" maxWidth="1.7976931348623157E308">
-                                        <columns>
-                                            <TreeTableColumn prefWidth="100.0" text="C1" />
-                                            <TreeTableColumn prefWidth="100.0" text="C2" />
-                                            <TreeTableColumn prefWidth="100.0" text="C3" />
-                                        </columns>
-                                    </TreeTableView>
-                                </children>
-                                <padding>
-                                    <Insets bottom="16.0" />
-                                </padding>
-                            </HBox>
-                        </children>
-                    </VBox>
-               </children>
+                <VBox maxWidth="1.7976931348623157E308" spacing="16.0">
+                    <HBox alignment="BASELINE_LEFT" spacing="8.0" VBox.vgrow="ALWAYS">
+                        <Button fx:id="btButton" mnemonicParsing="false" prefHeight="24.0" text="Button"/>
+                        <TextField fx:id="tfTextField" prefHeight="24.0"/>
+                        <CheckBox mnemonicParsing="false" text="CheckBox"/>
+                    </HBox>
+                    <HBox spacing="8.0">
+                        <Button fx:id="btDialogOk" mnemonicParsing="false" text="Button"/>
+                        <Button fx:id="btDialogOkCancel" mnemonicParsing="false" text="Button"/>
+                        <Button fx:id="btPickFile" mnemonicParsing="false" text="Button"/>
+                        <Button fx:id="btPickDirectory" mnemonicParsing="false" text="Button"/>
+                    </HBox>
+                    <HBox spacing="8.0" VBox.vgrow="ALWAYS">
+                        <padding>
+                            <Insets bottom="16.0"/>
+                        </padding>
+                        <VBox spacing="16.0">
+                            <ComboBox fx:id="cbComboBox" maxWidth="1.7976931348623157E308"/>
+                            <ChoiceBox maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"/>
+                            <ListView fx:id="lvListView" maxWidth="1.7976931348623157E308"/>
+                        </VBox>
+                        <TableView fx:id="tvTableView" maxWidth="1.7976931348623157E308">
+                            <columns>
+                                <TableColumn maxWidth="1.7976931348623157E308" prefWidth="100.0" text="C1"/>
+                                <TableColumn maxWidth="1.7976931348623157E308" prefWidth="100.0" text="C2"/>
+                                <TableColumn prefWidth="100.0" text="C3"/>
+                            </columns>
+                        </TableView>
+                        <TreeView fx:id="tvTreeView" maxWidth="1.7976931348623157E308"/>
+                        <TreeTableView fx:id="ttvTreeTableView" maxWidth="1.7976931348623157E308">
+                            <columns>
+                                <TreeTableColumn prefWidth="100.0" text="name"/>
+                                <TreeTableColumn prefWidth="100.0" text="size"/>
+                                <TreeTableColumn prefWidth="100.0" text="creationDate"/>
+                                <TreeTableColumn prefWidth="100.0" text="latestModificationDate"/>
+                            </columns>
+                        </TreeTableView>
+                    </HBox>
+                </VBox>
             </AnchorPane>
-          </center>
-          <padding>
-              <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-          </padding>
-      </BorderPane>
-   </children>
+        </center>
+        <padding>
+            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+        </padding>
+    </BorderPane>
 </AnchorPane>

@@ -149,9 +149,9 @@ public interface JavaFXBinder
      * @param   initCallback    the callback
      *
      ******************************************************************************************************************/
-    default public void bind (@Nonnull TableView<PresentationModel> tableView,
-                              @Nonnull PresentationModel pm,
-                              @Nonnull Runnable initCallback)
+    public default void bind (@Nonnull final TableView<PresentationModel> tableView,
+                              @Nonnull final PresentationModel pm,
+                              @Nonnull final Runnable initCallback)
       {
         bind(tableView, pm, Optional.of(initCallback));
       }
@@ -166,15 +166,15 @@ public interface JavaFXBinder
      * @param   pm              the {@code PresentationModel}
      *
      ******************************************************************************************************************/
-    default public void bind (@Nonnull TableView<PresentationModel> tableView,
-                              @Nonnull PresentationModel pm)
+    public default void bind (@Nonnull final TableView<PresentationModel> tableView,
+                              @Nonnull final PresentationModel pm)
       {
         bind(tableView, pm, Optional.empty());
       }
 
     /*******************************************************************************************************************
      *
-     * Binds a {@link TableView} to a {@link PresentationModel} and a callback.
+     * Binds a {@link TreeView} to a {@link PresentationModel} and a callback.
      *
      * The {@code PresentationModel} is used to populate the table. The following roles are used:
      *
@@ -187,6 +187,7 @@ public interface JavaFXBinder
      * <li>A {@link Styleable} (optional) is used to provide the rendering style for each item.</li>
      * <li>A {@link UserActionProvider} (optional) is used to provide the actions for creating a context menu;
      *     the default action is also bound to the double click or SPACE gesture.</li>
+     * <li>A {@link Visible} (optional) is used to decide whether the root node should be visible or not.</li>
      * </ul>
      *
      * The process of populating data is performed in background threads, so this method quickly returns also in case
@@ -213,9 +214,9 @@ public interface JavaFXBinder
      * @param   initCallback    the callback
      *
      ******************************************************************************************************************/
-    default public void bind (@Nonnull TreeView<PresentationModel> treeView,
-                              @Nonnull PresentationModel pm,
-                              @Nonnull Runnable initCallback)
+    public default void bind (@Nonnull final TreeView<PresentationModel> treeView,
+                              @Nonnull final PresentationModel pm,
+                              @Nonnull final Runnable initCallback)
       {
         bind(treeView, pm, Optional.of(initCallback));
       }
@@ -230,8 +231,8 @@ public interface JavaFXBinder
      * @param   pm              the {@code PresentationModel}
      *
      ******************************************************************************************************************/
-    default public void bind (@Nonnull TreeView<PresentationModel> treeView,
-                              @Nonnull PresentationModel pm)
+    public default void bind (@Nonnull final TreeView<PresentationModel> treeView,
+                              @Nonnull final PresentationModel pm)
       {
         bind(treeView, pm, Optional.empty());
       }
@@ -251,6 +252,7 @@ public interface JavaFXBinder
      * <li>A {@link Styleable} (optional) is used to provide the rendering style for each item.</li>
      * <li>A {@link UserActionProvider} (optional) is used to provide the actions for creating a context menu;
      *     the default action is also bound to the double click or SPACE gesture.</li>
+     * <li>A {@link Visible} (optional) is used to decide whether the root node should be visible or not.</li>
      * </ul>
      *
      * The process of populating data is performed in background threads, so this method quickly returns also in case
@@ -277,9 +279,9 @@ public interface JavaFXBinder
      * @param   initCallback    the callback
      *
      ******************************************************************************************************************/
-    default public void bind (@Nonnull TreeTableView<PresentationModel> treeTableView,
-                              @Nonnull PresentationModel pm,
-                              @Nonnull Runnable initCallback)
+    public default void bind (@Nonnull final TreeTableView<PresentationModel> treeTableView,
+                              @Nonnull final PresentationModel pm,
+                              @Nonnull final Runnable initCallback)
       {
         bind(treeTableView, pm, Optional.of(initCallback));
       }
@@ -294,8 +296,8 @@ public interface JavaFXBinder
      * @param   pm              the {@code PresentationModel}
      *
      ******************************************************************************************************************/
-    default public void bind (@Nonnull TreeTableView<PresentationModel> treeTableView,
-                              @Nonnull PresentationModel pm)
+    public default void bind (@Nonnull final TreeTableView<PresentationModel> treeTableView,
+                              @Nonnull final PresentationModel pm)
       {
         bind(treeTableView, pm, Optional.empty());
       }
@@ -341,9 +343,9 @@ public interface JavaFXBinder
      * @param   initCallback    the callback
      *
      ******************************************************************************************************************/
-    default public void bind (@Nonnull ListView<PresentationModel> listView,
-                              @Nonnull PresentationModel pm,
-                              @Nonnull Runnable initCallback)
+    public default void bind (@Nonnull final ListView<PresentationModel> listView,
+                              @Nonnull final PresentationModel pm,
+                              @Nonnull final Runnable initCallback)
       {
         bind(listView, pm, Optional.of(initCallback));
       }
@@ -358,8 +360,8 @@ public interface JavaFXBinder
      * @param   pm              the {@code PresentationModel}
      *
      ******************************************************************************************************************/
-    default public void bind (@Nonnull ListView<PresentationModel> listView,
-                              @Nonnull PresentationModel pm)
+    public default void bind (@Nonnull final ListView<PresentationModel> listView,
+                              @Nonnull final PresentationModel pm)
       {
         bind(listView, pm, Optional.empty());
       }
@@ -405,9 +407,9 @@ public interface JavaFXBinder
      * @param   initCallback    the callback
      *
      ******************************************************************************************************************/
-    default public void bind (@Nonnull ComboBox<PresentationModel> comboBox,
-                              @Nonnull PresentationModel pm,
-                              @Nonnull Runnable initCallback)
+    public default void bind (@Nonnull final ComboBox<PresentationModel> comboBox,
+                              @Nonnull final PresentationModel pm,
+                              @Nonnull final Runnable initCallback)
       {
         bind(comboBox, pm, Optional.of(initCallback));
       }
@@ -422,8 +424,8 @@ public interface JavaFXBinder
      * @param   pm              the {@code PresentationModel}
      *
      ******************************************************************************************************************/
-    default public void bind (@Nonnull ComboBox<PresentationModel> comboBox,
-                              @Nonnull PresentationModel pm)
+    public default void bind (@Nonnull final ComboBox<PresentationModel> comboBox,
+                              @Nonnull final PresentationModel pm)
       {
         bind(comboBox, pm, Optional.empty());
       }
@@ -490,20 +492,21 @@ public interface JavaFXBinder
                                    @Nonnull Optional<Node> node);
 
     // FIXME: use a Builder, merge with the above
-    default public void showInModalDialog (@Nonnull Node node,
-                                           @Nonnull UserNotificationWithFeedback notification,
-                                           @Nonnull BoundProperty<Boolean> valid)
+    public default void showInModalDialog (@Nonnull final Node node,
+                                           @Nonnull final UserNotificationWithFeedback notification,
+                                           @Nonnull final BoundProperty<Boolean> valid)
       {
         showInModalDialog(notification, Optional.of(node));
       }
 
     @Deprecated
-    default public void showInModalDialog (@Nonnull Node node, @Nonnull UserNotificationWithFeedback notification)
+    public default void showInModalDialog (@Nonnull final Node node,
+                                           @Nonnull final UserNotificationWithFeedback notification)
       {
         showInModalDialog(notification, Optional.of(node));
       }
 
-    default public void showInModalDialog (@Nonnull UserNotificationWithFeedback notification)
+    public default void showInModalDialog (@Nonnull final UserNotificationWithFeedback notification)
       {
         showInModalDialog(notification, Optional.empty());
       }

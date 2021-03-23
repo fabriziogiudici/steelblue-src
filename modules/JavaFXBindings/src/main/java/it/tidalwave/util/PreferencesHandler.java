@@ -48,10 +48,10 @@ public interface PreferencesHandler
     public static AtomicReference<PreferencesHandler> __INSTANCE = new AtomicReference<>();
 
     /** A property representing the initial main window size as a percentual of the screen size. */
-    public static final Key<Double> KEY_INITIAL_SIZE = new Key<Double>(__BASE_NAME + ".initialSize") {};
+    public static final Key<Double> KEY_INITIAL_SIZE = Key.of(__BASE_NAME + ".initialSize", Double.class);
 
     /** Whether the application should start at full screen. */
-    public static final Key<Boolean> KEY_FULL_SCREEN = new Key<Boolean>(__BASE_NAME + ".fullScreen") {};
+    public static final Key<Boolean> KEY_FULL_SCREEN = Key.of(__BASE_NAME + ".fullScreen", Boolean.class);
 
     @Nonnull
     public Path getAppFolder();
@@ -67,7 +67,7 @@ public interface PreferencesHandler
      * @param name    the property name
      *
      ******************************************************************************************************************/
-    public static void setAppName (final @Nonnull String name)
+    public static void setAppName (@Nonnull final String name)
       {
         System.setProperty(PROP_APP_NAME, name);
       }
@@ -94,7 +94,7 @@ public interface PreferencesHandler
      * @return        the property value
      *
      ******************************************************************************************************************/
-    public <T> void setProperty (final @Nonnull Key<T> name, final @Nonnull T value);
+    public <T> void setProperty (@Nonnull final Key<T> name, @Nonnull final T value);
 
     /**
      *
@@ -106,7 +106,7 @@ public interface PreferencesHandler
      * @return        the property value
      *
      ******************************************************************************************************************/
-    public <T> void setDefaultProperty (final @Nonnull Key<T> name, final @Nonnull T value);
+    public <T> void setDefaultProperty (@Nonnull final Key<T> name, @Nonnull final T value);
 
     /*******************************************************************************************************************
      *

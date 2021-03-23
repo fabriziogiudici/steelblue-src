@@ -101,20 +101,20 @@ public class DefaultPreferencesHandler implements PreferencesHandler
       }
 
     @Override
-    public <T> Optional<T> getProperty (@Nonnull Key<T> name)
+    public <T> Optional<T> getProperty (@Nonnull final Key<T> name)
       {
         return Optional.ofNullable((T)properties.get(name));
       }
 
     @Override
-    public <T> void setProperty (@Nonnull Key<T> name, @Nonnull T value)
+    public <T> void setProperty (@Nonnull final Key<T> name, @Nonnull final T value)
       {
         properties.put(name, value);
         // FIXME: should be made persistent (JSON?)
       }
 
     @Override
-    public <T> void setDefaultProperty (@Nonnull Key<T> name, @Nonnull T value)
+    public <T> void setDefaultProperty (@Nonnull final Key<T> name, @Nonnull final T value)
       {
         if (!properties.containsKey(name))
           {

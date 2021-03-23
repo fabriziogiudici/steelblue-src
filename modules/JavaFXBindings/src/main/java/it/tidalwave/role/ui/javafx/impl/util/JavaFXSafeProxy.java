@@ -58,7 +58,7 @@ public class JavaFXSafeProxy<T> implements InvocationHandler
     private T delegate;
 
     @Override
-    public Object invoke (final @Nonnull Object proxy, final @Nonnull Method method, final @Nonnull Object[] args)
+    public Object invoke (@Nonnull final Object proxy, @Nonnull final Method method, @Nonnull final Object[] args)
       throws Throwable
       {
         final AtomicReference<Object> result = new AtomicReference<>();

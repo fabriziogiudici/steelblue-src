@@ -26,60 +26,32 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl;
+package it.tidalwave.role.ui.javafx.impl.list;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import javafx.scene.control.cell.TextFieldListCell;
 import it.tidalwave.util.As;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import static java.util.Collections.*;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
+import lombok.AllArgsConstructor;
 
 /***********************************************************************************************************************
+ *
+ * A specialisation of {@link TextFieldListCell} which binds to an {@link As}-capable item.
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@NoArgsConstructor @ToString
-public class RoleBag
+@AllArgsConstructor
+public class AsObjectListCell<T extends As> extends TextFieldListCell<T>
   {
-    private final Map<Class<?>, List<Object>> map = new HashMap<>();
-
-    public RoleBag (final @Nonnull As source, final @Nonnull List<Class<?>> roleTypes)
-      {
-        roleTypes.forEach(roleType -> copyRoles(source, roleType));
-      }
-
-    public <ROLE_TYPE> void put (final @Nonnull Class<ROLE_TYPE> roleClass, final @Nonnull ROLE_TYPE role)
-      {
-        putMany(roleClass, singletonList(role));
-      }
-
-    public <ROLE_TYPE> void putMany (final @Nonnull Class<ROLE_TYPE> roleClass,
-                                     final @Nonnull Collection<? extends ROLE_TYPE> roles)
-      {
-        map.put(roleClass, new ArrayList<>(roles));
-      }
-
     @Nonnull
-    public <ROLE_TYPE> Optional<ROLE_TYPE> get (final @Nonnull Class<ROLE_TYPE> roleClass)
-      {
-        return getMany(roleClass).stream().findFirst();
-      }
+    private final CellBinder cellBinder;
 
-    @Nonnull
-    public <ROLE_TYPE> List<ROLE_TYPE> getMany (final @Nonnull Class<ROLE_TYPE> roleClass)
+    @Override
+    public void updateItem (@CheckForNull final T item, final boolean empty)
       {
-        return unmodifiableList((List<ROLE_TYPE>)map.getOrDefault(roleClass, emptyList()));
-      }
-
-    private <ROLE_TYPE> void copyRoles (final @Nonnull As item, final @Nonnull Class<ROLE_TYPE> roleClass)
-      {
-        putMany(roleClass, item.asMany(roleClass));
+        super.updateItem(item, empty);
+        cellBinder.bind(this, item, empty);
       }
   }

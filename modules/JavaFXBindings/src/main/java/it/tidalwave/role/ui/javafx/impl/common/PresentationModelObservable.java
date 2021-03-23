@@ -28,54 +28,57 @@
  */
 package it.tidalwave.role.ui.javafx.impl.common;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.concurrent.Executor;
-import javafx.scene.control.TreeItem;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import java.util.Optional;
+import java.util.function.Supplier;
+import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.ui.PresentationModel;
-import it.tidalwave.role.ui.Selectable;
+import javafx.beans.value.ObservableValueBase;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TreeTableColumn;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.ui.Selectable._Selectable_;
 
 /***********************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @Slf4j
-public class ChangeListenerSelectableAdapter implements ChangeListener<PresentationModel>
+@RequiredArgsConstructor
+public final class PresentationModelObservable extends ObservableValueBase
   {
     @Nonnull
-    protected final Executor executor;
+    private final Supplier<PresentationModel> rowPresentationModelSupplier;
 
-    private final ChangeListener<TreeItem<PresentationModel>> treeItemChangeListener =
-            // FIXME: test null oldValue, newValue?
-            (observable, oldValue, newValue) -> changed(null, safe(oldValue), safe(newValue));
+    @Nonnull
+    private final Supplier<String> columnKeySupplier;
 
-    @Override
-    public void changed (@Nonnull final ObservableValue<? extends PresentationModel> ov,
-                         @Nonnull final PresentationModel oldPm,
-                         @CheckForNull final PresentationModel newPm)
+    @Override @Nonnull
+    public final PresentationModel getValue()
       {
-        if (newPm != null) // no selection
-          {
-            executor.execute(() -> newPm.maybeAs(_Selectable_).ifPresent(Selectable::select));
-          }
+        final PresentationModel rowPm = rowPresentationModelSupplier.get();
+        final Optional<Aggregate<PresentationModel>> aggregate =
+                (Optional<Aggregate<PresentationModel>>)(Object)rowPm.maybeAs(Aggregate.class);
+        // FIXME: uses the column header names, should be an internal id instead
+        return aggregate.flatMap(a -> a.getByName(columnKeySupplier.get()))
+                        .map(columnPm -> PresentationModelAsDelegateDecorator.decorating(columnPm, rowPm))
+                        .orElse(PresentationModel.empty());
       }
 
     @Nonnull
-    public ChangeListener<TreeItem<PresentationModel>> asTreeItemChangeListener()
+    public static PresentationModelObservable of (
+            @Nonnull final TableColumn.CellDataFeatures<PresentationModel, PresentationModel> cell)
       {
-        return treeItemChangeListener;
+        return new PresentationModelObservable(
+                () -> cell.getValue(),
+                () -> cell.getTableColumn().getText());
       }
 
-    @Nullable
-    private static PresentationModel safe (@Nullable final TreeItem<PresentationModel> value)
+    @Nonnull
+    public static PresentationModelObservable of (
+            @Nonnull final TreeTableColumn.CellDataFeatures<PresentationModel, PresentationModel> cell)
       {
-        return (value != null) ? value.getValue() : null;
+        return new PresentationModelObservable(
+                () -> cell.getValue().getValue(),
+                () -> cell.getTreeTableColumn().getText());
       }
   }

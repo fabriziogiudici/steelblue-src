@@ -29,33 +29,30 @@
 package it.tidalwave.role.ui.javafx.impl.combobox;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
-import javafx.util.Callback;
 import javafx.collections.ObservableList;
+import javafx.util.Callback;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ComboBox;
-import javafx.scene.input.KeyEvent;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.application.Platform;
-import it.tidalwave.util.AsException;
-import it.tidalwave.util.NotFoundException;
-import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
-import it.tidalwave.role.ui.javafx.impl.CellBinder;
-import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
-import it.tidalwave.role.ui.javafx.impl.common.AsObjectListCell;
+import it.tidalwave.role.ui.javafx.impl.list.AsObjectListCell;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
+import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
+import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
 import lombok.extern.slf4j.Slf4j;
-import static javafx.collections.FXCollections.observableArrayList;
+import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
 import static javafx.scene.input.KeyCode.*;
-import static it.tidalwave.role.SimpleComposite._SimpleComposite_;
+import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
 
 /***********************************************************************************************************************
  *
@@ -74,21 +71,16 @@ public class ComboBoxBindings extends DelegateSupport
 
     /*******************************************************************************************************************
      *
-     *
+     * Event handler that executes the default action bound to the given combobox item.
      *
      ******************************************************************************************************************/
     private final EventHandler<ActionEvent> eventHandler = event ->
       {
-        try
-          {
-            final ComboBox<PresentationModel> comboBox = (ComboBox<PresentationModel>)event.getSource();
-            final PresentationModel selectedPm = comboBox.getSelectionModel().getSelectedItem();
-            selectedPm.as(UserActionProvider.class).getDefaultAction().actionPerformed();
-          }
-        catch (AsException | NotFoundException e)
-          {
-            // ok no action
-          }
+        final ComboBox<PresentationModel> comboBox = (ComboBox<PresentationModel>)event.getSource();
+        final PresentationModel selectedPm = comboBox.getSelectionModel().getSelectedItem();
+        selectedPm.maybeAs(_UserActionProvider_)
+                  .flatMap(UserActionProvider::getOptionalDefaultAction)
+                  .ifPresent(UserAction::actionPerformed);
       };
 
     /*******************************************************************************************************************
@@ -96,7 +88,7 @@ public class ComboBoxBindings extends DelegateSupport
      *
      *
      ******************************************************************************************************************/
-    public ComboBoxBindings (final @Nonnull Executor executor, final @Nonnull CellBinder cellBinder)
+    public ComboBoxBindings (@Nonnull final Executor executor, @Nonnull final CellBinder cellBinder)
       {
         super(executor);
         this.cellBinder = cellBinder;
@@ -108,9 +100,9 @@ public class ComboBoxBindings extends DelegateSupport
      * {@inheritDoc}
      *
      ******************************************************************************************************************/
-    public void bind (final @Nonnull ComboBox<PresentationModel> comboBox,
-                      final @Nonnull PresentationModel pm,
-                      final @Nonnull Optional<Runnable> callback)
+    public void bind (@Nonnull final ComboBox<PresentationModel> comboBox,
+                      @Nonnull final PresentationModel pm,
+                      @Nonnull final Optional<Runnable> callback)
       {
         comboBox.setCellFactory(cellFactory);
         comboBox.setButtonCell(new AsObjectListCell<>(cellBinder));
@@ -120,32 +112,37 @@ public class ComboBoxBindings extends DelegateSupport
 
         // FIXME: this won't work with any external navigation system, such as CEC menus
         // TODO: try by having CEC selection emulating RETURN and optionally accepting RETURN here
-        comboBox.setOnKeyPressed((KeyEvent event) ->
+        comboBox.setOnKeyPressed(event ->
           {
-            if (Arrays.asList(SPACE, ENTER).contains(event.getCode()))
+            if (List.of(SPACE, ENTER).contains(event.getCode()))
               {
                 comboBox.show();
               }
           });
 
-        final ReadOnlyObjectProperty<PresentationModel> pmProperty = comboBox.getSelectionModel().selectedItemProperty();
-        pmProperty.removeListener(changeListener);
-        executor.execute(() -> // TODO: use FXWorker
+        final ReadOnlyObjectProperty<PresentationModel> selectedProperty = comboBox.getSelectionModel().selectedItemProperty();
+        selectedProperty.removeListener(changeListener);
+        JavaFXWorker.run(executor,
+                         () -> childrenPm(pm),
+                         items -> finalize(comboBox, items, selectedProperty, callback));
+      }
+
+    /*******************************************************************************************************************
+     *
+     ******************************************************************************************************************/
+    private void finalize (@Nonnull final ComboBox<PresentationModel> comboBox,
+                           @Nonnull final ObservableList<PresentationModel> items,
+                           @Nonnull final ReadOnlyObjectProperty<PresentationModel> selectedProperty,
+                           @Nonnull final Optional<Runnable> callback)
+      {
+        comboBox.setItems(items);
+
+        if (!items.isEmpty())
           {
-            final SimpleComposite<PresentationModel> composite = pm.as(_SimpleComposite_);
-            final ObservableList<PresentationModel> items = observableArrayList(composite.findChildren().results());
-            Platform.runLater(() ->
-              {
-                comboBox.setItems(items);
+            comboBox.getSelectionModel().select(items.get(0));
+          }
 
-                if (!items.isEmpty())
-                  {
-                    comboBox.getSelectionModel().select(items.get(0));
-                  }
-
-                pmProperty.addListener(changeListener);
-                callback.ifPresent(Runnable::run);
-              });
-          });
+        selectedProperty.addListener(changeListener);
+        callback.ifPresent(Runnable::run);
       }
   }

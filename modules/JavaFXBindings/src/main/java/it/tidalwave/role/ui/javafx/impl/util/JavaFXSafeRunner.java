@@ -46,21 +46,17 @@ public final class JavaFXSafeRunner
      *
      *
      ******************************************************************************************************************/
-    public static void runSafely (final @Nonnull Runnable runnable)
+    public static void runSafely (@Nonnull final Runnable runnable)
       {
-        final Runnable guardedRunnable = new Runnable()
+        final Runnable guardedRunnable = () ->
           {
-            @Override
-            public void run()
+            try
               {
-                try
-                  {
-                    runnable.run();
-                  }
-                catch (Throwable t)
-                  {
-                    log.warn("", t);
-                  }
+                runnable.run();
+              }
+            catch (Throwable t)
+              {
+                log.warn("", t);
               }
           };
 

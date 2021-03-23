@@ -28,6 +28,7 @@
  */
 package it.tidalwave.role.ui.javafx.example.large.data;
 
+import it.tidalwave.role.ui.javafx.example.large.data.impl.FileEntity;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
@@ -43,4 +44,7 @@ public interface Dao
 
     @Nonnull
     public Collection<SimpleDciEntity> getDciEntities();
+
+    @Nonnull
+    public Collection<FileEntity> getFiles();
   }

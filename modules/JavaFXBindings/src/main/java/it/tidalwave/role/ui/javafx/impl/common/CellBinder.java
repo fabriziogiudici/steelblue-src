@@ -26,23 +26,22 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx;
+package it.tidalwave.role.ui.javafx.impl.common;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javafx.scene.control.Cell;
+import it.tidalwave.util.As;
 
 /***********************************************************************************************************************
  *
- * @deprecated  Use @FXML instead
+ * A service that binds text, graphic, default action, context menu and css style to a {@link Cell} extracting data from
+ * an {@link As}-capable item.
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Deprecated
-public @interface Widget
+public interface CellBinder
   {
-    String value();
+    public void bind (@Nonnull Cell<?> cell, @Nullable As item, final boolean empty);
   }

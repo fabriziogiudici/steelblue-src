@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100" prefWidth="400" xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1">
+    <BorderPane fx:id="application" layoutY="-116.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <center>
+            <HBox alignment="CENTER">
+                <Label alignment="CENTER" contentDisplay="TEXT_ONLY" prefHeight="181.0" style="-fx-text-fill: grey;" text="SteelBlue" textAlignment="CENTER">
+                    <font>
+                        <Font name="System Bold Italic" size="50"/>
+                    </font>
+                </Label>
+            </HBox>
+        </center>
+    </BorderPane>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100" prefWidth="400" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-<children><BorderPane fx:id="application" layoutY="-116.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-  <center>
-<HBox alignment="CENTER">
-<children>
-    <Label alignment="CENTER" contentDisplay="TEXT_ONLY" prefHeight="181.0" style="-fx-text-fill: grey;" text="SteelBlue" textAlignment="CENTER">
-      <font>
-        <Font name="System Bold Italic" size="50" />
-      </font>
-    </Label>
-</children>
-</HBox>
-  </center>
-</BorderPane>
-</children>
 </AnchorPane>

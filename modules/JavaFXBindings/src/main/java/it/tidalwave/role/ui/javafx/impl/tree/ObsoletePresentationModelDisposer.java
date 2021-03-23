@@ -47,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ObsoletePresentationModelDisposer implements ChangeListener<TreeItem<PresentationModel>>
   {
     @Override
-    public void changed (final @Nonnull ObservableValue<? extends TreeItem<PresentationModel>> ov,
+    public void changed (@Nonnull final ObservableValue<? extends TreeItem<PresentationModel>> ov,
                          final TreeItem<PresentationModel> oldTreeItem,
                          final TreeItem<PresentationModel> newTreeItem)
       {
@@ -57,7 +57,7 @@ public class ObsoletePresentationModelDisposer implements ChangeListener<TreeIte
           }
       }
 
-    private void disposeRecursively (final @Nonnull TreeItem<PresentationModel> treeItem)
+    private void disposeRecursively (@Nonnull final TreeItem<PresentationModel> treeItem)
       {
         treeItem.getValue().dispose();
         treeItem.setValue(null);

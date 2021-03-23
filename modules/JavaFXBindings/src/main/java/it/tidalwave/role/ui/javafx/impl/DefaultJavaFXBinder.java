@@ -30,10 +30,14 @@ package it.tidalwave.role.ui.javafx.impl;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
+import it.tidalwave.role.ui.Displayable;
+import it.tidalwave.role.ui.Styleable;
+import it.tidalwave.role.ui.UserActionProvider;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.DefaultCellBinder;
 import javafx.beans.property.Property;
 import javafx.beans.binding.BooleanExpression;
 import javafx.collections.ObservableList;
@@ -52,8 +56,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.application.Platform;
-import it.tidalwave.util.AsException;
-import it.tidalwave.util.NotFoundException;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.BoundProperty;
@@ -66,7 +68,7 @@ import it.tidalwave.role.ui.javafx.impl.list.ListViewBindings;
 import it.tidalwave.role.ui.javafx.impl.tableview.TableViewBindings;
 import it.tidalwave.role.ui.javafx.impl.tree.TreeViewBindings;
 import it.tidalwave.role.ui.javafx.impl.treetable.TreeTableViewBindings;
-import it.tidalwave.role.ui.javafx.impl.util.PropertyAdapter;
+import it.tidalwave.role.ui.javafx.impl.common.PropertyAdapter;
 import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.*;
@@ -87,7 +89,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
   {
     private final Executor executor;
 
-    private String invalidTextFieldStyle = "-fx-background-color: pink";
+    private final String invalidTextFieldStyle = "-fx-background-color: pink";
 
     interface Exclusions
       {
@@ -122,7 +124,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      *
      *
      ******************************************************************************************************************/
-    public DefaultJavaFXBinder (final @Nonnull Executor executor)
+    public DefaultJavaFXBinder (@Nonnull final Executor executor)
       {
         this.executor = executor;
         cellBinder = new DefaultCellBinder(executor);
@@ -141,7 +143,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      *
      ******************************************************************************************************************/
     @Override
-    public void setMainWindow (final @Nonnull Window mainWindow)
+    public void setMainWindow (@Nonnull final Window mainWindow)
       {
         treeItemBindings.setMainWindow(mainWindow);
         tableViewBindings.setMainWindow(mainWindow);
@@ -155,22 +157,12 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      *
      ******************************************************************************************************************/
     @Override
-    public void bind (final @Nonnull ButtonBase button, final @Nonnull UserAction action)
+    public void bind (@Nonnull final ButtonBase button, @Nonnull final UserAction action)
       {
-        Objects.requireNonNull(button, "button");
         assertIsFxApplicationThread();
-
-        try
-          {
-            button.setText(action.as(_Displayable_).getDisplayName());
-          }
-        catch (AsException e)
-          {
-            // ok, no label
-          }
-
+        button.setText(action.maybeAs(_Displayable_).map(Displayable::getDisplayName).orElse(""));
         button.disableProperty().bind(adaptBoolean(action.enabled()).not());
-        button.setOnAction((event) -> executor.execute(() -> action.actionPerformed()));
+        button.setOnAction(__ -> executor.execute(action::actionPerformed));
       }
 
     /*******************************************************************************************************************
@@ -179,21 +171,12 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      *
      ******************************************************************************************************************/
     @Override
-    public void bind (final @Nonnull MenuItem menuItem, final @Nonnull UserAction action)
+    public void bind (@Nonnull final MenuItem menuItem, @Nonnull final UserAction action)
       {
         assertIsFxApplicationThread();
-
-        try
-          {
-            menuItem.setText(action.as(_Displayable_).getDisplayName());
-          }
-        catch (AsException e)
-          {
-            // ok, no label
-          }
-
+        menuItem.setText(action.maybeAs(_Displayable_).map(Displayable::getDisplayName).orElse(""));
         menuItem.disableProperty().bind(adaptBoolean(action.enabled()).not());
-        menuItem.setOnAction(event -> executor.execute(action::actionPerformed));
+        menuItem.setOnAction(__ -> executor.execute(action::actionPerformed));
       }
 
     /*******************************************************************************************************************
@@ -202,11 +185,10 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      *
      ******************************************************************************************************************/
     @Override
-    public <T> void bindBidirectionally (final @Nonnull Property<T> property1,
-                                         final @Nonnull BoundProperty<T> property2)
+    public <T> void bindBidirectionally (@Nonnull final Property<T> property1,
+                                         @Nonnull final BoundProperty<T> property2)
       {
         assertIsFxApplicationThread();
-
         property1.bindBidirectional(new PropertyAdapter<>(executor, property2));
       }
 
@@ -216,9 +198,9 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      *
      ******************************************************************************************************************/
     @Override
-    public <T> void bindBidirectionally (final @Nonnull TextField textField,
-                                         final @Nonnull BoundProperty<String> textProperty,
-                                         final @Nonnull BoundProperty<Boolean> validProperty)
+    public <T> void bindBidirectionally (@Nonnull final TextField textField,
+                                         @Nonnull final BoundProperty<String> textProperty,
+                                         @Nonnull final BoundProperty<Boolean> validProperty)
       {
         assertIsFxApplicationThread();
         requireNonNull(textField, "textField");
@@ -229,7 +211,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
 
         // FIXME: weak listener
         validProperty.addPropertyChangeListener(
-                (event) -> textField.setStyle(validProperty.get() ? "" : invalidTextFieldStyle));
+                __ -> textField.setStyle(validProperty.get() ? "" : invalidTextFieldStyle));
       }
 
     /*******************************************************************************************************************
@@ -238,7 +220,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      *
      ******************************************************************************************************************/
     @Override
-    public void bindToggleButtons (final @Nonnull Pane pane, final @Nonnull PresentationModel pm)
+    public void bindToggleButtons (@Nonnull final Pane pane, @Nonnull final PresentationModel pm)
       {
         assert Platform.isFxApplicationThread();
 
@@ -256,8 +238,8 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      *
      ******************************************************************************************************************/
     @Override
-    public void bindButtonsInPane (final @Nonnull GridPane gridPane,
-                                   final @Nonnull Collection<UserAction> actions)
+    public void bindButtonsInPane (@Nonnull final GridPane gridPane,
+                                   @Nonnull final Collection<UserAction> actions)
       {
         assert Platform.isFxApplicationThread();
 
@@ -308,24 +290,26 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      *
      ******************************************************************************************************************/
     @Nonnull
-    private ToggleButton createToggleButton (final @Nonnull PresentationModel pm,
-                                             final @Nonnull List<String> baseStyleClass,
-                                             final @Nonnull ToggleGroup group)
+    private ToggleButton createToggleButton (@Nonnull final PresentationModel pm,
+                                             @Nonnull final List<String> baseStyleClass,
+                                             @Nonnull final ToggleGroup group)
       {
         final ToggleButton button = new ToggleButton();
         button.setToggleGroup(group);
-        button.setText(pm.maybeAs(_Displayable_).map(d -> d.getDisplayName()).orElse(""));
+        button.setText(pm.maybeAs(_Displayable_).map(Displayable::getDisplayName).orElse(""));
         button.getStyleClass().addAll(baseStyleClass);
-        button.getStyleClass().addAll(pm.maybeAs(_Styleable_).map(s -> s.getStyles()).orElse(emptyList()));
+        button.getStyleClass().addAll(pm.maybeAs(_Styleable_).map(Styleable::getStyles).orElse(emptyList()));
+        pm.maybeAs(_UserActionProvider_).flatMap(UserActionProvider::getOptionalDefaultAction)
+                                        .ifPresent(action -> bind(button, action));
 
-        try
-          {
-            bind(button, pm.as(_UserActionProvider_).getDefaultAction());
-          }
-        catch (NotFoundException e)
-          {
-            // ok, no UserActionProvider
-          }
+//        try
+//          {
+//            bind(button, pm.as(_UserActionProvider_).getDefaultAction());
+//          }
+//        catch (NotFoundException e)
+//          {
+//            // ok, no UserActionProvider
+//          }
 
         if (group.getSelectedToggle() == null)
           {
@@ -354,7 +338,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      *
      ******************************************************************************************************************/
     @Nonnull
-    private BooleanExpression adaptBoolean (final @Nonnull BoundProperty<Boolean> property)
+    private BooleanExpression adaptBoolean (@Nonnull final BoundProperty<Boolean> property)
       {
         return BooleanExpression.booleanExpression(new PropertyAdapter<>(executor, property));
       }

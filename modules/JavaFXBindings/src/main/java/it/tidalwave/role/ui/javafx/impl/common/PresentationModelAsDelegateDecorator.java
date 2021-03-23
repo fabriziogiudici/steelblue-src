@@ -26,7 +26,7 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl.treetable;
+package it.tidalwave.role.ui.javafx.impl.common;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -35,6 +35,7 @@ import java.util.List;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.util.As;
 import it.tidalwave.util.AsException;
+import lombok.AccessLevel;
 import lombok.experimental.Delegate;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -43,22 +44,29 @@ import lombok.ToString;
  *
  * A decorator for {@link PresentationModel} that also searches for roles in a specified delegate as a fallback.
  *
- * @stereotype Decorator
+ * FIME: move to TFT
  *
+ * @stereotype Decorator
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-@RequiredArgsConstructor @ToString
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE) @ToString
 public class PresentationModelAsDelegateDecorator implements PresentationModel
   {
     @Delegate(excludes = As.class) @Nonnull
     private final PresentationModel pmDelegate;
 
-
     private final As asDelegate;
 
+    @Nonnull
+    public static PresentationModel decorating (@Nonnull final PresentationModel pmDelegate,
+                                                @Nonnull final As asDelegate)
+      {
+        return new PresentationModelAsDelegateDecorator(pmDelegate, asDelegate);
+      }
+
     @Override @Nonnull
-    public <T> T as (final @Nonnull Class<T> type)
+    public <T> T as (@Nonnull final Class<T> type)
       {
         try
           {
@@ -71,13 +79,13 @@ public class PresentationModelAsDelegateDecorator implements PresentationModel
       }
 
     @Override @Nonnull
-    public <T> T as (final @Nonnull Class<T> type, final @Nonnull NotFoundBehaviour<T> notFoundBehaviour)
+    public <T> T as (@Nonnull final Class<T> type, @Nonnull final NotFoundBehaviour<T> notFoundBehaviour)
       {
         throw new UnsupportedOperationException("Not implemented yet");
       }
 
     @Override @Nonnull
-    public <T> Collection<T> asMany (final @Nonnull Class<T> type)
+    public <T> Collection<T> asMany (@Nonnull final Class<T> type)
       {
         final List<T> results = new ArrayList<>();
         results.addAll(pmDelegate.asMany(type));

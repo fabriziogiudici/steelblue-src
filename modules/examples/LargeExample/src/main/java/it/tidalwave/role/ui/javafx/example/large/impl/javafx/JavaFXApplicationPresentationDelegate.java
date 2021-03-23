@@ -43,7 +43,7 @@ public class JavaFXApplicationPresentationDelegate
     @FXML
     private BorderPane pnMainPane;
 
-    public void assemble (final @Nonnull Node node)
+    public void assemble (@Nonnull final Node node)
       {
         pnMainPane.getChildren().setAll(node);
       }

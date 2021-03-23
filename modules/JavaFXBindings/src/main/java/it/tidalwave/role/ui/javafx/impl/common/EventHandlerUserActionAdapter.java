@@ -26,22 +26,33 @@
  * *********************************************************************************************************************
  * #L%
  */
-package it.tidalwave.role.ui.javafx.impl;
+package it.tidalwave.role.ui.javafx.impl.common;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javafx.scene.control.Cell;
-import it.tidalwave.util.As;
+import java.util.concurrent.Executor;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import it.tidalwave.role.ui.UserAction;
+import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
- *
- * A service that binds text, graphic, default action, context menu and css style to a {@link Cell} extracting data from
- * an {@link As}-capable item.
  *
  * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
-public interface CellBinder
+@RequiredArgsConstructor
+public class EventHandlerUserActionAdapter implements EventHandler<ActionEvent>
   {
-    public void bind (@Nonnull Cell<?> cell, @Nullable As item, final boolean empty);
+    @Nonnull
+    private final Executor executor;
+
+    @Nonnull
+    private final UserAction action;
+
+    @Override
+    public void handle (@Nonnull final ActionEvent event)
+      {
+        executor.execute(action::actionPerformed);
+      }
   }
+
