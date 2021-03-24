@@ -42,7 +42,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
 import javafx.application.Application;
 import javafx.application.Platform;
-import com.aquafx_project.AquaFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.NodeAndDelegate;
@@ -208,8 +207,6 @@ public abstract class JavaFXApplicationWithSplash extends Application
      ******************************************************************************************************************/
     private void setMacOSXLookAndFeel (@Nonnull final Scene scene)
       {
-        log.info("Setting Aqua style");
-        AquaFx.style();
       }
 
     /*******************************************************************************************************************

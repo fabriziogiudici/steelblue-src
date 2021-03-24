@@ -82,11 +82,6 @@
             <artifactId>javafx-fxml</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.aquafx-project</groupId>
-            <artifactId>aquafx</artifactId>
-        </dependency>
-
         <!-- TEST DEPENDENCIES -->
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
