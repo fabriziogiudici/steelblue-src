@@ -83,7 +83,7 @@ public class TreeViewBindingsTest
         final PresentationModel oldPm = PresentationModel.of(datum, selectable);
         final PresentationModel pm = PresentationModel.of(datum, selectable);
         // when
-        underTest.changeListener.asTreeItemChangeListener().changed(null, new TreeItem<>(oldPm), new TreeItem<>(pm));
+        underTest.getSelectionListener().asTreeItemChangeListener().changed(null, new TreeItem<>(oldPm), new TreeItem<>(pm));
         // then
         executor.shutdown();
         executor.awaitTermination(5, TimeUnit.SECONDS);
@@ -102,7 +102,7 @@ public class TreeViewBindingsTest
         final PresentationModel oldPm = PresentationModel.of(datum);
         final PresentationModel pm = PresentationModel.of(datum);
         // when
-        underTest.changeListener.asTreeItemChangeListener().changed(null, new TreeItem<>(oldPm), new TreeItem<>(pm));
+        underTest.getSelectionListener().asTreeItemChangeListener().changed(null, new TreeItem<>(oldPm), new TreeItem<>(pm));
         // then
         // no exceptions are thrown
       }
