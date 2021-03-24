@@ -37,6 +37,7 @@ import it.tidalwave.role.ui.Displayable;
 import it.tidalwave.role.ui.Styleable;
 import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import it.tidalwave.role.ui.javafx.impl.common.DefaultCellBinder;
 import javafx.beans.property.Property;
 import javafx.beans.binding.BooleanExpression;
@@ -94,6 +95,8 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     interface Exclusions
       {
         public void setMainWindow (Window window);
+        // duplicated in TableViewBindings and TreeTableViewBindings due to common super class
+        public ChangeListenerSelectableAdapter getSelectionListener();
       }
 
     @Delegate(excludes = Exclusions.class)

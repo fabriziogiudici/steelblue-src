@@ -31,25 +31,14 @@ package it.tidalwave.role.ui.javafx.impl.tree;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
-import java.beans.PropertyChangeListener;
-import javafx.application.Platform;
-import it.tidalwave.role.ui.Visible;
-import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
-import it.tidalwave.role.ui.javafx.impl.common.PresentationModelTreeItem;
 import javafx.util.Callback;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
-import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
-import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
+import it.tidalwave.role.ui.javafx.impl.common.TreeItemDelegateSupport;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.ui.Visible._Visible_;
-import static java.util.stream.Collectors.toList;
 
 /***********************************************************************************************************************
  *
@@ -57,13 +46,9 @@ import static java.util.stream.Collectors.toList;
  *
  **********************************************************************************************************************/
 @Slf4j
-public class TreeViewBindings extends DelegateSupport
+public class TreeViewBindings extends TreeItemDelegateSupport
   {
-    @VisibleForTesting final Callback<TreeView<PresentationModel>, TreeCell<PresentationModel>> treeCellFactory;
-
-    private final ObsoletePresentationModelDisposer presentationModelDisposer = new ObsoletePresentationModelDisposer();
-
-    @VisibleForTesting final ChangeListenerSelectableAdapter changeListener = new ChangeListenerSelectableAdapter(executor);
+    @VisibleForTesting final Callback<TreeView<PresentationModel>, TreeCell<PresentationModel>> cellFactory;
 
     /*******************************************************************************************************************
      *
@@ -73,7 +58,7 @@ public class TreeViewBindings extends DelegateSupport
     public TreeViewBindings (@Nonnull final Executor executor, @Nonnull final CellBinder cellBinder)
       {
         super(executor);
-        treeCellFactory = treeView -> new AsObjectTreeCell<>(cellBinder);
+        cellFactory = __ -> new AsObjectTreeCell<>(cellBinder);
       }
 
     /*******************************************************************************************************************
@@ -88,70 +73,10 @@ public class TreeViewBindings extends DelegateSupport
         assertIsFxApplicationThread();
         log.debug("bind({}, {}, {})", treeView, pm, callback);
 
-        final ObjectProperty<TreeItem<PresentationModel>> rootProperty = treeView.rootProperty();
-        rootProperty.removeListener(presentationModelDisposer);
-        rootProperty.addListener(presentationModelDisposer);
-        rootProperty.set(createTreeItem(pm, 0));
-        callback.ifPresent(Runnable::run);
-
-        treeView.setCellFactory(treeCellFactory);
-        treeView.setShowRoot(pm.maybeAs(_Visible_).map(Visible::isVisible).orElse(true));
-
-        final ReadOnlyObjectProperty<TreeItem<PresentationModel>> selectionProperty =
-                treeView.getSelectionModel().selectedItemProperty();
-        selectionProperty.removeListener(changeListener.asTreeItemChangeListener());
-        selectionProperty.addListener(changeListener.asTreeItemChangeListener());
-     }
-
-    /*******************************************************************************************************************
-     *
-     *
-     *
-     ******************************************************************************************************************/
-    @Nonnull
-    private TreeItem<PresentationModel> createTreeItem (@Nonnull final PresentationModel pm, final int depth)
-      {
-        assertIsFxApplicationThread();
-        final TreeItem<PresentationModel> item = new PresentationModelTreeItem(pm);
-
-        final PropertyChangeListener recreateChildrenOnUpdateListener = __ ->
-          Platform.runLater(() ->
-            {
-              log.debug("On recreateChildrenOnUpdateListener");
-              setChildren(item, pm, depth + 1);
-              item.setExpanded(true);
-            });
-
-        pm.addPropertyChangeListener(PresentationModel.PROPERTY_CHILDREN, recreateChildrenOnUpdateListener);
-
-        item.expandedProperty().addListener(((observable, oldValue, newValue) ->
-          {
-            if (newValue)
-              {
-                setChildren(item, pm, depth + 1);
-              }
-          }));
-
-        return item;
-      }
-
-    /*******************************************************************************************************************
-     *
-     * Sets the children for a {@link TreeItem}.
-     *
-     * @param   parentItem  the {@code TreeItem}
-     * @param   depth       the depth level (used only for logging)
-     *
-     ******************************************************************************************************************/
-    private void setChildren (@Nonnull final TreeItem<PresentationModel> parentItem,
-                              @Nonnull final PresentationModel pm,
-                              final int depth)
-      {
-        assertIsFxApplicationThread();
-        JavaFXWorker.run(executor,
-                         () -> JavaFXWorker.childrenPm(pm, depth),
-                         items -> parentItem.getChildren().setAll(items.stream()
-                                                                       .map(childPm -> createTreeItem(childPm, depth))
-                                                                       .collect(toList())));
+        setRootProperty(pm, treeView.rootProperty());
+        treeView.setCellFactory(cellFactory);
+        treeView.setShowRoot(shouldShowRoot(pm));
+        bindSelectionListener(treeView.getSelectionModel().selectedItemProperty());
+        callback.ifPresent(Runnable::run); // FIXME: thread?
       }
   }
