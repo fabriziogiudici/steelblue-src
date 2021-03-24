@@ -49,6 +49,7 @@ import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.ui.Visible._Visible_;
+import static java.util.stream.Collectors.toList;
 
 /***********************************************************************************************************************
  *
@@ -117,8 +118,7 @@ public class TreeViewBindings extends DelegateSupport
           Platform.runLater(() ->
             {
               log.debug("On recreateChildrenOnUpdateListener");
-              item.getChildren().clear(); // FIXME: should update it incrementally
-              createChildren(item, pm, depth + 1);
+              setChildren(item, pm, depth + 1);
               item.setExpanded(true);
             });
 
@@ -128,7 +128,7 @@ public class TreeViewBindings extends DelegateSupport
           {
             if (newValue)
               {
-                createChildren(item, pm, depth + 1);
+                setChildren(item, pm, depth + 1);
               }
           }));
 
@@ -137,17 +137,21 @@ public class TreeViewBindings extends DelegateSupport
 
     /*******************************************************************************************************************
      *
+     * Sets the children for a {@link TreeItem}.
      *
+     * @param   parentItem  the {@code TreeItem}
+     * @param   depth       the depth level (used only for logging)
      *
      ******************************************************************************************************************/
-    // FIXME: add on demand, upon node expansion
-    private void createChildren (@Nonnull final TreeItem<PresentationModel> parentItem,
-                                 @Nonnull final PresentationModel pm,
-                                 final int recursion)
+    private void setChildren (@Nonnull final TreeItem<PresentationModel> parentItem,
+                              @Nonnull final PresentationModel pm,
+                              final int depth)
       {
         assertIsFxApplicationThread();
         JavaFXWorker.run(executor,
-                         () -> JavaFXWorker.childrenPm(pm, recursion),
-                         items -> items.forEach(item -> parentItem.getChildren().add(createTreeItem(item, recursion))));
+                         () -> JavaFXWorker.childrenPm(pm, depth),
+                         items -> parentItem.getChildren().setAll(items.stream()
+                                                                       .map(childPm -> createTreeItem(childPm, depth))
+                                                                       .collect(toList())));
       }
   }

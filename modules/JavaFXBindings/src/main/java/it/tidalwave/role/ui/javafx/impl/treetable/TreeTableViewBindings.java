@@ -54,6 +54,7 @@ import it.tidalwave.role.ui.javafx.impl.tree.ObsoletePresentationModelDisposer;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.ui.Visible._Visible_;
 import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
+import static java.util.stream.Collectors.toList;
 
 /***********************************************************************************************************************
  *
@@ -135,8 +136,7 @@ public class TreeTableViewBindings extends DelegateSupport
         final PropertyChangeListener recreateChildrenOnUpdateListener = __ ->
           Platform.runLater(() ->
             {
-              item.getChildren().clear();
-              createChildren(item, depth + 1);
+              setChildren(item, depth + 1);
               item.setExpanded(true);
             });
 
@@ -146,7 +146,7 @@ public class TreeTableViewBindings extends DelegateSupport
           {
             if (newValue)
               {
-                createChildren(item, depth + 1);
+                setChildren(item, depth + 1);
               }
           }));
 
@@ -155,19 +155,19 @@ public class TreeTableViewBindings extends DelegateSupport
 
     /*******************************************************************************************************************
      *
-     * Creates the children for a {@link TreeItem}.
+     * Sets the children for a {@link TreeItem}.
      *
      * @param   parentItem  the {@code TreeItem}
      * @param   depth       the depth level (used only for logging)
      *
      ******************************************************************************************************************/
-    // FIXME: add on demand, upon node expansion
-    private void createChildren (@Nonnull final TreeItem<PresentationModel> parentItem, final int depth)
+    private void setChildren (@Nonnull final TreeItem<PresentationModel> parentItem, final int depth)
       {
         final PresentationModel parentPm = parentItem.getValue();
-        final ObservableList<TreeItem<PresentationModel>> children = parentItem.getChildren();
         JavaFXWorker.run(executor,
                          () -> childrenPm(parentPm, depth),
-                         items -> items.forEach(childPm -> children.add(createTreeItem(childPm, depth))));
+                         items -> parentItem.getChildren().setAll(items.stream()
+                                                          .map(childPm -> createTreeItem(childPm, depth))
+                                                          .collect(toList())));
       }
   }
