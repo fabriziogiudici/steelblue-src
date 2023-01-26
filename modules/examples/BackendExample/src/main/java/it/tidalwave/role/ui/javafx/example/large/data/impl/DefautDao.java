@@ -27,13 +27,15 @@
 package it.tidalwave.role.ui.javafx.example.large.data.impl;
 
 import javax.annotation.Nonnull;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
-import it.tidalwave.role.ui.javafx.example.large.data.*;
-import static java.util.stream.Collectors.toList;
+import java.nio.file.Path;
+import it.tidalwave.role.ui.javafx.example.large.data.Dao;
+import it.tidalwave.role.ui.javafx.example.large.data.SimpleDciEntity;
+import it.tidalwave.role.ui.javafx.example.large.data.SimpleEntity;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *
@@ -51,12 +53,12 @@ public class DefautDao implements Dao // FIXME: rename to Model
     @Override @Nonnull
     public Collection<SimpleDciEntity> getDciEntities()
       {
-        final AtomicInteger sequence = new AtomicInteger(1); // I know it's bad, it's just an example
+        final var sequence = new AtomicInteger(1); // I know it's bad, it's just an example
         return IntStream.rangeClosed(1, 1000).mapToObj(row ->
           {
-            final int attr1 = sequence.getAndIncrement();
-            final int attr2 = sequence.getAndIncrement();
-            final String name = String.format("(%d ; %d)", attr1, attr2);
+            final var attr1 = sequence.getAndIncrement();
+            final var attr2 = sequence.getAndIncrement();
+            final var name = String.format("(%d ; %d)", attr1, attr2);
             return new SimpleDciEntity(name, attr1, attr2);
           }).collect(toList());
       }

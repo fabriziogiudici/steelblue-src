@@ -26,12 +26,12 @@
  */
 package it.tidalwave.ui.javafx;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Proxy;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.io.IOException;
@@ -39,10 +39,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.application.Platform;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import it.tidalwave.util.ReflectionUtils;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
-import it.tidalwave.role.ui.javafx.impl.util.JavaFXSafeProxy;
 import it.tidalwave.role.ui.javafx.impl.DefaultJavaFXBinder;
-import it.tidalwave.role.ui.javafx.impl.util.ReflectionUtils;
+import it.tidalwave.role.ui.javafx.impl.util.JavaFXSafeProxy;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -182,12 +182,12 @@ public class JavaFXSafeProxyCreator
           {
             log.debug("NodeAndDelegate({}, {})", clazz, resource);
             assert Platform.isFxApplicationThread() : "Not in JavaFX UI Thread";
-            final FXMLLoader loader = new FXMLLoader(clazz.getResource(resource), null, null,
+            final var loader = new FXMLLoader(clazz.getResource(resource), null, null,
                                                      type -> ReflectionUtils.instantiateWithDependencies(type, BEANS));
-            final Node node = (Node)loader.load();
+            final Node node = loader.load();
             final T jfxController = loader.getController();
             ReflectionUtils.injectDependencies(jfxController, BEANS);
-            final Class<?>[] interfaces = jfxController.getClass().getInterfaces();
+            final var interfaces = jfxController.getClass().getInterfaces();
 
             if (interfaces.length == 0)
               {
@@ -197,8 +197,8 @@ public class JavaFXSafeProxyCreator
               }
             else
               {
-                final Class<T> interfaceClass = (Class<T>)interfaces[0]; // FIXME
-                final T safeDelegate = JavaFXSafeProxyCreator.createSafeProxy(jfxController, interfaceClass);
+                final var interfaceClass = (Class<T>)interfaces[0]; // FIXME
+                final var safeDelegate = JavaFXSafeProxyCreator.createSafeProxy(jfxController, interfaceClass);
                 log.debug(">>>> load({}, {}) completed", clazz, resource);
                 return new NodeAndDelegate(node, safeDelegate);
               }
@@ -221,10 +221,10 @@ public class JavaFXSafeProxyCreator
     @Nonnull
     public static <T> NodeAndDelegate createNodeAndDelegate (@Nonnull final Class<?> presentationClass)
       {
-        final String resource = presentationClass.getSimpleName().replaceAll("^JavaFX", "")
-                                                                 .replaceAll("^JavaFx", "")
-                                                                 .replaceAll("Presentation$", "")
-                                                                 + ".fxml";
+        final var resource = presentationClass.getSimpleName().replaceAll("^JavaFX", "")
+                                              .replaceAll("^JavaFx", "")
+                                              .replaceAll("Presentation$", "")
+                             + ".fxml";
         return createNodeAndDelegate(presentationClass, resource);
       }
 
@@ -242,9 +242,9 @@ public class JavaFXSafeProxyCreator
       {
         log.debug("createNodeAndDelegate({}, {})", presentationClass, fxmlResourcePath);
 
-        final CountDownLatch latch = new CountDownLatch(1);
-        final AtomicReference<NodeAndDelegate> nad = new AtomicReference<>();
-        final AtomicReference<RuntimeException> exception = new AtomicReference<>();
+        final var latch = new CountDownLatch(1);
+        final var nad = new AtomicReference<NodeAndDelegate>();
+        final var exception = new AtomicReference<RuntimeException>();
 
         if (Platform.isFxApplicationThread())
           {
@@ -295,8 +295,8 @@ public class JavaFXSafeProxyCreator
 
         if (nad.get() == null)
           {
-            final String message = String.format("Likely deadlock in the JavaFX Thread: couldn't create " +
-                                                 "NodeAndDelegate: %s, %s", presentationClass, fxmlResourcePath);
+            final var message = String.format("Likely deadlock in the JavaFX Thread: couldn't create " +
+                                              "NodeAndDelegate: %s, %s", presentationClass, fxmlResourcePath);
             throw new RuntimeException(message);
           }
 

@@ -26,11 +26,13 @@
  */
 package it.tidalwave.role.ui.javafx.impl.util;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import javax.annotation.Nonnull;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
+import javafx.application.Platform;
+import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -38,11 +40,11 @@ import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
  *
- * An {@link InvocationHandler} that safely wraps all method calls with {@link #Platform.runLater(Runnable)}. The caller
+ * An {@link InvocationHandler} that safely wraps all method calls with {@link Platform#runLater(Runnable)}. The caller
  * is not blocked if the method is declared as {@code void}; it is blocked otherwise, so it can immediately retrieve
  * the result.
  *
- * This behaviour is required by {@link JavaFXSafeProxyCreator.#createNodeAndDelegate()}.
+ * This behaviour is required by {@link JavaFXSafeProxyCreator#createNodeAndDelegate(Class)} ()}.
  *
  * TODO: add support for aysnc returning a Future.
  *
@@ -59,9 +61,9 @@ public class JavaFXSafeProxy<T> implements InvocationHandler
     public Object invoke (@Nonnull final Object proxy, @Nonnull final Method method, @Nonnull final Object[] args)
       throws Throwable
       {
-        final AtomicReference<Object> result = new AtomicReference<>();
-        final AtomicReference<Throwable> throwable = new AtomicReference<>();
-        final CountDownLatch waitForReturn = new CountDownLatch(1);
+        final var result = new AtomicReference<>();
+        final var throwable = new AtomicReference<Throwable>();
+        final var waitForReturn = new CountDownLatch(1);
 
         JavaFXSafeRunner.runSafely(() ->
           {

@@ -27,10 +27,10 @@
 package it.tidalwave.role.ui.javafx.impl.treetable;
 
 import javax.annotation.CheckForNull;
-import it.tidalwave.util.annotation.VisibleForTesting;
-import it.tidalwave.util.As;
-import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
 import javafx.scene.control.TreeTableCell;
+import it.tidalwave.util.As;
+import it.tidalwave.util.annotation.VisibleForTesting;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
 import lombok.AllArgsConstructor;
 
 /***********************************************************************************************************************

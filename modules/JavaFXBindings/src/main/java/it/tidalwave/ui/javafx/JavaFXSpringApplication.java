@@ -29,7 +29,6 @@ package it.tidalwave.ui.javafx;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -39,10 +38,10 @@ import javafx.stage.Stage;
 import javafx.application.Platform;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import it.tidalwave.role.ui.javafx.ApplicationPresentationAssembler;
 import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.NodeAndDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import it.tidalwave.role.ui.javafx.ApplicationPresentationAssembler;
 
 /***********************************************************************************************************************
  *
@@ -87,7 +86,7 @@ public class JavaFXSpringApplication extends JavaFXApplicationWithSplash
             System.setProperty("it.tidalwave.util.spring.ClassScanner.basePackages", "it");
 
             springConfigLocations.add("classpath*:/META-INF/*AutoBeans.xml");
-            final String osName = System.getProperty("os.name", "").toLowerCase();
+            final var osName = System.getProperty("os.name", "").toLowerCase();
 
             if (osName.contains("os x"))
               {
@@ -174,7 +173,7 @@ public class JavaFXSpringApplication extends JavaFXApplicationWithSplash
       {
         final SortedMap<Object, Object> map = new TreeMap<>(System.getProperties());
 
-        for (final Entry<Object, Object> e : map.entrySet())
+        for (final var e : map.entrySet())
           {
             log.debug("{}: {}", e.getKey(), e.getValue());
           }

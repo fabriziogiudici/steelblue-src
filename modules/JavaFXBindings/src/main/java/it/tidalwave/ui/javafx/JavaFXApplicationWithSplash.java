@@ -27,22 +27,21 @@
 package it.tidalwave.ui.javafx;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.io.IOException;
-import it.tidalwave.util.PreferencesHandler;
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.application.Application;
 import javafx.application.Platform;
+import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.NodeAndDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.NodeAndDelegate;
+import it.tidalwave.util.PreferencesHandler;
 import lombok.Getter;
 import lombok.Setter;
 import static it.tidalwave.util.PreferencesHandler.*;
@@ -103,7 +102,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
     public void start (@Nonnull final Stage stage)
       {
         log.info("start({})", stage);
-        final Stage splashStage = new Stage(StageStyle.TRANSPARENT);
+        final var splashStage = new Stage(StageStyle.TRANSPARENT);
         stage.setMaximized(maximized);
 //        splashStage.setMaximized(maximized); FIXME: doesn't work
         configureFullScreen(stage);
@@ -123,8 +122,8 @@ public abstract class JavaFXApplicationWithSplash extends Application
               {
                 try
                   {
-                    final NodeAndDelegate applicationNad = createParent();
-                    final Scene scene = new Scene((Parent)applicationNad.getNode());
+                    final var applicationNad = createParent();
+                    final var scene = new Scene((Parent)applicationNad.getNode());
 
                     if (useAquaFxOnMacOsX && isOSX())
                       {
@@ -134,11 +133,11 @@ public abstract class JavaFXApplicationWithSplash extends Application
                     stage.setOnCloseRequest(event -> onClosing());
                     stage.setScene(scene);
                     onStageCreated(stage, applicationNad);
-                    final PreferencesHandler preferencesHandler = PreferencesHandler.getInstance();
+                    final var preferencesHandler = PreferencesHandler.getInstance();
 
                     stage.setFullScreen(preferencesHandler.getProperty(KEY_FULL_SCREEN).orElse(false));
                     final double scale = preferencesHandler.getProperty(KEY_INITIAL_SIZE).orElse(0.65);
-                    final Rectangle2D screenSize = Screen.getPrimary().getBounds();
+                    final var screenSize = Screen.getPrimary().getBounds();
                     stage.setWidth(scale * screenSize.getWidth());
                     stage.setHeight(scale * screenSize.getHeight());
                     stage.show();

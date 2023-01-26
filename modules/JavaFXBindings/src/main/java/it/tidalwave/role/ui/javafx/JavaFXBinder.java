@@ -27,8 +27,8 @@
 package it.tidalwave.role.ui.javafx;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
 import java.util.Collection;
+import java.util.Optional;
 import java.nio.file.Path;
 import javafx.beans.property.Property;
 import javafx.scene.Node;
@@ -39,14 +39,14 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.TreeView;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Window;
 import it.tidalwave.util.ui.UserNotificationWithFeedback;
-import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.BoundProperty;
+import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.UserAction;
 
 /***********************************************************************************************************************

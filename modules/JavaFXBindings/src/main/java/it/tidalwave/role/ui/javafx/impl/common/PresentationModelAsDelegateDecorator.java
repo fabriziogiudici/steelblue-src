@@ -30,13 +30,14 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import it.tidalwave.role.ui.PresentationModel;
+import java.util.Optional;
 import it.tidalwave.util.As;
 import it.tidalwave.util.AsException;
+import it.tidalwave.role.ui.PresentationModel;
 import lombok.AccessLevel;
-import lombok.experimental.Delegate;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Delegate;
 
 /***********************************************************************************************************************
  *
@@ -64,26 +65,21 @@ public class PresentationModelAsDelegateDecorator implements PresentationModel
       }
 
     @Override @Nonnull
-    public <T> T as (@Nonnull final Class<T> type)
+    public <T> T as (@Nonnull final Class<? extends T> type)
       {
-        try
-          {
-            return pmDelegate.as(type);
-          }
-        catch (AsException e)
-          {
-            return asDelegate.as(type);
-          }
+        return maybeAs(type).orElseThrow(() -> new AsException(type));
       }
 
     @Override @Nonnull
-    public <T> T as (@Nonnull final Class<T> type, @Nonnull final NotFoundBehaviour<T> notFoundBehaviour)
+    public <T> Optional<T> maybeAs (@Nonnull Class<? extends T> type)
       {
-        throw new UnsupportedOperationException("Not implemented yet");
+        final Optional<T> t = pmDelegate.maybeAs(type);
+        return t.isPresent() ? t : asDelegate.maybeAs(type);
+        // .or(() -> (Optional<T>)asDelegate.maybeAs(type));
       }
 
     @Override @Nonnull
-    public <T> Collection<T> asMany (@Nonnull final Class<T> type)
+    public <T> Collection<T> asMany (@Nonnull final Class<? extends T> type)
       {
         final List<T> results = new ArrayList<>();
         results.addAll(pmDelegate.asMany(type));

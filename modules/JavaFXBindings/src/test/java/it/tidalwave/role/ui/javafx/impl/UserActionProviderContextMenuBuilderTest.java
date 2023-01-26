@@ -34,25 +34,24 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import it.tidalwave.role.ui.Displayable;
-import it.tidalwave.role.ui.javafx.impl.common.DefaultCellBinder;
-import it.tidalwave.role.ui.javafx.impl.common.RoleBag;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.scene.control.MenuItem;
-import it.tidalwave.role.ContextManager;
-import it.tidalwave.role.spi.DefaultContextManagerProvider;
+import javafx.application.Platform;
+import it.tidalwave.util.ContextManager;
+import it.tidalwave.role.impl.DefaultContextManagerProvider;
+import it.tidalwave.role.spi.SystemRoleFactory;
+import it.tidalwave.role.ui.Displayable;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
+import it.tidalwave.role.ui.javafx.impl.common.DefaultCellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.RoleBag;
 import it.tidalwave.role.ui.spi.DefaultUserActionProvider;
-import it.tidalwave.util.spi.AsDelegateProvider;
-import lombok.experimental.Delegate;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Delegate;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /***********************************************************************************************************************
  *
@@ -112,11 +111,11 @@ public class UserActionProviderContextMenuBuilderTest
     @BeforeMethod
     public void setup()
       {
-        AsDelegateProvider.Locator.set(AsDelegateProvider.empty());
-        ContextManager.Locator.set(new DefaultContextManagerProvider()); // TODO: possibly drop this
+        SystemRoleFactory.reset();
+        ContextManager.set(new DefaultContextManagerProvider()); // TODO: possibly drop this
         actions = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++)
+        for (var i = 0; i < 10; i++)
           {
             actions.add(spy(UserAction.of(this::checkThread, Displayable.of("Action #" + i))));
           }
@@ -145,8 +144,9 @@ public class UserActionProviderContextMenuBuilderTest
     @Test
     public void must_return_empty_list_when_UserActionProvider_is_not_present()
       {
-        final List<MenuItem> menuItems = underTest.createMenuItems(roleMapWithoutUserActionProvider);
-
+        // when
+        final var menuItems = underTest.createMenuItems(roleMapWithoutUserActionProvider);
+        // then
         assertThat(menuItems, is(notNullValue()));
         assertThat(menuItems.isEmpty(), is(true));
       }
@@ -157,14 +157,15 @@ public class UserActionProviderContextMenuBuilderTest
     @Test
     public void must_set_the_MenuItem_text_from_UserAction_Displayable()
       {
-        final List<MenuItem> menuItems = underTest.createMenuItems(roleMapWithUserActionProvider);
-
+        // when
+        final var menuItems = underTest.createMenuItems(roleMapWithUserActionProvider);
+        // then
         assertThat(menuItems, is(not(nullValue())));
         assertThat(menuItems.size(), is(actions.size()));
 
-        for (int i = 0; i < menuItems.size(); i++)
+        for (var i = 0; i < menuItems.size(); i++)
           {
-            final MenuItem menuItem = menuItems.get(i);
+            final var menuItem = menuItems.get(i);
             assertThat(menuItem, is(not(nullValue())));
             assertThat(menuItem.getText(), is("Action #" + i));
           }
@@ -177,12 +178,13 @@ public class UserActionProviderContextMenuBuilderTest
     public void must_invoke_callbacks_in_a_non_FX_thread()
       throws InterruptedException
       {
-        final List<MenuItem> menuItems = underTest.createMenuItems(roleMapWithUserActionProvider);
-
+        // when
+        final var menuItems = underTest.createMenuItems(roleMapWithUserActionProvider);
+        // then
         assertThat(menuItems, is(not(nullValue())));
         assertThat(menuItems.size(), is(actions.size()));
 
-        for (final MenuItem menuItem : menuItems)
+        for (final var menuItem : menuItems)
           {
             menuItem.getOnAction().handle(new ActionEvent());
           }
@@ -190,7 +192,7 @@ public class UserActionProviderContextMenuBuilderTest
         executorService.shutdown();
         executorService.awaitTermination(10, TimeUnit.SECONDS);
 
-        for (int i = 0; i < menuItems.size(); i++)
+        for (var i = 0; i < menuItems.size(); i++)
           {
             verify(actions.get(i), times(1)).actionPerformed();
 //            verifyNoMoreInteractions(actions.get(i));

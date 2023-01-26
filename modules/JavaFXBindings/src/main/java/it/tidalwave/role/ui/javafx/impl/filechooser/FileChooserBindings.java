@@ -31,9 +31,9 @@ import javax.annotation.Nullable;
 import java.util.concurrent.Executor;
 import java.io.File;
 import java.nio.file.Path;
-import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.application.Platform;
 import it.tidalwave.util.ui.UserNotificationWithFeedback;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
@@ -68,12 +68,12 @@ public class FileChooserBindings extends DelegateSupport
         log.debug("openFileChooserFor({}, {})", notification, selectedFile);
         assertIsFxApplicationThread();
 
-        final FileChooser fileChooser = new FileChooser();
+        final var fileChooser = new FileChooser();
         fileChooser.setTitle(notification.getCaption());
         fileChooser.setInitialDirectory(selectedFile.get().toFile());
 
         // It seems we need to take care of modality: https://javafx-jira.kenai.com/browse/RT-13949
-        final File file = runWhileDisabling(mainWindow, () -> fileChooser.showOpenDialog(mainWindow));
+        final var file = runWhileDisabling(mainWindow, () -> fileChooser.showOpenDialog(mainWindow));
 
         notifyFile(file, notification, selectedFile);
       }
@@ -89,12 +89,12 @@ public class FileChooserBindings extends DelegateSupport
         log.debug("openDirectoryChooserFor({}, {})", notification, selectedFolder);
         assertIsFxApplicationThread();
 
-        final DirectoryChooser directoryChooser = new DirectoryChooser();
+        final var directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle(notification.getCaption());
         directoryChooser.setInitialDirectory(selectedFolder.get().toFile());
 
         // It seems we need to take care of modality: https://javafx-jira.kenai.com/browse/RT-13949
-        final File file = runWhileDisabling(mainWindow, () -> directoryChooser.showDialog(mainWindow));
+        final var file = runWhileDisabling(mainWindow, () -> directoryChooser.showDialog(mainWindow));
 
         notifyFile(file, notification, selectedFolder);
       }

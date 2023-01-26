@@ -29,7 +29,6 @@ package it.tidalwave.role.ui.javafx.impl.common;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 import javafx.collections.ObservableList;
@@ -37,19 +36,19 @@ import javafx.scene.control.Cell;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
+import it.tidalwave.ui.role.javafx.CustomGraphicProvider;
 import it.tidalwave.util.As;
 import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.role.ui.Displayable;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
-import it.tidalwave.ui.role.javafx.CustomGraphicProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.stream.Collectors.toList;
+import static it.tidalwave.ui.role.javafx.CustomGraphicProvider._CustomGraphicProvider_;
+import static java.util.stream.Collectors.*;
 import static it.tidalwave.role.ui.Displayable._Displayable_;
 import static it.tidalwave.role.ui.Styleable._Styleable_;
 import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
-import static it.tidalwave.ui.role.javafx.CustomGraphicProvider._CustomGraphicProvider_;
 
 /***********************************************************************************************************************
  *
@@ -116,7 +115,7 @@ public class DefaultCellBinder implements CellBinder
      ******************************************************************************************************************/
     private void bindTextAndGraphic (@Nonnull final Cell<?> cell, @Nonnull final RoleBag roles)
       {
-        final Optional<CustomGraphicProvider> cgp = roles.get(_CustomGraphicProvider_);
+        final var cgp = roles.get(_CustomGraphicProvider_);
         cell.setGraphic(cgp.map(CustomGraphicProvider::getGraphic).orElse(null));
         cell.setText(cgp.map(c -> "").orElse(roles.get(_Displayable_).map(Displayable::getDisplayName).orElse("")));
       }
@@ -167,7 +166,7 @@ public class DefaultCellBinder implements CellBinder
      ******************************************************************************************************************/
     private void bindContextMenu (@Nonnull final Cell<?> cell, @Nonnull final RoleBag roles)
       {
-        final List<MenuItem> menuItems = createMenuItems(roles);
+        final var menuItems = createMenuItems(roles);
         cell.setContextMenu(menuItems.isEmpty() ? null : new ContextMenu(menuItems.toArray(new MenuItem[0])));
       }
 
@@ -182,9 +181,9 @@ public class DefaultCellBinder implements CellBinder
     @Nonnull
     private void bindStyles (@Nonnull final ObservableList<String> styleClasses, @Nonnull final RoleBag roles)
       {
-        final List<String> styles = styleClasses.stream()
-                                                .filter(s -> !s.startsWith(ROLE_STYLE_PREFIX))
-                                                .collect(toList());
+        final var styles = styleClasses.stream()
+                                       .filter(s -> !s.startsWith(ROLE_STYLE_PREFIX))
+                                       .collect(toList());
         // FIXME: shouldn't reset them? In case of cell reuse, they get accumulated
         styles.addAll(roles.getMany(_Styleable_)
                            .stream()
@@ -237,7 +236,7 @@ public class DefaultCellBinder implements CellBinder
     @Nonnull
     private MenuItem createMenuItem (@Nonnull final UserAction action)
       {
-        final MenuItem menuItem = new MenuItem(action.as(_Displayable_).getDisplayName());
+        final var menuItem = new MenuItem(action.as(_Displayable_).getDisplayName());
         menuItem.setOnAction(new EventHandlerUserActionAdapter(executor, action));
         return menuItem;
       }

@@ -29,15 +29,15 @@ package it.tidalwave.role.ui.javafx.impl.treetable;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
-import javafx.util.Callback;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.util.Callback;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
-import it.tidalwave.role.ui.javafx.impl.common.TreeItemDelegateSupport;
 import it.tidalwave.role.ui.javafx.impl.common.PresentationModelObservable;
+import it.tidalwave.role.ui.javafx.impl.common.TreeItemDelegateSupport;
 import lombok.extern.slf4j.Slf4j;
 
 /***********************************************************************************************************************
@@ -87,10 +87,9 @@ public class TreeTableViewBindings extends TreeItemDelegateSupport
     private void setCellFactory (@Nonnull final TreeTableView<PresentationModel> treeTableView)
       {
         final ObservableList rawColumns = treeTableView.getColumns(); // FIXME cast
-        final ObservableList<TreeTableColumn<PresentationModel, PresentationModel>> columns =
-                (ObservableList<TreeTableColumn<PresentationModel, PresentationModel>>)rawColumns;
+        final var columns = (ObservableList<TreeTableColumn<PresentationModel, PresentationModel>>)rawColumns;
 
-        for (final TreeTableColumn<PresentationModel, PresentationModel> column : columns)
+        for (final var column : columns)
           {
             column.setCellValueFactory(PresentationModelObservable::of);
             column.setCellFactory(cellFactory);

@@ -30,27 +30,27 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
-import javafx.util.Callback;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ComboBox;
+import javafx.util.Callback;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
-import it.tidalwave.role.ui.javafx.impl.list.AsObjectListCell;
 import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
+import it.tidalwave.role.ui.javafx.impl.list.AsObjectListCell;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
 import static javafx.scene.input.KeyCode.*;
 import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
+import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
 
 /***********************************************************************************************************************
  *
@@ -74,8 +74,8 @@ public class ComboBoxBindings extends DelegateSupport
      ******************************************************************************************************************/
     private final EventHandler<ActionEvent> eventHandler = event ->
       {
-        final ComboBox<PresentationModel> comboBox = (ComboBox<PresentationModel>)event.getSource();
-        final PresentationModel selectedPm = comboBox.getSelectionModel().getSelectedItem();
+        final var comboBox = (ComboBox<PresentationModel>)event.getSource();
+        final var selectedPm = comboBox.getSelectionModel().getSelectedItem();
         selectedPm.maybeAs(_UserActionProvider_)
                   .flatMap(UserActionProvider::getOptionalDefaultAction)
                   .ifPresent(UserAction::actionPerformed);
@@ -118,7 +118,7 @@ public class ComboBoxBindings extends DelegateSupport
               }
           });
 
-        final ReadOnlyObjectProperty<PresentationModel> selectedProperty = comboBox.getSelectionModel().selectedItemProperty();
+        final var selectedProperty = comboBox.getSelectionModel().selectedItemProperty();
         selectedProperty.removeListener(changeListener);
         JavaFXWorker.run(executor,
                          () -> childrenPm(pm),

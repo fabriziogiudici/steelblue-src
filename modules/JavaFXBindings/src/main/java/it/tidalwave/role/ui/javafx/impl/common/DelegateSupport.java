@@ -29,11 +29,9 @@ package it.tidalwave.role.ui.javafx.impl.common;
 import javax.annotation.Nonnull;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
-import javafx.application.Platform;
-import javafx.scene.Parent;
 import javafx.scene.effect.BoxBlur;
-import javafx.scene.effect.Effect;
 import javafx.stage.Window;
+import javafx.application.Platform;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -62,9 +60,9 @@ public abstract class DelegateSupport
      ******************************************************************************************************************/
     protected <T> T runWhileDisabling (@Nonnull final Window window, @Nonnull final Callable<T> callable)
       {
-        final Parent root = window.getScene().getRoot();
-        final Effect effect = root.getEffect();
-        final boolean disabled = root.isDisable();
+        final var root = window.getScene().getRoot();
+        final var effect = root.getEffect();
+        final var disabled = root.isDisable();
 
         try
           {
@@ -91,7 +89,7 @@ public abstract class DelegateSupport
     @Nonnull
     private BoxBlur createDisablingEffect()
       {
-        final BoxBlur bb = new BoxBlur();
+        final var bb = new BoxBlur();
         bb.setWidth(5);
         bb.setHeight(5);
         bb.setIterations(3);

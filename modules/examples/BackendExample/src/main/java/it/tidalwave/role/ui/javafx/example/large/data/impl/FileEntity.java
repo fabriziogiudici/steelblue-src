@@ -42,7 +42,6 @@ import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import it.tidalwave.util.As;
-import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.util.spi.SimpleFinderSupport;
 import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.Displayable;
@@ -50,7 +49,7 @@ import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Delegate;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 /***********************************************************************************************************************
  *
@@ -69,12 +68,12 @@ public class FileEntity implements As, Displayable
         public FileEntityFinder (@Nonnull final FileEntityFinder other, @Nonnull final Object override)
           {
             super(other, override);
-            final FileEntityFinder source = getSource(FileEntityFinder.class, other, override);
+            final var source = getSource(FileEntityFinder.class, other, override);
             this.path = source.path;
           }
 
         @Nonnull @Override
-        protected List<? extends FileEntity> computeNeededResults()
+        protected List<FileEntity> computeNeededResults()
           {
             try
               {
@@ -93,7 +92,7 @@ public class FileEntity implements As, Displayable
     private final Path path;
 
     @Delegate
-    private final AsSupport delegate;
+    private final As delegate;
 
     private FileEntity (@Nonnull final Path path)
       {
@@ -105,7 +104,7 @@ public class FileEntity implements As, Displayable
             roles.add(SimpleComposite.of(new FileEntityFinder(path)));
           }
 
-        delegate = new AsSupport(this, roles);
+        delegate = As.forObject(this, roles);
       }
 
     @Nonnull

@@ -27,9 +27,7 @@
 package it.tidalwave.role.ui.javafx.impl;
 
 import java.util.concurrent.Executors;
-import it.tidalwave.util.spi.AsDelegateProvider;
-import it.tidalwave.role.ContextManager;
-import it.tidalwave.role.spi.DefaultContextManagerProvider;
+import it.tidalwave.role.spi.SystemRoleFactory;
 import org.testng.annotations.BeforeMethod;
 
 /***********************************************************************************************************************
@@ -47,8 +45,7 @@ public class DefaultJavaFXBinderTest
     @BeforeMethod
     public void setup()
       {
-        AsDelegateProvider.Locator.set(AsDelegateProvider.empty());
-        ContextManager.Locator.set(new DefaultContextManagerProvider());
+        SystemRoleFactory.reset();
         underTest = new DefaultJavaFXBinder(Executors.newSingleThreadExecutor());
       }
 

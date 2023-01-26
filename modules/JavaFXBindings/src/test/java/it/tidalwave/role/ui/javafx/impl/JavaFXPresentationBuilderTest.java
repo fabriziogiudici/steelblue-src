@@ -51,15 +51,15 @@ public class JavaFXPresentationBuilderTest
           }
       }
 
-    public class MockProvider extends JavaFXPresentationBuilder<MockInterface, MockImplementation>
+    public static class MockProvider extends JavaFXPresentationBuilder<MockInterface, MockImplementation>
       {
       }
 
     @Test(enabled = false)
     public void must_properly_create_a_presentation_instance()
       {
-        final MockProvider underTest = new MockProvider();
+        final var underTest = new MockProvider();
 
-        final MockInterface i = underTest.create(null);
+        final var i = underTest.create(null);
       }
 }

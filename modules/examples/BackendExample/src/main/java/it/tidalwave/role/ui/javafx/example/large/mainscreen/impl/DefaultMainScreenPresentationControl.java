@@ -29,7 +29,6 @@ package it.tidalwave.role.ui.javafx.example.large.mainscreen.impl;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.util.Collection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import it.tidalwave.role.Aggregate;
@@ -42,15 +41,14 @@ import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.role.ui.Visible;
 import it.tidalwave.role.ui.javafx.example.large.data.Dao;
-import it.tidalwave.role.ui.javafx.example.large.data.SimpleEntity;
 import it.tidalwave.role.ui.javafx.example.large.data.SimpleDciEntity;
-import it.tidalwave.role.ui.javafx.example.large.data.impl.FileEntity;
+import it.tidalwave.role.ui.javafx.example.large.data.SimpleEntity;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentation.Bindings;
 import it.tidalwave.role.ui.javafx.example.large.mainscreen.MainScreenPresentationControl;
-import static it.tidalwave.role.ui.Presentable._Presentable_;
 import static it.tidalwave.util.Parameters.r;
 import static it.tidalwave.util.ui.UserNotificationWithFeedback.*;
+import static it.tidalwave.role.ui.Presentable._Presentable_;
 import static it.tidalwave.role.ui.spi.PresentationModelCollectors.toCompositePresentationModel;
 
 /***********************************************************************************************************************
@@ -125,15 +123,13 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     public void start()
       {
         presentation.showUp();
-        final Collection<SimpleEntity> entities1 = dao.getSimpleEntities();
-        final Collection<SimpleDciEntity> entities2 = dao.getDciEntities();
-        final Collection<FileEntity> files = dao.getFiles();
-        final PresentationModel pm1 = entities1.stream().map(this::pmFor)
-                                                        .collect(toCompositePresentationModel());
-        final PresentationModel pm2 = entities2.stream().map(this::pmFor)
-                                                        .collect(toCompositePresentationModel());
-        final PresentationModel pm3 = files.stream().map(item -> item.as(_Presentable_).createPresentationModel())
-                                               .collect(toCompositePresentationModel(r(Visible.INVISIBLE)));
+        final var entities1 = dao.getSimpleEntities();
+        final var entities2 = dao.getDciEntities();
+        final var files = dao.getFiles();
+        final var pm1 = entities1.stream().map(this::pmFor).collect(toCompositePresentationModel());
+        final var pm2 = entities2.stream().map(this::pmFor).collect(toCompositePresentationModel());
+        final var pm3 = files.stream().map(item -> item.as(_Presentable_).createPresentationModel())
+                             .collect(toCompositePresentationModel(r(Visible.INVISIBLE)));
         presentation.populate(pm1, pm2, pm3);
       }
 
@@ -150,9 +146,9 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
     private PresentationModel pmFor (@Nonnull final SimpleEntity entity)
       {
         final Selectable selectable = () -> onSelected(entity);
-        final UserAction action1 = UserAction.of(() -> action1(entity), Displayable.of("Action 1"));
-        final UserAction action2 = UserAction.of(() -> action2(entity), Displayable.of("Action 2"));
-        final UserAction action3 = UserAction.of(() -> action3(entity), Displayable.of("Action 3"));
+        final var action1 = UserAction.of(() -> action1(entity), Displayable.of("Action 1"));
+        final var action2 = UserAction.of(() -> action2(entity), Displayable.of("Action 2"));
+        final var action3 = UserAction.of(() -> action3(entity), Displayable.of("Action 3"));
         return PresentationModel.of(entity, r(Displayable.of("Item #" + entity.getName()),
                                               selectable,
                                               UserActionProvider.of(action1, action2, action3)));
@@ -172,9 +168,9 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
              .withPmOf("C2", r(Displayable.of("" + entity.getAttribute1())))
              .withPmOf("C3", r(Displayable.of("" + entity.getAttribute2())));
         final Selectable selectable = () -> onSelected(entity);
-        final UserAction action1 = UserAction.of(() -> action1(entity), Displayable.of("Action 1"));
-        final UserAction action2 = UserAction.of(() -> action2(entity), Displayable.of("Action 2"));
-        final UserAction action3 = UserAction.of(() -> action3(entity), Displayable.of("Action 3"));
+        final var action1 = UserAction.of(() -> action1(entity), Displayable.of("Action 1"));
+        final var action2 = UserAction.of(() -> action2(entity), Displayable.of("Action 2"));
+        final var action3 = UserAction.of(() -> action3(entity), Displayable.of("Action 3"));
         // No explicit Displayable here, as the one inside SimpleDciEntity is used.
         return PresentationModel.of(entity, r(aggregate, selectable, UserActionProvider.of(action1, action2, action3)));
       }
@@ -221,7 +217,7 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
      ******************************************************************************************************************/
     private void onButtonPickFilePressed()
       {
-        final BoundProperty<Path> selectedFile = new BoundProperty<>(USER_HOME);
+        final var selectedFile = new BoundProperty<>(USER_HOME);
         presentation.pickFile(selectedFile,
             notificationWithFeedback()
                 .withCaption("Pick a file")
@@ -236,7 +232,7 @@ public class DefaultMainScreenPresentationControl implements MainScreenPresentat
      ******************************************************************************************************************/
     private void onButtonPickDirectoryPressed()
       {
-        final BoundProperty<Path> selectedFolder = new BoundProperty<>(USER_HOME);
+        final var selectedFolder = new BoundProperty<>(USER_HOME);
         presentation.pickDirectory(selectedFolder,
             notificationWithFeedback()
                 .withCaption("Pick a directory")

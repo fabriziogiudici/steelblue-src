@@ -26,23 +26,20 @@
  */
 package it.tidalwave.role.ui.javafx.impl.tree;
 
-import javafx.scene.control.TreeItem;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import it.tidalwave.role.ContextManager;
-import it.tidalwave.util.spi.AsDelegateProvider;
-import it.tidalwave.role.spi.DefaultContextManagerProvider;
+import javafx.scene.control.TreeItem;
+import it.tidalwave.util.ContextManager;
+import it.tidalwave.role.impl.DefaultContextManagerProvider;
+import it.tidalwave.role.spi.SystemRoleFactory;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.Selectable;
 import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
 import it.tidalwave.role.ui.javafx.impl.common.DefaultCellBinder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.*;
 
 /***********************************************************************************************************************
  *
@@ -61,8 +58,8 @@ public class TreeViewBindingsTest
     @BeforeMethod
     public void setup()
       {
-        AsDelegateProvider.Locator.set(AsDelegateProvider.empty());
-        ContextManager.Locator.set(new DefaultContextManagerProvider());
+        SystemRoleFactory.reset();
+        ContextManager.set(new DefaultContextManagerProvider());
         executor = Executors.newSingleThreadExecutor();
         final CellBinder cellBinder = new DefaultCellBinder(executor);
         underTest = new TreeViewBindings(executor, cellBinder);
@@ -76,10 +73,10 @@ public class TreeViewBindingsTest
       throws InterruptedException
       {
         // given
-        final Selectable selectable = mock(Selectable.class);
-        final Object datum = new Object();
-        final PresentationModel oldPm = PresentationModel.of(datum, selectable);
-        final PresentationModel pm = PresentationModel.of(datum, selectable);
+        final var selectable = mock(Selectable.class);
+        final var datum = new Object();
+        final var oldPm = PresentationModel.of(datum, selectable);
+        final var pm = PresentationModel.of(datum, selectable);
         // when
         underTest.getSelectionListener().asTreeItemChangeListener().changed(null, new TreeItem<>(oldPm), new TreeItem<>(pm));
         // then
@@ -96,9 +93,9 @@ public class TreeViewBindingsTest
     public void treeItemChangeListener_must_do_nothing_when_there_is_no_Selectable_role()
       {
         // given
-        final Object datum = new Object();
-        final PresentationModel oldPm = PresentationModel.of(datum);
-        final PresentationModel pm = PresentationModel.of(datum);
+        final var datum = new Object();
+        final var oldPm = PresentationModel.of(datum);
+        final var pm = PresentationModel.of(datum);
         // when
         underTest.getSelectionListener().asTreeItemChangeListener().changed(null, new TreeItem<>(oldPm), new TreeItem<>(pm));
         // then

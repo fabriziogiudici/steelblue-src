@@ -28,7 +28,6 @@ package it.tidalwave.role.ui.javafx;
 
 import javax.annotation.Nonnull;
 import java.util.WeakHashMap;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import lombok.extern.slf4j.Slf4j;
@@ -85,9 +84,9 @@ public class StackPaneSelector // FIXME: rename, introduce interface
       {
         log.info("setShownNode({})", node);
 
-        for (final StackPane stackPane : stackPaneMapByArea.values())
+        for (final var stackPane : stackPaneMapByArea.values())
           {
-            final ObservableList<Node> children = stackPane.getChildren();
+            final var children = stackPane.getChildren();
 
             if (children.contains(node))
               {
@@ -107,7 +106,7 @@ public class StackPaneSelector // FIXME: rename, introduce interface
     @Nonnull
     private StackPane findStackPaneFor (@Nonnull final String area)
       {
-        final StackPane stackPane = stackPaneMapByArea.get(area);
+        final var stackPane = stackPaneMapByArea.get(area);
 
         if (stackPane == null)
           {

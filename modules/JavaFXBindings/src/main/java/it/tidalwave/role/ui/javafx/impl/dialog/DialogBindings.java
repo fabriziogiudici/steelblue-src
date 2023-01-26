@@ -29,16 +29,14 @@ package it.tidalwave.role.ui.javafx.impl.dialog;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.application.Platform;
 import it.tidalwave.util.Callback;
 import it.tidalwave.util.ui.UserNotificationWithFeedback;
-import it.tidalwave.util.ui.UserNotificationWithFeedback.Feedback;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
-import javafx.scene.control.Alert;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -81,10 +79,10 @@ public class DialogBindings extends DelegateSupport
             dialog.setContentText(notification.getText());
             node.ifPresent(n -> dialog.getDialogPane().setContent(n));
 
-            final Feedback feedback = notification.getFeedback();
-            final boolean hasOnCancel = feedback.canCancel();
+            final var feedback = notification.getFeedback();
+            final var hasOnCancel = feedback.canCancel();
 
-            final ObservableList<ButtonType> buttonTypes = dialog.getDialogPane().getButtonTypes();
+            final var buttonTypes = dialog.getDialogPane().getButtonTypes();
             buttonTypes.clear();
             buttonTypes.add(ButtonType.OK);
 
@@ -95,9 +93,9 @@ public class DialogBindings extends DelegateSupport
 
 //                okButton.disableProperty().bind(new PropertyAdapter<>(valid)); // FIXME: doesn't work
 
-            final Optional<ButtonType> result = dialog.showAndWait();
+            final var result = dialog.showAndWait();
 
-            if (!result.isPresent())
+            if (result.isEmpty())
               {
                 if (hasOnCancel)
                   {

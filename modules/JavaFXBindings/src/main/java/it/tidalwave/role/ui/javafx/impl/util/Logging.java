@@ -28,16 +28,14 @@ package it.tidalwave.role.ui.javafx.impl.util;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.Optional;
 import it.tidalwave.util.As;
-import it.tidalwave.util.Finder;
 import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.Composite;
 import it.tidalwave.role.ui.Displayable;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.spi.impl.LogUtil.shortName;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
+import static it.tidalwave.util.ShortNames.shortName;
 
 /***********************************************************************************************************************
  *
@@ -51,7 +49,7 @@ public class Logging
 
     public static final String P_LOG_CHILDREN = Logging.class.getName() + ".logCompositeChildren";
 
-    public static final boolean logChildren = Boolean.valueOf(P_LOG_CHILDREN);
+    public static final boolean logChildren = Boolean.parseBoolean(P_LOG_CHILDREN);
 
     /*******************************************************************************************************************
      *
@@ -98,16 +96,14 @@ public class Logging
 
         if (object instanceof Aggregate)
           {
-            final Aggregate<?> aggregate = (Aggregate<?>)object;
+            final var aggregate = (Aggregate<?>)object;
             aggregate.getNames().forEach(name ->
-              {
-                logObject(indent + "    " + name + ": ", aggregate.getByName(name).get());
-              });
+                       logObject(indent + "    " + name + ": ", aggregate.getByName(name).get()));
           }
 
         if (object instanceof Composite)
           {
-            final Finder<?> finder = ((Composite<?, ?>)object).findChildren();
+            final var finder = ((Composite<?, ?>)object).findChildren();
 
             // this is optional because it would jeopardize incremental loading of tress and probably cause troubles
             if (!logChildren)

@@ -28,11 +28,10 @@ package it.tidalwave.role.ui.javafx.example.large.data;
 
 import javax.annotation.Nonnull;
 import it.tidalwave.util.As;
-import it.tidalwave.util.spi.AsSupport;
 import it.tidalwave.role.ui.Displayable;
-import lombok.experimental.Delegate;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.experimental.Delegate;
 
 /***********************************************************************************************************************
  *
@@ -47,7 +46,7 @@ import lombok.ToString;
 public class SimpleDciEntity implements As
   {
     @Delegate
-    private final AsSupport asDelegate;
+    private final As asDelegate;
 
     @Nonnull
     private final String name;
@@ -61,6 +60,6 @@ public class SimpleDciEntity implements As
         this.name = id;
         this.attribute1 = attribute1;
         this.attribute2 = attribute2;
-        asDelegate = new AsSupport(this, Displayable.of(name));
+        asDelegate = As.forObject(this, Displayable.of(name));
       }
   }

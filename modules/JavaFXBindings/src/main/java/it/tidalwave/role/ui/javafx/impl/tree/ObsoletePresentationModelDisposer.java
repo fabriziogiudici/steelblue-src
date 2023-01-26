@@ -60,7 +60,7 @@ public class ObsoletePresentationModelDisposer implements ChangeListener<TreeIte
         treeItem.getValue().dispose();
         treeItem.setValue(null);
 
-        for (final TreeItem<PresentationModel> childTreeItem : treeItem.getChildren())
+        for (final var childTreeItem : treeItem.getChildren())
           {
             disposeRecursively(childTreeItem);
           }

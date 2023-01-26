@@ -29,11 +29,11 @@ package it.tidalwave.role.ui.javafx.impl.common;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.function.Supplier;
-import it.tidalwave.role.Aggregate;
-import it.tidalwave.role.ui.PresentationModel;
 import javafx.beans.value.ObservableValueBase;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TreeTableColumn;
+import it.tidalwave.role.Aggregate;
+import it.tidalwave.role.ui.PresentationModel;
 import lombok.RequiredArgsConstructor;
 
 /***********************************************************************************************************************
@@ -51,10 +51,10 @@ public final class PresentationModelObservable extends ObservableValueBase
     private final Supplier<String> columnKeySupplier;
 
     @Override @Nonnull
-    public final PresentationModel getValue()
+    public PresentationModel getValue()
       {
-        final PresentationModel rowPm = rowPresentationModelSupplier.get();
-        final Optional<Aggregate<PresentationModel>> aggregate =
+        final var rowPm = rowPresentationModelSupplier.get();
+        final var aggregate =
                 (Optional<Aggregate<PresentationModel>>)(Object)rowPm.maybeAs(Aggregate.class);
         // FIXME: uses the column header names, should be an internal id instead
         return aggregate.flatMap(a -> a.getByName(columnKeySupplier.get()))

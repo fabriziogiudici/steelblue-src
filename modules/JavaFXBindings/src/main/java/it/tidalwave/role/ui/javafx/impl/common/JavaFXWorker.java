@@ -30,7 +30,6 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.function.Consumer;
@@ -38,7 +37,6 @@ import java.util.function.Supplier;
 import javafx.collections.ObservableList;
 import javafx.application.Platform;
 import it.tidalwave.util.annotation.VisibleForTesting;
-import it.tidalwave.role.SimpleComposite;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.javafx.impl.util.Logging;
 import lombok.experimental.UtilityClass;
@@ -64,7 +62,7 @@ public class JavaFXWorker
           {
             executor.execute(() ->
               {
-                final T value = backgroundSupplier.get();
+                final var value = backgroundSupplier.get();
                 Platform.runLater(() -> javaFxFinalizer.accept(value));
               });
           }
@@ -84,11 +82,11 @@ public class JavaFXWorker
     public static ObservableList<PresentationModel> childrenPm (@Nonnull final PresentationModel pm,
                                                                 @Nonnegative int depth)
       {
-        final String indent = INDENT.substring(0, depth * 8);
-        final Optional<SimpleComposite> composite = pm.maybeAs(_SimpleComposite_);
+        final var indent = INDENT.substring(0, depth * 8);
+        final var composite = pm.maybeAs(_SimpleComposite_);
         composite.ifPresent(c -> Logging.logObject(indent, composite));
         final List<PresentationModel> items = composite.map(c -> c.findChildren().results()).orElse(emptyList());
-        final List<Object> badItems = extractBadItems(items);
+        final var badItems = extractBadItems(items);
 
         if (!badItems.isEmpty()) // defensive
           {

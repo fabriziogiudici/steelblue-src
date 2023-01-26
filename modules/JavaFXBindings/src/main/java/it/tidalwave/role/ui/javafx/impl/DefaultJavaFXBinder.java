@@ -31,19 +31,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
-import it.tidalwave.role.ui.Displayable;
-import it.tidalwave.role.ui.Styleable;
-import it.tidalwave.role.ui.UserActionProvider;
-import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
-import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
-import it.tidalwave.role.ui.javafx.impl.common.DefaultCellBinder;
-import javafx.beans.property.Property;
 import javafx.beans.binding.BooleanExpression;
-import javafx.collections.ObservableList;
+import javafx.beans.property.Property;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-import javafx.stage.Window;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.MenuItem;
@@ -54,25 +45,32 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.stage.Window;
 import javafx.application.Platform;
 import it.tidalwave.role.SimpleComposite;
-import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.BoundProperty;
+import it.tidalwave.role.ui.Displayable;
+import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.Styleable;
 import it.tidalwave.role.ui.UserAction;
+import it.tidalwave.role.ui.UserActionProvider;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
-import it.tidalwave.role.ui.javafx.impl.dialog.DialogBindings;
 import it.tidalwave.role.ui.javafx.impl.combobox.ComboBoxBindings;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
+import it.tidalwave.role.ui.javafx.impl.common.DefaultCellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.PropertyAdapter;
+import it.tidalwave.role.ui.javafx.impl.dialog.DialogBindings;
 import it.tidalwave.role.ui.javafx.impl.filechooser.FileChooserBindings;
 import it.tidalwave.role.ui.javafx.impl.list.ListViewBindings;
 import it.tidalwave.role.ui.javafx.impl.tableview.TableViewBindings;
 import it.tidalwave.role.ui.javafx.impl.tree.TreeViewBindings;
 import it.tidalwave.role.ui.javafx.impl.treetable.TreeTableViewBindings;
-import it.tidalwave.role.ui.javafx.impl.common.PropertyAdapter;
 import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
-import static java.util.Collections.*;
-import static java.util.Objects.*;
-import static java.util.stream.Collectors.toList;
+import static java.util.Collections.emptyList;
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.*;
 import static it.tidalwave.role.SimpleComposite._SimpleComposite_;
 import static it.tidalwave.role.ui.Displayable._Displayable_;
 import static it.tidalwave.role.ui.Styleable._Styleable_;
@@ -225,13 +223,12 @@ public class DefaultJavaFXBinder implements JavaFXBinder
       {
         assert Platform.isFxApplicationThread();
 
-        final ToggleGroup group = new ToggleGroup();
-        final ObservableList<Node> children = pane.getChildren();
-        final ObservableList<String> prototypeStyleClass = children.get(0).getStyleClass();
+        final var group = new ToggleGroup();
+        final var children = pane.getChildren();
+        final var prototypeStyleClass = children.get(0).getStyleClass();
         final SimpleComposite<PresentationModel> pmc = pm.as(_SimpleComposite_);
-        children.setAll(pmc.findChildren().results().stream()
-                                                    .map(cpm -> createToggleButton(cpm, prototypeStyleClass, group))
-                                                    .collect(toList()));
+        children.setAll(pmc.findChildren().stream().map(cpm -> createToggleButton(cpm, prototypeStyleClass, group))
+                                                   .collect(toList()));
       }
 
     /*******************************************************************************************************************
@@ -244,19 +241,19 @@ public class DefaultJavaFXBinder implements JavaFXBinder
       {
         assert Platform.isFxApplicationThread();
 
-        final ObservableList<ColumnConstraints> columnConstraints = gridPane.getColumnConstraints();
-        final ObservableList<Node> children = gridPane.getChildren();
+        final var columnConstraints = gridPane.getColumnConstraints();
+        final var children = gridPane.getChildren();
 
         columnConstraints.clear();
         children.clear();
-        final AtomicInteger columnIndex = new AtomicInteger(0);
+        final var columnIndex = new AtomicInteger(0);
 
         actions.forEach(menuAction ->
           {
-            final ColumnConstraints column = new ColumnConstraints();
+            final var column = new ColumnConstraints();
             column.setPercentWidth(100.0 / actions.size());
             columnConstraints.add(column);
-            final Button button = createButton();
+            final var button = createButton();
             GridPane.setConstraints(button, columnIndex.getAndIncrement(), 0);
             bind(button, menuAction);
             children.add(button);
@@ -274,7 +271,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     @Nonnull
     private Button createButton()
       {
-        final Button button = new Button();
+        final var button = new Button();
         GridPane.setHgrow(button, Priority.ALWAYS);
         GridPane.setVgrow(button, Priority.ALWAYS);
         GridPane.setHalignment(button, HPos.CENTER);
@@ -295,7 +292,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
                                              @Nonnull final List<String> baseStyleClass,
                                              @Nonnull final ToggleGroup group)
       {
-        final ToggleButton button = new ToggleButton();
+        final var button = new ToggleButton();
         button.setToggleGroup(group);
         button.setText(pm.maybeAs(_Displayable_).map(Displayable::getDisplayName).orElse(""));
         button.getStyleClass().addAll(baseStyleClass);

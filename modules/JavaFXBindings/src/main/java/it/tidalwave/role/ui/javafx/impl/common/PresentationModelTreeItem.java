@@ -26,8 +26,8 @@
  */
 package it.tidalwave.role.ui.javafx.impl.common;
 
-import javafx.scene.control.TreeItem;
 import javax.annotation.Nonnull;
+import javafx.scene.control.TreeItem;
 import it.tidalwave.role.ui.PresentationModel;
 import static it.tidalwave.role.Composite._Composite_;
 

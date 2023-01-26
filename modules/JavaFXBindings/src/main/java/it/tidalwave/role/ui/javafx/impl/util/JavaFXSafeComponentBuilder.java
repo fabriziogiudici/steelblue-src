@@ -26,19 +26,19 @@
  */
 package it.tidalwave.role.ui.javafx.impl.util;
 
-import javax.annotation.Nonnull;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator;
 import javafx.fxml.FXMLLoader;
+import javafx.application.Platform;
+import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator;
+import it.tidalwave.util.ReflectionUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static lombok.AccessLevel.PRIVATE;
@@ -64,7 +64,7 @@ public final class JavaFXSafeComponentBuilder<I, T extends I>
     @Nonnull
     public static <J, X extends J> JavaFXSafeComponentBuilder<J, X> builderFor (@Nonnull final Class<X> componentClass)
       {
-        final Class<J> interfaceClass = (Class<J>)componentClass.getInterfaces()[0]; // FIXME: guess
+        final var interfaceClass = (Class<J>)componentClass.getInterfaces()[0]; // FIXME: guess
         return new JavaFXSafeComponentBuilder<>(componentClass, interfaceClass);
       }
 
@@ -110,7 +110,7 @@ public final class JavaFXSafeComponentBuilder<I, T extends I>
     public synchronized T createInstance (@Nonnull final Object fxmlFieldsSource)
       {
         log.trace("createInstance({})", fxmlFieldsSource);
-        T presentation = presentationRef.get();
+        var presentation = presentationRef.get();
 
         if (presentation == null)
           {
@@ -142,7 +142,7 @@ public final class JavaFXSafeComponentBuilder<I, T extends I>
      *
      ******************************************************************************************************************/
     @Nonnull
-    protected T createComponentInstance()
+    private T createComponentInstance()
       {
         return ReflectionUtils.instantiateWithDependencies(componentClass, JavaFXSafeProxyCreator.BEANS);
       }
@@ -155,8 +155,8 @@ public final class JavaFXSafeComponentBuilder<I, T extends I>
     @Nonnull
     private T createComponentInstanceInJAT()
       {
-        final AtomicReference<T> reference = new AtomicReference<>();
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final var reference = new AtomicReference<T>();
+        final var countDownLatch = new CountDownLatch(1);
 
         Platform.runLater(() ->
           {
@@ -190,16 +190,16 @@ public final class JavaFXSafeComponentBuilder<I, T extends I>
         log.debug("injecting {} with fields from {}", target, source);
         final Map<String, Object> valuesMapByFieldName = new HashMap<>();
 
-        for (final Field field : source.getClass().getDeclaredFields())
+        for (final var field : source.getClass().getDeclaredFields())
           {
             if (field.getAnnotation(FXML.class) != null)
               {
-                final String name = field.getName();
+                final var name = field.getName();
 
                 try
                   {
                     field.setAccessible(true);
-                    final Object value = field.get(source);
+                    final var value = field.get(source);
                     valuesMapByFieldName.put(name, value);
                     log.trace(">>>> available field {}: {}", name, value);
                   }
@@ -210,14 +210,14 @@ public final class JavaFXSafeComponentBuilder<I, T extends I>
               }
           }
 
-        for (final Field field : target.getClass().getDeclaredFields())
+        for (final var field : target.getClass().getDeclaredFields())
           {
-            final FXML fxml = field.getAnnotation(FXML.class);
+            final var fxml = field.getAnnotation(FXML.class);
 
             if (fxml != null)
               {
-                final String name = field.getName();
-                final Object value = valuesMapByFieldName.get(name);
+                final var name = field.getName();
+                final var value = valuesMapByFieldName.get(name);
 
                 if (value == null)
                   {

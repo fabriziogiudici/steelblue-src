@@ -29,19 +29,19 @@ package it.tidalwave.role.ui.javafx.impl.tableview;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
-import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
-import it.tidalwave.role.ui.PresentationModel;
-import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
-import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
-import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
-import it.tidalwave.role.ui.javafx.impl.common.PresentationModelObservable;
-import javafx.util.Callback;
-import javafx.collections.ObservableList;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.util.Callback;
+import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
+import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
+import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
+import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
+import it.tidalwave.role.ui.javafx.impl.common.PresentationModelObservable;
 import lombok.extern.slf4j.Slf4j;
 import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
 
@@ -81,7 +81,7 @@ public class TableViewBindings extends DelegateSupport
         assertIsFxApplicationThread();
         log.debug("bind({}, {}, {})", tableView, pm, callback);
 
-        final ReadOnlyObjectProperty<PresentationModel> selectedProperty = tableView.getSelectionModel().selectedItemProperty();
+        final var selectedProperty = tableView.getSelectionModel().selectedItemProperty();
         selectedProperty.removeListener(changeListener);
         JavaFXWorker.run(executor,
                          () -> childrenPm(pm),

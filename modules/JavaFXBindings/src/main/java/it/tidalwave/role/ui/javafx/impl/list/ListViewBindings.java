@@ -30,24 +30,24 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
-import javafx.collections.ObservableList;
-import javafx.util.Callback;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import it.tidalwave.role.ui.UserAction;
+import javafx.util.Callback;
 import it.tidalwave.role.ui.PresentationModel;
+import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.javafx.impl.common.CellBinder;
-import it.tidalwave.role.ui.javafx.impl.common.RoleBag;
 import it.tidalwave.role.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
 import it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker;
+import it.tidalwave.role.ui.javafx.impl.common.RoleBag;
 import lombok.extern.slf4j.Slf4j;
-import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.scene.input.KeyCode.*;
 import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
+import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
 
 /***********************************************************************************************************************
  *
@@ -91,7 +91,7 @@ public class ListViewBindings extends DelegateSupport
           {
             if (List.of(SPACE, ENTER).contains(event.getCode()))
               {
-                final PresentationModel selectedPm = listView.getSelectionModel().getSelectedItem();
+                final var selectedPm = listView.getSelectionModel().getSelectedItem();
                 // TODO: must call the default action - but should we look up it again?
                 // Otherwise emulate mouse double click on the cell
                 ListViewBindings.log.debug("ListView onKeyPressed: {}", selectedPm);
@@ -99,13 +99,13 @@ public class ListViewBindings extends DelegateSupport
                 executor.execute(() ->
                   {
                     // FIXME: it would be nicer to retrieve the cell and its associated RoleBag?
-                    final RoleBag roles = new RoleBag(selectedPm, List.of(_UserActionProvider_));
+                    final var roles = new RoleBag(selectedPm, List.of(_UserActionProvider_));
                     roles.getDefaultUserAction().ifPresent(UserAction::actionPerformed);
                   });
               }
           });
 
-        final ReadOnlyObjectProperty<PresentationModel> selectedProperty = listView.getSelectionModel().selectedItemProperty();
+        final var selectedProperty = listView.getSelectionModel().selectedItemProperty();
         selectedProperty.removeListener(changeListener);
         listView.setItems(observableArrayList()); // quick clear in case of long operations FIXME doesn't work
         JavaFXWorker.run(executor,

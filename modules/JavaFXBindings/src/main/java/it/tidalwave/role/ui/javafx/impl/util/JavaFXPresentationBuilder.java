@@ -27,8 +27,8 @@
 package it.tidalwave.role.ui.javafx.impl.util;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-import static it.tidalwave.role.ui.javafx.impl.util.JavaFXSafeComponentBuilder.*;
+import it.tidalwave.util.ReflectionUtils;
+import static it.tidalwave.role.ui.javafx.impl.util.JavaFXSafeComponentBuilder.builderFor;
 
 /***********************************************************************************************************************
  *
@@ -42,7 +42,7 @@ public abstract class JavaFXPresentationBuilder<I, T extends I>
 
     public JavaFXPresentationBuilder()
       {
-        final List<Class<?>> t = ReflectionUtils.getTypeArguments(JavaFXPresentationBuilder.class, getClass());
+        final var t = ReflectionUtils.getTypeArguments(JavaFXPresentationBuilder.class, getClass());
         builder = builderFor((Class<I>)t.get(0), (Class<T>)t.get(1));
       }
 
