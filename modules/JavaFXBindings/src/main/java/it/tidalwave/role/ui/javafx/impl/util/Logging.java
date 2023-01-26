@@ -49,7 +49,7 @@ public class Logging
 
     public static final String P_LOG_CHILDREN = Logging.class.getName() + ".logCompositeChildren";
 
-    public static final boolean logChildren = Boolean.parseBoolean(P_LOG_CHILDREN);
+    public static final boolean logChildren = Boolean.getBoolean(P_LOG_CHILDREN);
 
     /*******************************************************************************************************************
      *
