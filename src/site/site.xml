@@ -27,23 +27,16 @@
     *********************************************************************************************************************
 
 -->
-<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
-
-    <bannerLeft>
-        <name>${project.name}</name>
-<!--        <src>http://tidalwave.it/media/Tidalwave%20Logo.png</src>-->
-        <href>https://tidalwave.it/projects/thesefoolishthings</href>
+<site xmlns="http://maven.apache.org/SITE/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/SITE/2.0.0 https://maven.apache.org/xsd/site-2.0.0.xsd">
+    <bannerLeft name="${project.name}" href="http://tidalwave.it">
+        <image src="http://tidalwave.it/media/Tidalwave%20Logo.png" />
     </bannerLeft>
-    <bannerRight>
-        <src>http://tidalwave.it/media/Tidalwave%20Logo.png</src>
-    </bannerRight>
 
     <skin>
         <groupId>org.apache.maven.skins</groupId>
         <artifactId>maven-fluido-skin</artifactId>
-        <version>1.7</version>
+        <version>${tft.maven-fluido-skin.version}</version>
     </skin>
 
     <custom>
@@ -55,7 +48,7 @@
                 <sitesearch>${project.url}</sitesearch>
             </googleSearch>
             <gitHub>
-                <projectId>tidalwave-it/thesefoolishthings-src</projectId>
+                <projectId>tidalwave-it/steelblue-src</projectId>
                 <ribbonOrientation>right</ribbonOrientation>
                 <ribbonColor>gray</ribbonColor>
             </gitHub>
@@ -67,9 +60,18 @@
     </custom>
 
     <body>
-        <menu name="Overview">
+        <menu name="Overview" inherit="top">
             <item name="Introduction" href="index.html"/>
         </menu>
+
+        <menu name="SpotBugs" inherit="top">
+        <!-- It's not possible to have a SpotBugs aggregate: https://spotbugs.github.io/spotbugs-maven-plugin/faq.html#Aggregate_Reporting -->
+            <item name="JavaFX Bindings" href="it-tidalwave-steelblue-modules/it-tidalwave-role-ui-javafx/spotbugs.html"/>
+            <item name="Example Model" href="it-tidalwave-steelblue-modules/it-tidalwave-steelblue-examples/it-tidalwave-steelblue-example-model/spotbugs.html"/>
+            <item name="Example Presentation" href="it-tidalwave-steelblue-modules/it-tidalwave-steelblue-examples/it-tidalwave-steelblue-example-presentation/spotbugs.html"/>
+            <item name="Example JavaFX Presentation" href="it-tidalwave-steelblue-modules/it-tidalwave-steelblue-examples/it-tidalwave-steelblue-example-presentation-javafx/spotbugs.html"/>
+        </menu>
+
         <menu ref="reports" inherit="bottom"/>
     </body>
-</project>
+</site>
