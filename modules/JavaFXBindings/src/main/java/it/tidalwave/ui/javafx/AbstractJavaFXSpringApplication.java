@@ -28,7 +28,6 @@ package it.tidalwave.ui.javafx;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
-import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.io.IOException;
@@ -42,6 +41,8 @@ import org.slf4j.LoggerFactory;
 import it.tidalwave.role.ui.javafx.ApplicationPresentationAssembler;
 
 /***********************************************************************************************************************
+ *
+ * A base class for all variants of JavaFX applications with Spring.
  *
  * @author  Fabrizio Giudici
  *
@@ -101,7 +102,7 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
 
     /*******************************************************************************************************************
      *
-     *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
@@ -129,7 +130,7 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
 
     /*******************************************************************************************************************
      *
-     *
+     * {@inheritDoc}
      *
      ******************************************************************************************************************/
     @Override
@@ -152,14 +153,12 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
 
     /*******************************************************************************************************************
      *
-     *
+     * Logs all the system properties.
      *
      ******************************************************************************************************************/
     private void logProperties()
       {
-        final SortedMap<Object, Object> map = new TreeMap<>(System.getProperties());
-
-        for (final var e : map.entrySet())
+        for (final var e : new TreeMap<>(System.getProperties()).entrySet())
           {
             log.debug("{}: {}", e.getKey(), e.getValue());
           }

@@ -78,9 +78,9 @@ public class PropertyAdapter<T> implements Property<T>
             Platform.runLater(() ->
               {
                 new ArrayList<>(invalidationListeners)
-                        .forEach(listener -> listener.invalidated(PropertyAdapter.this));
+                        .forEach(listener -> listener.invalidated(this));
                 new ArrayList<>(changeListeners)
-                        .forEach(listener -> listener.changed(PropertyAdapter.this,
+                        .forEach(listener -> listener.changed(this,
                                 (T)event.getOldValue(), (T)event.getNewValue()));
               });
           }

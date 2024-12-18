@@ -28,6 +28,7 @@ package it.tidalwave.ui.javafx;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Locale;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.slf4j.Logger;
@@ -54,7 +55,7 @@ public class JavaFXSpringApplication extends AbstractJavaFXSpringApplication
     protected ConfigurableApplicationContext createApplicationContext()
       {
         final var springConfigLocations = new ArrayList<String>();
-        final var osName = System.getProperty("os.name", "").toLowerCase();
+        final var osName = System.getProperty("os.name", "").toLowerCase(Locale.getDefault());
         springConfigLocations.add("classpath*:/META-INF/*AutoBeans.xml");
 
         if (osName.contains("os x"))

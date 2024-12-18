@@ -37,7 +37,7 @@ import static it.tidalwave.role.ui.Displayable._Displayable_;
 
 /***********************************************************************************************************************
  *
- * The JavaFX implementation for {@link it.tidalwave.ui.ToolBarModel}.
+ * The JavaFX implementation for {@link it.tidalwave.role.ui.ToolBarModel}.
  *
  * @author  Fabrizio Giudici
  * @since   1.1-ALPHA-4

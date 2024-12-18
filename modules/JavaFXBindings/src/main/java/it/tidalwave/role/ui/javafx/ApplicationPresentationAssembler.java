@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  * @param <DELEGATE>
  *
  * @since   1.0-ALPHA-13
- * @author  Fabrizio Giudici (Fabrizio.Giudici@tidalwave.it)
+ * @author  Fabrizio Giudici
  *
  **********************************************************************************************************************/
 public interface ApplicationPresentationAssembler<DELEGATE>

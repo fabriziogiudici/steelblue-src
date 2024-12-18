@@ -111,13 +111,13 @@ public class TreeItemDelegateSupport extends DelegateSupport
 
         pm.addPropertyChangeListener(PresentationModel.PROPERTY_CHILDREN, recreateChildrenOnUpdateListener);
 
-        item.expandedProperty().addListener(((observable, oldValue, newValue) ->
+        item.expandedProperty().addListener((observable, oldValue, newValue) ->
           {
             if (newValue)
               {
                 setChildren(item, depth + 1);
               }
-          }));
+          });
 
         return item;
       }

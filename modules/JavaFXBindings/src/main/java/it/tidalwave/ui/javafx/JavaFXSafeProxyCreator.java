@@ -61,7 +61,7 @@ import static lombok.AccessLevel.PRIVATE;
  *   {
  *     private static final String FXML_URL = "/my/package/javafx/FooBar.fxml";
  *
- *     @Inject
+ *     {@literal @}Inject
  *     private FlowController flowController;
  *
  *     private final NodeAndDelegate nad = createNodeAndDelegate(getClass(), FXML_URL);
@@ -97,22 +97,22 @@ import static lombok.AccessLevel.PRIVATE;
  * // This is not a Spring bean - created by the FXMLLoader
  * public class JavaFxFooBarPresentationDelegate implements FooBarPresentation
  *   {
- *     @FXML
+ *     {@literal @}FXML
  *     private Label label;
  *
- *     @FXML
+ *     {@literal @}FXML
  *     private Button button;
  *
- *     @Inject // the only thing that can be injected, by means of JavaFXSafeProxyCreator
+ *     {@literal @}Inject // the only thing that can be injected, by means of JavaFXSafeProxyCreator
  *     private JavaFxBinder binder;
  *
- *     @Override
+ *     {@literal @}Override
  *     public void bind (final UserAction action)
  *       {
  *         binder.bind(button, action);
  *       }
  *
- *     @Override
+ *     {@literal @}Override
  *     public void showData (final String data)
  *       {
  *         label.setText(data);
