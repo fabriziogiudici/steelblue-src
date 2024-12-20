@@ -35,10 +35,10 @@ import javafx.stage.Stage;
 import javafx.application.Platform;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator.NodeAndDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import it.tidalwave.role.ui.javafx.ApplicationPresentationAssembler;
+import it.tidalwave.role.ui.javafx.PresentationAssembler;
 
 /***********************************************************************************************************************
  *
@@ -60,7 +60,7 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
      *
      ******************************************************************************************************************/
     @Override @Nonnull
-    protected NodeAndDelegate createParent()
+    protected NodeAndDelegate<?> createParent()
       throws IOException
       {
         return NodeAndDelegate.load(getClass(), applicationFxml);
@@ -98,7 +98,7 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
      *
      ******************************************************************************************************************/
     @Nonnull
-    abstract protected ConfigurableApplicationContext createApplicationContext();
+    protected abstract ConfigurableApplicationContext createApplicationContext();
 
     /*******************************************************************************************************************
      *
@@ -106,11 +106,18 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
      *
      ******************************************************************************************************************/
     @Override
-    protected void onStageCreated (@Nonnull final Stage stage,
-                                   @Nonnull final NodeAndDelegate applicationNad)
+    protected final void onStageCreated (@Nonnull final Stage stage,
+                                         @Nonnull final NodeAndDelegate<?> applicationNad)
       {
         assert Platform.isFxApplicationThread();
         JavaFXSafeProxyCreator.getJavaFxBinder().setMainWindow(stage);
+        final var delegate = applicationNad.getDelegate();
+
+        if (PresentationAssembler.class.isAssignableFrom(delegate.getClass()))
+          {
+            ((PresentationAssembler)delegate).assemble(applicationContext);
+          }
+
         runApplicationAssemblers(applicationNad);
         Executors.newSingleThreadExecutor().execute(() -> onStageCreated(applicationContext));
       }
