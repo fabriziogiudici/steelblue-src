@@ -46,6 +46,10 @@
     <description>SteelBlue (examples)</description>
 
     <properties>
+        <tft.javac.source>21</tft.javac.source>
+        <tft.javac.target>21</tft.javac.target>
+        <tft.javac.release>21</tft.javac.release>
+        <tft.javafx.version>23.0.1</tft.javafx.version>
         <!-- Generate all javadocs and UML diagrams. -->
         <tft.javadoc.excludePackageNames/>
     </properties>
