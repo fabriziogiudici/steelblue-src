@@ -1,28 +1,27 @@
 /*
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * SteelBlue: DCI User Interfaces
  * http://tidalwave.it/projects/steelblue
  *
  * Copyright (C) 2015 - 2024 by Tidalwave s.a.s. (http://tidalwave.it)
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License.
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * git clone https://bitbucket.org/tidalwave/steelblue-src
  * git clone https://github.com/tidalwave-it/steelblue-src
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  */
 package it.tidalwave.role.ui.example.presentation.impl;
 
@@ -54,13 +53,13 @@ import static it.tidalwave.util.ui.UserNotificationWithFeedback.*;
 import static it.tidalwave.role.ui.Presentable._Presentable_;
 import static it.tidalwave.role.ui.spi.PresentationModelCollectors.toCompositePresentationModel;
 
-/***********************************************************************************************************************
+/***************************************************************************************************************************************************************
  *
  * @stereotype  Control
  *
  * @author  Fabrizio Giudici
  *
- **********************************************************************************************************************/
+ **************************************************************************************************************************************************************/
 @Component @RequiredArgsConstructor
 public class DefaultMainPanelPresentationControl implements MainPanelPresentationControl
   {
@@ -109,11 +108,9 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
     // Then there can be a set of variables that represent the internal state of the control.
     @VisibleForTesting int status = 1;
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * At {@link PostConstruct} time the control just performs the binding to the presentation.
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: initialization
     @PostConstruct
     @VisibleForTesting void initialize()
@@ -122,8 +119,7 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
       }
     // END SNIPPET: initialization
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@inheritDoc}
      *
      * This method demonstrates the typical idiom for populating model:
@@ -131,8 +127,7 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
      * 1. A dao is called to provide raw model - let's say in form of collections;
      * 2. Objects in the collection are transformed into PresentationModels.
      * 3. The PresentationModels are then passed to the presentation.
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: populate
     @Override
     public void populate ()
@@ -149,15 +144,13 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
       }
     // END SNIPPET: populate
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * Factory method for the PresentationModel of SimpleEntity instances.
      *
      * It aggregates a few extra roles into the PresentationModel that are used by the control, such as callbacks
      * for action associated to the context menu. Also a Displayable role is usually injected to control the rendering
      * of entities.
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: pmSimpleEntity
     @Nonnull
     private PresentationModel pmFor (@Nonnull final SimpleEntity entity)
@@ -172,11 +165,9 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
       }
     // END SNIPPET: pmSimpleEntity
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * Factory method for the PresentationModel of SimpleDciEntity instances.
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: pmSimpleDciEntity
     @Nonnull
     private PresentationModel pmFor (@Nonnull final SimpleDciEntity entity)
@@ -197,9 +188,9 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
 
     // Below simple business methods, as per usual business.
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: onButtonPressed
     private void onButtonPressed()
       {
@@ -209,9 +200,9 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
       }
     // END SNIPPET: onButtonPressed
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: onButtonDialogOkPressed
     private void onButtonDialogOkPressed()
       {
@@ -222,9 +213,9 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
       }
     // END SNIPPET: onButtonDialogOkPressed
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: onButtonDialogOkCancelPressed
     private void onButtonDialogOkCancelPressed()
       {
@@ -236,11 +227,9 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
       }
     // END SNIPPET: onButtonDialogOkCancelPressed
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * This method demonstrates how to pick a file name by using the proper UI dialog.
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: onButtonPickFilePressed
     private void onButtonPickFilePressed()
       {
@@ -253,11 +242,9 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
       }
     // END SNIPPET: onButtonPickFilePressed
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * This method demonstrates how to pick a directory name by using the proper UI dialog.
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: onButtonPickDirectoryPressed
     private void onButtonPickDirectoryPressed()
       {
@@ -270,9 +257,9 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
       }
     // END SNIPPET: onButtonPickDirectoryPressed
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: onSelected
     private void onSelected (@Nonnull final Object object)
       {
@@ -280,9 +267,9 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
       }
     // END SNIPPET: onSelected
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: action1
     private void action1 (@Nonnull final Object object)
       {
@@ -290,17 +277,17 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
       }
     // END SNIPPET: action1
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     private void action2 (@Nonnull final Object object)
       {
         presentation.notify("Action 2 on " + object);
       }
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     private void action3 (@Nonnull final Object object)
       {
         presentation.notify("Action 3 on " + object);

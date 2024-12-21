@@ -1,28 +1,27 @@
 /*
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * SteelBlue: DCI User Interfaces
  * http://tidalwave.it/projects/steelblue
  *
  * Copyright (C) 2015 - 2024 by Tidalwave s.a.s. (http://tidalwave.it)
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License.
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * git clone https://bitbucket.org/tidalwave/steelblue-src
  * git clone https://github.com/tidalwave-it/steelblue-src
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  */
 package it.tidalwave.role.ui.javafx.impl.util;
 
@@ -43,13 +42,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import static lombok.AccessLevel.PRIVATE;
 
-/***********************************************************************************************************************
+/***************************************************************************************************************************************************************
  *
  * @stereotype Factory
  *
  * @author  Fabrizio Giudici
  *
- **********************************************************************************************************************/
+ **************************************************************************************************************************************************************/
 @RequiredArgsConstructor(access = PRIVATE) @Slf4j
 public final class JavaFXSafeComponentBuilder<I, T extends I>
   {
@@ -75,8 +74,7 @@ public final class JavaFXSafeComponentBuilder<I, T extends I>
         return new JavaFXSafeComponentBuilder<>(componentClass, interfaceClass);
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * Creates an instance of a surrogate JavaFX delegate. JavaFX delegates (controllers in JavaFX jargon) are those
      * objects with fields annotated with {@link @FXML} that are created by the {@link FXMLLoader} starting from a
      * {@code .fxml} file. Sometimes a surrogate delegate is needed, that is a class that is not mapped to any
@@ -85,8 +83,7 @@ public final class JavaFXSafeComponentBuilder<I, T extends I>
      * @param   componentClass      the class of the surrogate
      * @param   fxmlFieldsSource    the existing JavaFX delegate with {@code @FXML} annotated fields.
      * @return                      the new surrogate delegate
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Nonnull
     public static <J, X extends J> X createInstance (@Nonnull final Class<X> componentClass,
                                                      @Nonnull final Object fxmlFieldsSource)
@@ -95,8 +92,7 @@ public final class JavaFXSafeComponentBuilder<I, T extends I>
         return builder.createInstance(fxmlFieldsSource);
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * Creates an instance of a surrogate JavaFX delegate. JavaFX delegates (controllers in JavaFX jargon) are those
      * objects with fields annotated with {@link @FXML} that are created by the {@link FXMLLoader} starting from a
      * {@code .fxml} file. Sometimes a surrogate delegate is needed, that is a class that is not mapped to any
@@ -104,8 +100,7 @@ public final class JavaFXSafeComponentBuilder<I, T extends I>
      *
      * @param   fxmlFieldsSource    the existing JavaFX delegate with {@code @FXML} annotated fields.
      * @return                      the new surrogate delegate
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Nonnull
     public synchronized T createInstance (@Nonnull final Object fxmlFieldsSource)
       {
@@ -136,22 +131,18 @@ public final class JavaFXSafeComponentBuilder<I, T extends I>
         return presentation;
       }
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     *
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Nonnull
     private T createComponentInstance()
       {
         return ReflectionUtils.instantiateWithDependencies(componentClass, JavaFXSafeProxyCreator.BEANS);
       }
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     *
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Nonnull
     private T createComponentInstanceInJAT()
       {
@@ -177,14 +168,12 @@ public final class JavaFXSafeComponentBuilder<I, T extends I>
         return reference.get();
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * Inject fields annotated with {@link FXML} in {@code source} to {@code target}.
      *
      * @param   target  the target object
      * @param   source  the source object
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     private void copyFxmlFields (@Nonnull final Object target, @Nonnull final Object source)
       {
         log.debug("injecting {} with fields from {}", target, source);

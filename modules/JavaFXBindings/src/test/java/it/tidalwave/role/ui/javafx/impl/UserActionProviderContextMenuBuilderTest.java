@@ -1,28 +1,27 @@
 /*
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * SteelBlue: DCI User Interfaces
  * http://tidalwave.it/projects/steelblue
  *
  * Copyright (C) 2015 - 2024 by Tidalwave s.a.s. (http://tidalwave.it)
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License.
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * git clone https://bitbucket.org/tidalwave/steelblue-src
  * git clone https://github.com/tidalwave-it/steelblue-src
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  */
 package it.tidalwave.role.ui.javafx.impl;
 
@@ -53,11 +52,11 @@ import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-/***********************************************************************************************************************
+/***************************************************************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
- **********************************************************************************************************************/
+ **************************************************************************************************************************************************************/
 public class UserActionProviderContextMenuBuilderTest
   {
     @RequiredArgsConstructor
@@ -105,9 +104,9 @@ public class UserActionProviderContextMenuBuilderTest
         assertThat("Must not be in the FX thread!", Platform.isFxApplicationThread(), is(false));
       }
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @BeforeMethod
     public void setup()
       {
@@ -138,9 +137,9 @@ public class UserActionProviderContextMenuBuilderTest
         underTest = new DefaultCellBinder(executorService);
       }
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Test
     public void must_return_empty_list_when_UserActionProvider_is_not_present()
       {
@@ -151,9 +150,9 @@ public class UserActionProviderContextMenuBuilderTest
         assertThat(menuItems.isEmpty(), is(true));
       }
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Test
     public void must_set_the_MenuItem_text_from_UserAction_Displayable()
       {
@@ -171,9 +170,9 @@ public class UserActionProviderContextMenuBuilderTest
           }
       }
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Test
     public void must_invoke_callbacks_in_a_non_FX_thread()
       throws InterruptedException

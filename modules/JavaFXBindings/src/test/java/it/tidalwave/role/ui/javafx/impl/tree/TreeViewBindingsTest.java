@@ -1,28 +1,27 @@
 /*
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * SteelBlue: DCI User Interfaces
  * http://tidalwave.it/projects/steelblue
  *
  * Copyright (C) 2015 - 2024 by Tidalwave s.a.s. (http://tidalwave.it)
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License.
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * git clone https://bitbucket.org/tidalwave/steelblue-src
  * git clone https://github.com/tidalwave-it/steelblue-src
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  */
 package it.tidalwave.role.ui.javafx.impl.tree;
 
@@ -41,20 +40,20 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 
-/***********************************************************************************************************************
+/***************************************************************************************************************************************************************
  *
  * @author  Fabrizio Giudici
  *
- **********************************************************************************************************************/
+ **************************************************************************************************************************************************************/
 public class TreeViewBindingsTest
   {
     private TreeViewBindings underTest;
 
     private ExecutorService executor;
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @BeforeMethod
     public void setup()
       {
@@ -65,9 +64,9 @@ public class TreeViewBindingsTest
         underTest = new TreeViewBindings(executor, cellBinder);
       }
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Test
     public void treeItemChangeListener_must_callback_a_Selectable_on_selection_change()
       throws InterruptedException
@@ -86,9 +85,9 @@ public class TreeViewBindingsTest
         verifyNoMoreInteractions(selectable);
       }
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Test
     public void treeItemChangeListener_must_do_nothing_when_there_is_no_Selectable_role()
       {

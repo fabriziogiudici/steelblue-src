@@ -1,28 +1,27 @@
 /*
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * SteelBlue: DCI User Interfaces
  * http://tidalwave.it/projects/steelblue
  *
  * Copyright (C) 2015 - 2024 by Tidalwave s.a.s. (http://tidalwave.it)
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License.
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * git clone https://bitbucket.org/tidalwave/steelblue-src
  * git clone https://github.com/tidalwave-it/steelblue-src
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  */
 package it.tidalwave.role.ui.javafx.impl.common;
 
@@ -49,13 +48,13 @@ import static it.tidalwave.role.ui.Displayable._Displayable_;
 import static it.tidalwave.role.ui.Styleable._Styleable_;
 import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
 
-/***********************************************************************************************************************
+/***************************************************************************************************************************************************************
  *
  * An implementation of {@link CellBinder} that extracts information from a {@link UserActionProvider}.
  *
  * @author  Fabrizio Giudici
  *
- **********************************************************************************************************************/
+ **************************************************************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
 public class DefaultCellBinder implements CellBinder
   {
@@ -68,11 +67,9 @@ public class DefaultCellBinder implements CellBinder
     @Nonnull
     private final Executor executor;
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Override
     public void bind (@Nonnull final Cell<?> cell, @Nullable final As item, final boolean empty)
       {
@@ -87,14 +84,12 @@ public class DefaultCellBinder implements CellBinder
           }
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * Binds everything provided by the given {@link RoleBag} to the given {@link Cell}.
      *
      * @param     cell            the {@code Cell}
      * @param     roles           the role bag
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     private void bindAll (@Nonnull final Cell<?> cell, @Nonnull final RoleBag roles)
       {
         bindTextAndGraphic(cell, roles);
@@ -103,15 +98,13 @@ public class DefaultCellBinder implements CellBinder
         bindStyles(cell.getStyleClass(), roles);
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * Binds the text and eventual custom {@link javafx.scene.Node} provided by the given {@link RoleBag} to the given
      * {@link Cell}.
      *
      * @param     cell            the {@code Cell}
      * @param     roles           the role bag
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     private void bindTextAndGraphic (@Nonnull final Cell<?> cell, @Nonnull final RoleBag roles)
       {
         final var cgp = roles.get(_CustomGraphicProvider_);
@@ -119,15 +112,13 @@ public class DefaultCellBinder implements CellBinder
         cell.setText(cgp.map(c -> "").orElse(roles.get(_Displayable_).map(Displayable::getDisplayName).orElse("")));
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * Binds the default {@link UserAction}s provided by the given {@link RoleBag} as the default action of the given
      * {@link Cell} (activated by double click or key pressure).
      *
      * @param     cell            the {@code Cell}
      * @param     roles           the role bag
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     private void bindDefaultAction (@Nonnull final Cell<?> cell, @Nonnull final RoleBag roles)
       {
         roles.getDefaultUserAction().ifPresent(defaultAction ->
@@ -154,29 +145,25 @@ public class DefaultCellBinder implements CellBinder
           });
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * Binds the {@link UserAction}s provided by the given {@link RoleBag} as items of the contextual menu of a
      * {@link Cell}.
      *
      * @param     cell            the {@code Cell}
      * @param     roles           the role bag
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     private void bindContextMenu (@Nonnull final Cell<?> cell, @Nonnull final RoleBag roles)
       {
         final var menuItems = createMenuItems(roles);
         cell.setContextMenu(menuItems.isEmpty() ? null : new ContextMenu(menuItems.toArray(new MenuItem[0])));
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * Adds all the styles provided by the given {@link RoleBag} to a {@link ObservableList} of styles.
      *
      * @param     styleClasses    the destination where to add styles
      * @param     roles           the role bag
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Nonnull
     private void bindStyles (@Nonnull final ObservableList<String> styleClasses, @Nonnull final RoleBag roles)
       {
@@ -192,15 +179,13 @@ public class DefaultCellBinder implements CellBinder
         styleClasses.setAll(styles);
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * Create a list of {@link MenuItem}s for each action provided by the given {@link RoleBag}.
      * Don't directly return a ContextMenu otherwise it will be untestable.
      *
      * @param     roles           the role bag
      * @return                    the list of {@MenuItem}s
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Nonnull
     @VisibleForTesting public List<MenuItem> createMenuItems (@Nonnull final RoleBag roles)
       {
@@ -210,11 +195,9 @@ public class DefaultCellBinder implements CellBinder
                     .collect(toList());
       }
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     *
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     private void clearBindings (@Nonnull final Cell<?> cell)
       {
         cell.setText("");
@@ -224,14 +207,12 @@ public class DefaultCellBinder implements CellBinder
         cell.setOnMouseClicked(null);
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * Creates a {@link MenuItem} bound to the given action.
      *
      * @param     action          the action
      * @return                    the bound {@code MenuItem}
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Nonnull
     private MenuItem createMenuItem (@Nonnull final UserAction action)
       {

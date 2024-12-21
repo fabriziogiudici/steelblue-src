@@ -1,28 +1,27 @@
 /*
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * SteelBlue: DCI User Interfaces
  * http://tidalwave.it/projects/steelblue
  *
  * Copyright (C) 2015 - 2024 by Tidalwave s.a.s. (http://tidalwave.it)
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License.
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * git clone https://bitbucket.org/tidalwave/steelblue-src
  * git clone https://github.com/tidalwave-it/steelblue-src
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  */
 package it.tidalwave.role.ui.example.model;
 
@@ -53,13 +52,13 @@ import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.stream.Collectors.*;
 
-/***********************************************************************************************************************
+/***************************************************************************************************************************************************************
  *
  * A class that models a file with its attributes and children.
  *
  * @author  Fabrizio Giudici
  *
- **********************************************************************************************************************/
+ **************************************************************************************************************************************************************/
 @Immutable @EqualsAndHashCode @ToString @Slf4j
 public class FileEntity implements As, Displayable
   {
@@ -101,13 +100,11 @@ public class FileEntity implements As, Displayable
     @Delegate
     private final As delegate;
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * Creates a new instance related to the given path.
      *
      * @param   path    the path
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: constructor
     private FileEntity (@Nonnull final Path path)
       {
@@ -118,12 +115,10 @@ public class FileEntity implements As, Displayable
       }
     // END SNIPPET: constructor
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@return a new instance} related to the given path.
      * @param   path    the path
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: constructor
     @Nonnull
     public static FileEntity of (@Nonnull final Path path)
@@ -131,11 +126,9 @@ public class FileEntity implements As, Displayable
         return new FileEntity(path);
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@return the display name}. It's a static implementation of the {@link Displayable} role.
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: constructor
     @Override @Nonnull
     public String getDisplayName()
@@ -143,12 +136,10 @@ public class FileEntity implements As, Displayable
         return Optional.ofNullable(path.getFileName()).map(Path::toString).orElse("/");
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@return the creation date-time} of the file.
      * @throws  IOException if the file does not exist or cannot be accessed
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Nonnull
     public ZonedDateTime getCreationDateTime()
             throws IOException
@@ -156,12 +147,10 @@ public class FileEntity implements As, Displayable
         return toZoneDateTime(getBasicFileAttributes().creationTime());
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@return the last access date-time} of the file.
      * @throws  IOException if the file does not exist or cannot be accessed
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Nonnull
     public ZonedDateTime getLastAccessDateTime()
             throws IOException
@@ -169,12 +158,10 @@ public class FileEntity implements As, Displayable
         return toZoneDateTime(getBasicFileAttributes().lastAccessTime());
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@return the last modified date-time} of the file.
      * @throws  IOException if the file does not exist or cannot be accessed
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Nonnull
     public ZonedDateTime getLastModifiedDateTime()
             throws IOException
@@ -182,12 +169,10 @@ public class FileEntity implements As, Displayable
         return toZoneDateTime(getBasicFileAttributes().lastModifiedTime());
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@return the size} of the file.
      * @throws  IOException if the file does not exist or cannot be accessed
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Nonnegative
     public long getSize()
             throws IOException
@@ -195,12 +180,10 @@ public class FileEntity implements As, Displayable
         return Files.size(path);
       }
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@return the basic attributes} of the file.
      * @throws  IOException if the file does not exist or cannot be accessed
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Nonnull
     private BasicFileAttributes getBasicFileAttributes()
             throws IOException
@@ -208,9 +191,9 @@ public class FileEntity implements As, Displayable
         return Files.getFileAttributeView(path, BasicFileAttributeView.class).readAttributes();
       }
 
-    /*******************************************************************************************************************
+    /***********************************************************************************************************************************************************
      *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     @Nonnull
     private static ZonedDateTime toZoneDateTime (@Nonnull final FileTime dateTime)
       {

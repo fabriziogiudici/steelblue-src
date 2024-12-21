@@ -1,28 +1,27 @@
 /*
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * SteelBlue: DCI User Interfaces
  * http://tidalwave.it/projects/steelblue
  *
  * Copyright (C) 2015 - 2024 by Tidalwave s.a.s. (http://tidalwave.it)
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License.
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  *
  * git clone https://bitbucket.org/tidalwave/steelblue-src
  * git clone https://github.com/tidalwave-it/steelblue-src
  *
- * *********************************************************************************************************************
+ * *************************************************************************************************************************************************************
  */
 package it.tidalwave.role.ui.example.presentation.impl.javafx;
 
@@ -45,7 +44,7 @@ import it.tidalwave.role.ui.example.presentation.MainPanelPresentation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/***********************************************************************************************************************
+/***************************************************************************************************************************************************************
  *
  * The JavaFX controller just works as a dumb object with SteelBlue: it must implement in the most simple way each
  * method in the presentation interface, by applying simple manipulation to the UI. No logic here, neither presentaton
@@ -53,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @author  Fabrizio Giudici
  *
- **********************************************************************************************************************/
+ **************************************************************************************************************************************************************/
 @RequiredArgsConstructor @Slf4j
 public class JavaFXMainPanelPresentationDelegate implements MainPanelPresentation
   {
@@ -99,11 +98,9 @@ public class JavaFXMainPanelPresentationDelegate implements MainPanelPresentatio
     private TextArea taLog;
     // END SNIPPET: fields
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: bind
     @Override
     public void bind (@Nonnull final Bindings bindings)
@@ -117,11 +114,9 @@ public class JavaFXMainPanelPresentationDelegate implements MainPanelPresentatio
       }
     // END SNIPPET: bind
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: populate
     @Override
     public void populate (@Nonnull final PresentationModel pmSimpleEntities,
@@ -136,11 +131,9 @@ public class JavaFXMainPanelPresentationDelegate implements MainPanelPresentatio
       }
     // END SNIPPET: populate
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: notify1
     @Override
     public void notify (@Nonnull final UserNotificationWithFeedback notification)
@@ -149,11 +142,9 @@ public class JavaFXMainPanelPresentationDelegate implements MainPanelPresentatio
       }
     // END SNIPPET: notify1
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: notify2
     @Override
     public void notify (@Nonnull final String message)
@@ -162,11 +153,9 @@ public class JavaFXMainPanelPresentationDelegate implements MainPanelPresentatio
       }
     // END SNIPPET: notify2
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: pickFile
     @Override
     public void pickFile (@Nonnull final BoundProperty<Path> selectedFile,
@@ -176,11 +165,9 @@ public class JavaFXMainPanelPresentationDelegate implements MainPanelPresentatio
       }
     // END SNIPPET: pickFile
 
-    /*******************************************************************************************************************
-     *
+    /***********************************************************************************************************************************************************
      * {@inheritDoc}
-     *
-     ******************************************************************************************************************/
+     **********************************************************************************************************************************************************/
     // START SNIPPET: pickDirectory
     @Override
     public void pickDirectory (@Nonnull final BoundProperty<Path> selectedFolder,
