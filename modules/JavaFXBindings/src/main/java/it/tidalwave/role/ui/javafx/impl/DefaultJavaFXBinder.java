@@ -173,8 +173,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      * {@inheritDoc}
      **********************************************************************************************************************************************************/
     @Override
-    public <T> void bindBidirectionally (@Nonnull final Property<T> property1,
-                                         @Nonnull final BoundProperty<T> property2)
+    public <T> void bindBidirectionally (@Nonnull final Property<T> property1, @Nonnull final BoundProperty<T> property2)
       {
         assertIsFxApplicationThread();
         property1.bindBidirectional(new PropertyAdapter<>(executor, property2));
@@ -196,8 +195,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
         textField.textProperty().bindBidirectional(new PropertyAdapter<>(executor, textProperty));
 
         // FIXME: weak listener
-        validProperty.addPropertyChangeListener(
-                __ -> textField.setStyle(validProperty.get() ? "" : invalidTextFieldStyle));
+        validProperty.addPropertyChangeListener(__ -> textField.setStyle(validProperty.get() ? "" : invalidTextFieldStyle));
       }
 
     /***********************************************************************************************************************************************************
@@ -212,16 +210,14 @@ public class DefaultJavaFXBinder implements JavaFXBinder
         final var children = pane.getChildren();
         final var prototypeStyleClass = children.get(0).getStyleClass();
         final SimpleComposite<PresentationModel> pmc = pm.as(_SimpleComposite_);
-        children.setAll(pmc.findChildren().stream().map(cpm -> createToggleButton(cpm, prototypeStyleClass, group))
-                                                   .collect(toList()));
+        children.setAll(pmc.findChildren().stream().map(cpm -> createToggleButton(cpm, prototypeStyleClass, group)).collect(toList()));
       }
 
     /***********************************************************************************************************************************************************
      *
      **********************************************************************************************************************************************************/
     @Override
-    public void bindButtonsInPane (@Nonnull final GridPane gridPane,
-                                   @Nonnull final Collection<UserAction> actions)
+    public void bindButtonsInPane (@Nonnull final GridPane gridPane, @Nonnull final Collection<UserAction> actions)
       {
         assert Platform.isFxApplicationThread();
 
@@ -245,10 +241,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
       }
 
     /***********************************************************************************************************************************************************
-     * Create a {@code Button} for the menu bar.
-     *
-     * @param   text    the label of the button
-     * @return          the button
+     * {@return a new {@code Button}} for the menu bar.
      **********************************************************************************************************************************************************/
     @Nonnull
     private Button createButton()
@@ -268,9 +261,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      *
      **********************************************************************************************************************************************************/
     @Nonnull
-    private ToggleButton createToggleButton (@Nonnull final PresentationModel pm,
-                                             @Nonnull final List<String> baseStyleClass,
-                                             @Nonnull final ToggleGroup group)
+    private ToggleButton createToggleButton (@Nonnull final PresentationModel pm, @Nonnull final List<String> baseStyleClass, @Nonnull final ToggleGroup group)
       {
         final var button = new ToggleButton();
         button.setToggleGroup(group);
@@ -279,15 +270,6 @@ public class DefaultJavaFXBinder implements JavaFXBinder
         button.getStyleClass().addAll(pm.maybeAs(_Styleable_).map(Styleable::getStyles).orElse(emptyList()));
         pm.maybeAs(_UserActionProvider_).flatMap(UserActionProvider::getOptionalDefaultAction)
                                         .ifPresent(action -> bind(button, action));
-
-//        try
-//          {
-//            bind(button, pm.as(_UserActionProvider_).getDefaultAction());
-//          }
-//        catch (NotFoundException e)
-//          {
-//            // ok, no UserActionProvider
-//          }
 
         if (group.getSelectedToggle() == null)
           {

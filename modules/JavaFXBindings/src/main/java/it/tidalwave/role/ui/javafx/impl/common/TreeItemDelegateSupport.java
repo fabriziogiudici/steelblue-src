@@ -53,11 +53,9 @@ import static it.tidalwave.role.ui.javafx.impl.common.JavaFXWorker.childrenPm;
 public class TreeItemDelegateSupport extends DelegateSupport
   {
     @VisibleForTesting @Getter()
-    private final ChangeListenerSelectableAdapter selectionListener =
-          new ChangeListenerSelectableAdapter(executor);
+    private final ChangeListenerSelectableAdapter selectionListener = new ChangeListenerSelectableAdapter(executor);
 
-    private final ObsoletePresentationModelDisposer presentationModelDisposer =
-          new ObsoletePresentationModelDisposer();
+    private final ObsoletePresentationModelDisposer presentationModelDisposer = new ObsoletePresentationModelDisposer();
 
     /***********************************************************************************************************************************************************
      *

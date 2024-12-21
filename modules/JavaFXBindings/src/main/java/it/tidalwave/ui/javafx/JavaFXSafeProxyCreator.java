@@ -226,8 +226,7 @@ public class JavaFXSafeProxyCreator
         try
           {
             log.debug("Waiting for NodeAndDelegate initialisation in JavaFX thread...");
-            log.debug("If deadlocks and you need longer time with the debugger, set {} (current value: {})",
-                      P_TIMEOUT, initializerTimeout);
+            log.debug("If deadlocks and you need longer time with the debugger, set {} (current value: {})", P_TIMEOUT, initializerTimeout);
             latch.await(initializerTimeout, TimeUnit.SECONDS); // FIXME
           }
         catch (InterruptedException e)
@@ -242,8 +241,8 @@ public class JavaFXSafeProxyCreator
 
         if (nad.get() == null)
           {
-            final var message = String.format("Likely deadlock in the JavaFX Thread: couldn't create " +
-                                              "NodeAndDelegate: %s, %s", presentationClass, fxmlResourcePath);
+            final var message = String.format("Likely deadlock in the JavaFX Thread: couldn't create NodeAndDelegate: %s, %s",
+                                              presentationClass, fxmlResourcePath);
             throw new RuntimeException(message);
           }
 

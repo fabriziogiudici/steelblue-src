@@ -49,8 +49,7 @@ public class RoleBag
   {
     private final Map<Class<?>, List<Object>> map = new HashMap<>();
 
-    /** The default user action, which is he first action of the first
-     *  {@link it.tidalwave.role.ui.UserActionProvider}. */
+    /** The default user action, which is the first action of the first {@link it.tidalwave.role.ui.UserActionProvider}. */
     @Getter
     private final Optional<UserAction> defaultUserAction;
 
@@ -65,9 +64,7 @@ public class RoleBag
         roleTypes.forEach(roleType -> copyRoles(source, roleType));
         // computed NOW because we are in the background thread
         // TODO: perhaps it could be associated to a dummy key, instead of being returned by a getter?
-        defaultUserAction = getMany(_UserActionProvider_).stream()
-                                            .flatMap(a -> a.getOptionalDefaultAction().stream())
-                                            .findFirst();
+        defaultUserAction = getMany(_UserActionProvider_).stream().flatMap(a -> a.getOptionalDefaultAction().stream()).findFirst();
       }
 
     public <ROLE_TYPE> void put (@Nonnull final Class<ROLE_TYPE> roleClass, @Nonnull final ROLE_TYPE role)
