@@ -34,13 +34,13 @@
     <parent>
         <groupId>it.tidalwave.steelblue</groupId>
         <artifactId>it-tidalwave-steelblue-modules</artifactId>
-        <version>1.1-ALPHA-4-SNAPSHOT</version>
+        <version>1.1-ALPHA-4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>it.tidalwave.steelblue</groupId>
     <artifactId>it-tidalwave-steelblue-examples</artifactId>
-    <version>1.1-ALPHA-4-SNAPSHOT</version>
+    <version>1.1-ALPHA-4</version>
     <packaging>pom</packaging>
     <name>SteelBlue (examples)</name>
     <description>SteelBlue (examples)</description>
@@ -51,7 +51,7 @@
         <tft.javac.release>21</tft.javac.release>
         <tft.javafx.version>23.0.1</tft.javafx.version>
         <!-- Generate all javadocs and UML diagrams. -->
-        <tft.javadoc.excludePackageNames/>
+        <tft.javadoc.excludePackageNames />
     </properties>
 
     <modules>
