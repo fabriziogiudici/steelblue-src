@@ -45,6 +45,7 @@
     <name>SteelBlue - Examples - JavaFX presentation</name>
 
     <properties>
+        <tft.javafx.modules>javafx.base,javafx.controls,javafx.fxml,javafx.graphics</tft.javafx.modules>
         <tft.mainClass>it.tidalwave.role.ui.example.presentation.javafx.Main</tft.mainClass>
     </properties>
 
@@ -111,15 +112,22 @@
             <artifactId>logback-classic</artifactId>
             <scope>runtime</scope>
         </dependency>
-    </dependencies>
 
-    <profiles>
-        <profile>
-            <id>run</id>
-            <properties>
-                <tft.defaultGoal>exec:java</tft.defaultGoal>
-            </properties>
-        </profile>
-    </profiles>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
 </project>
