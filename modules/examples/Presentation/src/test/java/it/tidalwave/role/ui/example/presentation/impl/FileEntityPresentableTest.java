@@ -27,13 +27,17 @@ package it.tidalwave.role.ui.example.presentation.impl;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.Selectable;
 import it.tidalwave.role.ui.example.model.FileEntity;
 import org.testng.annotations.Test;
+import static it.tidalwave.util.LocalizedDateTimeFormatters.getDateTimeFormatterFor;
 import static it.tidalwave.role.Aggregate._Aggregate_;
 import static it.tidalwave.role.ui.Displayable._Displayable_;
 import static it.tidalwave.role.ui.Selectable._Selectable_;
@@ -49,6 +53,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
  **************************************************************************************************************************************************************/
 public class FileEntityPresentableTest
   {
+    private static final DateTimeFormatter FORMATTER = getDateTimeFormatterFor(FormatStyle.SHORT, Locale.getDefault());
+
     @Test
     public void test()
       throws Exception
@@ -74,9 +80,9 @@ public class FileEntityPresentableTest
         assertThat(pmSize.as(_Displayable_).getDisplayName(), is("12345678"));
         assertThat(pmSize.as(_Styleable_).getStyles(), is(List.of("right-aligned")));
         final var pmCDT = aggregate.getByName("creationDate").orElseThrow();
-        assertThat(pmCDT.as(_Displayable_).getDisplayName(), is("10/28/24 8:34 pm"));
+        assertThat(pmCDT.as(_Displayable_).getDisplayName(), is(FORMATTER.format(creationDateTime)));
         final var pmLMDT = aggregate.getByName("latestModificationDate").orElseThrow();
-        assertThat(pmLMDT.as(_Displayable_).getDisplayName(), is("12/8/24 4:52 pm"));
+        assertThat(pmLMDT.as(_Displayable_).getDisplayName(), is(FORMATTER.format(lastModifiedDateTime)));
         assertThat(pm.as(_Selectable_), is(extraRole));
       }
   }
