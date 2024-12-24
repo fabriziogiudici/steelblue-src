@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import it.tidalwave.util.PreferencesHandler;
 import it.tidalwave.role.impl.DefaultContextManager;
 import it.tidalwave.role.spring.spi.AnnotationSpringSystemRoleFactory;
+import it.tidalwave.role.ui.ToolBarModel;
 import it.tidalwave.role.ui.javafx.StackPaneSelector;
 
 /***************************************************************************************************************************************************************
@@ -88,5 +89,11 @@ public class JavaFXSpringAnnotationApplication extends AbstractJavaFXSpringAppli
     public DefaultContextManager defaultContextManager()
       {
         return new DefaultContextManager();
+      }
+
+    @Bean
+    public ToolBarModel toolBarModel()
+      {
+        return JavaFXSafeProxyCreator.getToolBarModel();
       }
   }
