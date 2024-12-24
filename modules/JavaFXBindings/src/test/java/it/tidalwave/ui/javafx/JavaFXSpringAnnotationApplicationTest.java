@@ -29,6 +29,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import it.tidalwave.util.ContextManager;
 import it.tidalwave.util.PreferencesHandler;
 import it.tidalwave.role.spi.SystemRoleFactory;
+import it.tidalwave.role.ui.ToolBarModel;
 import it.tidalwave.role.ui.javafx.StackPaneSelector;
 import org.testng.annotations.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -55,5 +56,6 @@ public class JavaFXSpringAnnotationApplicationTest
         assertThat(applicationContext.getBean("preferencesHandler", PreferencesHandler.class), notNullValue());
         assertThat(applicationContext.getBean("defaultContextManager", ContextManager.class), notNullValue());
         assertThat(applicationContext.getBean("annotationSpringSystemRoleFactory", SystemRoleFactory.class), notNullValue());
+        assertThat(applicationContext.getBean("toolBarModel", ToolBarModel.class), notNullValue());
       }
   }
