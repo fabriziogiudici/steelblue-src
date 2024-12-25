@@ -40,8 +40,7 @@ import static it.tidalwave.util.PreferencesHandler.KEY_INITIAL_SIZE;
 
 /***************************************************************************************************************************************************************
  *
- * The main class extends {@link JavaFXSpringApplication} and invokes a starting method on a controller that boots
- * the application.
+ * The main class extends {@link JavaFXSpringApplication} and invokes a starting method on a controller that boots the application.
  *
  * @author  Fabrizio Giudici
  *
@@ -93,7 +92,11 @@ public class Main extends JavaFXSpringAnnotationApplication
     @Override
     protected void onStageCreated (@Nonnull final ApplicationContext applicationContext)
       {
+        // Because of STB-78, it's advisable not to user @PostConstruct to initialise controllers.
         applicationContext.getBean(MainPanelPresentationControl.class).populate();
+
+        // If one likes pubsub, an alternate approach is to fire an event to notify initialization.
+        // applicationContext.getBean(MessageBus.class).publish(new PowerOnEvent());
       }
     // END SNIPPET: onStageCreated
   }
