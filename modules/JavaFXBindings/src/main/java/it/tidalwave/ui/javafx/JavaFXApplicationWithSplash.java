@@ -58,8 +58,14 @@ public abstract class JavaFXApplicationWithSplash extends Application
     /** A property representing the initial main window size as a percentual of the screen size. */
     public static final Key<Double> K_INITIAL_SIZE = Key.of(K_BASE_NAME + ".initialSize", Double.class);
 
+    /** Whether the application should start maximized. */
+    public static final Key<Boolean> K_MAXIMIZED = Key.of(K_BASE_NAME + ".maximized", Boolean.class);
+
     /** Whether the application should start at full screen. */
     public static final Key<Boolean> K_FULL_SCREEN = Key.of(K_BASE_NAME + ".fullScreen", Boolean.class);
+
+    /** Whether the application should always stay at full screen. */
+    public static final Key<Boolean> K_FULL_SCREEN_LOCKED = Key.of(K_BASE_NAME + ".fullScreenLocked", Boolean.class);
 
     private static final String DEFAULT_APPLICATION_FXML = "Application.fxml";
 
@@ -70,12 +76,10 @@ public abstract class JavaFXApplicationWithSplash extends Application
 
     private Splash splash;
 
-    @Getter @Setter
     private boolean maximized;
 
     private boolean fullScreen;
 
-    @Getter @Setter
     private boolean fullScreenLocked;
 
     @Getter @Setter
@@ -104,6 +108,8 @@ public abstract class JavaFXApplicationWithSplash extends Application
         log.info("start({})", stage);
         final var preferencesHandler = PreferencesHandler.getInstance();
         fullScreen = preferencesHandler.getProperty(K_FULL_SCREEN).orElse(false);
+        fullScreenLocked = preferencesHandler.getProperty(K_FULL_SCREEN_LOCKED).orElse(false);
+        maximized = preferencesHandler.getProperty(K_MAXIMIZED).orElse(false);
 
         final var splashStage = new Stage(StageStyle.TRANSPARENT);
         stage.setMaximized(maximized);
