@@ -50,7 +50,7 @@
         <tft.javac.target>11</tft.javac.target>
         <tft.javac.release>11</tft.javac.release>
 
-        <thesefoolishthings.version>3.2-ALPHA-24</thesefoolishthings.version>
+        <thesefoolishthings.version>3.2-ALPHA-25</thesefoolishthings.version>
         <tft.javafx.version>11.0.1</tft.javafx.version>
         <jmetro.version>11.6.14</jmetro.version>
     </properties>
@@ -112,8 +112,12 @@
         </dependency>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-util-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-util</artifactId>
-            <version>${thesefoolishthings.version}</version> <!-- FIXME -->
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
