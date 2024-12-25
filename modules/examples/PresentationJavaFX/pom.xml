@@ -66,13 +66,6 @@
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-role</artifactId>
-            <!-- FIXME: this is a bogus dependency: see TFT-358. -->
-            <exclusions>
-                <exclusion>
-                    <groupId>it.tidalwave.thesefoolishthings</groupId>
-                    <artifactId>it-tidalwave-util-test</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- FIXME: These are indirect dependencies, directly referencing them solves convergence problems -->
