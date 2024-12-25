@@ -30,7 +30,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +49,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.*;
 
 /***************************************************************************************************************************************************************
@@ -63,7 +63,7 @@ import static java.util.stream.Collectors.*;
 public class FileEntity implements As, Displayable
   {
     @RequiredArgsConstructor
-    public static class FileEntityFinder extends SimpleFinderSupport<FileEntity>
+    private static class FileEntityFinder extends SimpleFinderSupport<FileEntity>
       {
         private static final long serialVersionUID = 5780394869213L;
 
@@ -102,16 +102,13 @@ public class FileEntity implements As, Displayable
 
     /***********************************************************************************************************************************************************
      * Creates a new instance related to the given path.
-     *
      * @param   path    the path
      **********************************************************************************************************************************************************/
     // START SNIPPET: constructor
     private FileEntity (@Nonnull final Path path)
       {
         this.path = path;
-        delegate = As.forObject(this, Files.isDirectory(path)
-                                                ? List.of(SimpleComposite.of(new FileEntityFinder(path)))
-                                                : Collections.emptyList());
+        delegate = As.forObject(this, Files.isDirectory(path) ? List.of(SimpleComposite.of(new FileEntityFinder(path))) : emptyList());
       }
     // END SNIPPET: constructor
 
@@ -125,11 +122,11 @@ public class FileEntity implements As, Displayable
       {
         return new FileEntity(path);
       }
+    // END SNIPPET: constructor
 
     /***********************************************************************************************************************************************************
      * {@return the display name}. It's a static implementation of the {@link Displayable} role.
      **********************************************************************************************************************************************************/
-    // START SNIPPET: constructor
     @Override @Nonnull
     public String getDisplayName()
       {

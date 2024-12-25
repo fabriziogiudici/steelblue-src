@@ -38,15 +38,15 @@ import java.util.Collection;
 // START SNIPPET: dao
 public interface Dao
   {
-    /** @return {a collection of simple entities} that are POJOs. */
+    /** {@return a collection of simple entities} that are POJOs. */
     @Nonnull
     public Collection<SimpleEntity> getSimpleEntities();
 
-    /** @return {a collection of entities} supporting DCI roles. */
+    /** {@return a collection of entities} supporting DCI roles. */
     @Nonnull
     public Collection<SimpleDciEntity> getDciEntities();
 
-    /** @return {a collection of file entities}. */
+    /** {@return a collection of file entities}. */
     @Nonnull
     public Collection<FileEntity> getFiles();
   }
