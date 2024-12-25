@@ -334,22 +334,25 @@ package.
 
 #[[####]]# Main class
 
-The `main` of the application must perform the following tasks:
+The `main` of the application must call a launch method specifying a bunch of properties, as shown in the following code snippet:
 
-+ set the `PROP_APP_NAME` with the name of the application;
-+ configure the JavaFX `Platform` for explicit exit;
-+ sets some default properties.
-
-Optional properties:
-
-+ `KEY_INITIAL_SIZE`: the initial size of the window, as a percentage of the screen size.
-+ `KEY_FULL_SCREEN`: `true` if the application must start at full screen.
-+ `PROP_SUPPRESS_CONSOLE`: TBD.
 
 <!-- MACRO{snippet|id=main|file=${project.basedir}/modules/examples/PresentationJavaFX/src/main/java/it/tidalwave/role/ui/example/presentation/javafx/Main.java} -->
 
-The method `onStageCreated()` must be used to initialize the control beans.
-> There's no other valid way to do that; `@PostConstruct` annotated methods won't work because of threading issues.
+These properties are mandatory:
++ the application name;
++ the name of a system property that will be set with the path of the log folder and referenced in the logger configuration file.
+
+Optional properties:
+
++ `K_INITIAL_SIZE`: the initial size of the window, as a percentage of the screen size.
++ `K_FULL_SCREEN`: `true` if the application must start at full screen.
+
+The method `onStageCreated()` can be used to initialize the control beans.
+> `@PostConstruct` annotated methods should be carefully used because of threading issues (see
+> [STB-78](https://tidalwave.atlassian.net/jira/software/c/projects/STB/issues/STB-78)). In particular, the `as()` subsystem might not properly be initialised
+> when post-initialisers are called. This might cause an exception or even deadlock the application at start.
+> Post-constructors are fine when they are just used by a control to talk to the presentation to set bindings.
 
 <!-- MACRO{snippet|id=onStageCreated|file=${project.basedir}/modules/examples/PresentationJavaFX/src/main/java/it/tidalwave/role/ui/example/presentation/javafx/Main.java} -->
 

@@ -25,19 +25,28 @@
  */
 package it.tidalwave.ui.javafx;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.io.IOException;
 import javafx.stage.Stage;
+import javafx.application.Application;
 import javafx.application.Platform;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import it.tidalwave.util.Key;
+import it.tidalwave.util.PreferencesHandler;
+import it.tidalwave.util.TypeSafeMap;
 import it.tidalwave.role.ui.javafx.ApplicationPresentationAssembler;
 import it.tidalwave.role.ui.javafx.PresentationAssembler;
+import lombok.RequiredArgsConstructor;
+import lombok.With;
+import static lombok.AccessLevel.PRIVATE;
 
 /***************************************************************************************************************************************************************
  *
@@ -48,10 +57,88 @@ import it.tidalwave.role.ui.javafx.PresentationAssembler;
  **************************************************************************************************************************************************************/
 public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationWithSplash
   {
+    /***********************************************************************************************************************************************************
+     * The initialisation parameters to pass to {@link #launch(Class, InitParameters)}.
+     * @since   1.1-ALPHA-6
+     **********************************************************************************************************************************************************/
+    @RequiredArgsConstructor(access = PRIVATE) @With
+    public static class InitParameters
+      {
+        @Nonnull
+        private final String[] args;
+
+        @Nonnull
+        private final String applicationName;
+
+        @Nonnull
+        private final String logFolderPropertyName;
+
+        private final boolean implicitExit;
+
+        @Nonnull
+        private final TypeSafeMap propertyMap;
+
+        @Nonnull
+        public <T> InitParameters withProperty (@Nonnull final Key<T> key, @Nonnull final T value)
+          {
+            return new InitParameters(args, applicationName, logFolderPropertyName, implicitExit, propertyMap.with(key, value));
+          }
+
+        public void validate()
+          {
+            requireNotEmpty(applicationName, "applicationName");
+            requireNotEmpty(logFolderPropertyName, "logFolderPropertyName");
+          }
+
+        private void requireNotEmpty (@CheckForNull final String name, @Nonnull final String message)
+          {
+            if (name == null || name.isEmpty())
+              {
+                throw new IllegalArgumentException(message);
+              }
+          }
+      }
+
     // Don't use Slf4j and its static logger - give Main a chance to initialize things
     private final Logger log = LoggerFactory.getLogger(AbstractJavaFXSpringApplication.class);
 
     private ConfigurableApplicationContext applicationContext;
+
+    /***********************************************************************************************************************************************************
+     * Launches the application.
+     * @param   appClass          the class of the application to instantiate
+     * @param   initParameters    the initialisation parameters
+     **********************************************************************************************************************************************************/
+    @SuppressFBWarnings("DM_EXIT")
+    public static void launch (@Nonnull final Class<? extends Application> appClass, @Nonnull final InitParameters initParameters)
+      {
+        try
+          {
+            initParameters.validate();
+            System.setProperty(PreferencesHandler.PROP_APP_NAME, initParameters.applicationName);
+            Platform.setImplicitExit(initParameters.implicitExit);
+            final var preferencesHandler = PreferencesHandler.getInstance();
+            initParameters.propertyMap.forEach(preferencesHandler::setProperty);
+            System.setProperty(initParameters.logFolderPropertyName, preferencesHandler.getLogFolder().toAbsolutePath().toString());
+            Application.launch(appClass, initParameters.args);
+          }
+        catch (Throwable t)
+          {
+            // Don't use logging facilities here, they could be not initialized
+            t.printStackTrace();
+            System.exit(-1);
+          }
+      }
+
+    /***********************************************************************************************************************************************************
+     * {@return an empty set of parameters} to populate and pass to {@link #launch(Class, InitParameters)}
+     * @since   1.1-ALPHA-6
+     **********************************************************************************************************************************************************/
+    @Nonnull
+    protected static InitParameters params()
+      {
+        return new InitParameters(new String[0], "", "", true, TypeSafeMap.newInstance());
+      }
 
     /***********************************************************************************************************************************************************
      *
