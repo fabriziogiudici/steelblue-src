@@ -73,7 +73,6 @@ public abstract class JavaFXApplicationWithSplash extends Application
     @Getter @Setter
     private boolean maximized;
 
-    @Getter @Setter
     private boolean fullScreen;
 
     @Getter @Setter
@@ -103,6 +102,9 @@ public abstract class JavaFXApplicationWithSplash extends Application
     public void start (@Nonnull final Stage stage)
       {
         log.info("start({})", stage);
+        final var preferencesHandler = PreferencesHandler.getInstance();
+        fullScreen = preferencesHandler.getProperty(K_FULL_SCREEN).orElse(false);
+
         final var splashStage = new Stage(StageStyle.TRANSPARENT);
         stage.setMaximized(maximized);
 //        splashStage.setMaximized(maximized); FIXME: doesn't work
@@ -128,8 +130,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
                     stage.setOnCloseRequest(event -> onClosing());
                     stage.setScene(scene);
                     onStageCreated(stage, applicationNad);
-                    final var preferencesHandler = PreferencesHandler.getInstance();
-                    stage.setFullScreen(preferencesHandler.getProperty(K_FULL_SCREEN).orElse(false));
+                    stage.setFullScreen(fullScreen);
                     final double scale = preferencesHandler.getProperty(K_INITIAL_SIZE).orElse(0.65);
                     final var screenSize = Screen.getPrimary().getBounds();
                     stage.setWidth(scale * screenSize.getWidth());
