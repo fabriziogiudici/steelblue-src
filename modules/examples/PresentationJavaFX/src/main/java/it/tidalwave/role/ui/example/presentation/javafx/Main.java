@@ -26,7 +26,6 @@
 package it.tidalwave.role.ui.example.presentation.javafx;
 
 import javax.annotation.Nonnull;
-import javafx.application.Platform;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -34,9 +33,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import it.tidalwave.ui.javafx.JavaFXSpringAnnotationApplication;
 import it.tidalwave.ui.javafx.JavaFXSpringApplication;
-import it.tidalwave.util.PreferencesHandler;
 import it.tidalwave.role.ui.example.presentation.MainPanelPresentationControl;
-import static it.tidalwave.util.PreferencesHandler.KEY_INITIAL_SIZE;
 
 /***************************************************************************************************************************************************************
  *
@@ -54,34 +51,21 @@ public class Main extends JavaFXSpringAnnotationApplication
 // END SNIPPET: annotations
   {
     /***********************************************************************************************************************************************************
-     * Usually {@code main()} does nothing more than a typical {@code main()} of a JavaFX application.
      * JavaFX and Spring are automatically booted with an implicit configuration:
-     *
      * <ul>
-     * <li>The FXML resource for the main UI is loaded from the same package as this class, and the name's
-     *     {@code Application.fxml}</li>
-     * <li>A splash screen is created from a FXML resource in the same package as this class and name
-     *     {@code Splash.fxml}, It is rendered on the screen while the system is initialised in background.</li>
+     * <li>The FXML resource for the main UI is loaded from the same package as this class, and the name's {@code Application.fxml}</li>
+     * <li>A splash screen is created from a FXML resource in the same package as this class and name {@code Splash.fxml}, It is rendered on the screen while
+     *     the system is initialised in background.</li>
      * </ul>
      **********************************************************************************************************************************************************/
     // START SNIPPET: main
-    public static void main (@Nonnull final String ... args)
+    public static void main (@Nonnull final String [] args)
       {
-        try
-          {
-            System.setProperty(PreferencesHandler.PROP_APP_NAME, "SteelBlueExample");
-            Platform.setImplicitExit(true);
-            final var preferencesHandler = PreferencesHandler.getInstance();
-            preferencesHandler.setDefaultProperty(KEY_INITIAL_SIZE, 0.8);
-            System.setProperty("it.tidalwave.role.ui.example.logFolder", preferencesHandler.getLogFolder().toAbsolutePath().toString());
-            launch(args);
-          }
-        catch (Throwable t)
-          {
-            // Don't use logging facilities here, they could be not initialized
-            t.printStackTrace();
-            System.exit(-1);
-          }
+        launch(Main.class,
+               params().withArgs(args)
+                       .withApplicationName("SteelBlueExample")
+                       .withLogFolderPropertyName("it.tidalwave.role.ui.example.logFolder") // referenced in the logger configuration
+                       .withProperty(K_INITIAL_SIZE, 0.8));                                 // initial windows size (in percentage)
       }
     // END SNIPPET: main
 
