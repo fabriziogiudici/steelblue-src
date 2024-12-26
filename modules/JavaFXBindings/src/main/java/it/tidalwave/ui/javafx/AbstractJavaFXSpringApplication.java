@@ -160,7 +160,7 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
      **********************************************************************************************************************************************************/
     @Override @Nonnull
     protected NodeAndDelegate<?> createParent()
-      throws IOException
+            throws IOException
       {
         return NodeAndDelegate.load(getClass(), applicationFxml);
       }
@@ -193,9 +193,7 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
       }
 
     /***********************************************************************************************************************************************************
-     * Creates the application context.
-     *
-     * @return  the application context
+     * {@return a created application context.}
      **********************************************************************************************************************************************************/
     @Nonnull
     protected abstract ConfigurableApplicationContext createApplicationContext();
@@ -204,8 +202,7 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
      * {@inheritDoc}
      **********************************************************************************************************************************************************/
     @Override
-    protected final void onStageCreated (@Nonnull final Stage stage,
-                                         @Nonnull final NodeAndDelegate<?> applicationNad)
+    protected final void onStageCreated (@Nonnull final Stage stage, @Nonnull final NodeAndDelegate<?> applicationNad)
       {
         assert Platform.isFxApplicationThread();
         JavaFXSafeProxyCreator.getJavaFxBinder().setMainWindow(stage);
@@ -234,10 +231,8 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
       }
 
     /***********************************************************************************************************************************************************
-     * Invoked when the {@link Stage} is created and the {@link ApplicationContext} has been initialized. Typically
-     * the main class overrides this, retrieves a reference to the main controller and boots it.
-     * This method is executed in a background thread.
-     *
+     * Invoked when the {@link Stage} is created and the {@link ApplicationContext} has been initialized. Typically, the main class overrides this, retrieves
+     * a reference to the main controller and boots it. This method is executed in a background thread.
      * @param   applicationContext  the application context
      **********************************************************************************************************************************************************/
     protected void onStageCreated (@Nonnull final ApplicationContext applicationContext)
@@ -260,8 +255,7 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
     private void runApplicationAssemblers (@Nonnull final NodeAndDelegate applicationNad)
       {
         Objects.requireNonNull(applicationContext, "applicationContext is null");
-        applicationContext.getBeansOfType(ApplicationPresentationAssembler.class).values()
-                .forEach(a -> a.assemble(applicationNad.getDelegate()));
+        applicationContext.getBeansOfType(ApplicationPresentationAssembler.class).values().forEach(a -> a.assemble(applicationNad.getDelegate()));
       }
 
     /***********************************************************************************************************************************************************
