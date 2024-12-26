@@ -41,11 +41,10 @@ import jfxtras.styles.jmetro.JMetro;
 import jfxtras.styles.jmetro.Style;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import it.tidalwave.util.Key;
 import it.tidalwave.util.PreferencesHandler;
 import lombok.Getter;
 import lombok.Setter;
-import static it.tidalwave.util.PreferencesHandler.KEY_FULL_SCREEN;
-import static it.tidalwave.util.PreferencesHandler.KEY_INITIAL_SIZE;
 
 /***************************************************************************************************************************************************************
  *
@@ -54,6 +53,14 @@ import static it.tidalwave.util.PreferencesHandler.KEY_INITIAL_SIZE;
  **************************************************************************************************************************************************************/
 public abstract class JavaFXApplicationWithSplash extends Application
   {
+    private static final String K_BASE_NAME = "it.tidalwave.javafx";
+
+    /** A property representing the initial main window size as a percentual of the screen size. */
+    public static final Key<Double> K_INITIAL_SIZE = Key.of(K_BASE_NAME + ".initialSize", Double.class);
+
+    /** Whether the application should start at full screen. */
+    public static final Key<Boolean> K_FULL_SCREEN = Key.of(K_BASE_NAME + ".fullScreen", Boolean.class);
+
     private static final String DEFAULT_APPLICATION_FXML = "Application.fxml";
 
     private static final String DEFAULT_SPLASH_FXML = "Splash.fxml";
@@ -122,8 +129,8 @@ public abstract class JavaFXApplicationWithSplash extends Application
                     stage.setScene(scene);
                     onStageCreated(stage, applicationNad);
                     final var preferencesHandler = PreferencesHandler.getInstance();
-                    stage.setFullScreen(preferencesHandler.getProperty(KEY_FULL_SCREEN).orElse(false));
-                    final double scale = preferencesHandler.getProperty(KEY_INITIAL_SIZE).orElse(0.65);
+                    stage.setFullScreen(preferencesHandler.getProperty(K_FULL_SCREEN).orElse(false));
+                    final double scale = preferencesHandler.getProperty(K_INITIAL_SIZE).orElse(0.65);
                     final var screenSize = Screen.getPrimary().getBounds();
                     stage.setWidth(scale * screenSize.getWidth());
                     stage.setHeight(scale * screenSize.getHeight());
