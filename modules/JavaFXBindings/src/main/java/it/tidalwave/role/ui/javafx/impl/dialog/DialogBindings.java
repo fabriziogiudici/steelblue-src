@@ -28,14 +28,25 @@ package it.tidalwave.role.ui.javafx.impl.dialog;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.awt.Desktop;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+import javafx.scene.web.WebView;
 import javafx.application.Platform;
+import it.tidalwave.util.BundleUtilities;
 import it.tidalwave.util.Callback;
 import it.tidalwave.util.ui.UserNotificationWithFeedback;
 import it.tidalwave.role.ui.javafx.impl.common.DelegateSupport;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,6 +58,38 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DialogBindings extends DelegateSupport
   {
+    @RequiredArgsConstructor
+    static class UrlOpener implements ChangeListener<String>
+      {
+        @Nonnull
+        private final WebView webView;
+
+        @Nonnull
+        private final String text;
+
+        @Override
+        public void changed (final ObservableValue<? extends String> observableValue, final String oldValue, final String newValue)
+          {
+            if (newValue != null && !newValue.isEmpty())
+              {
+                Platform.runLater(() ->
+                  {
+                    try
+                      {
+                        log.debug("Opening {} ...", newValue);
+                        Desktop.getDesktop().browse(new URI(newValue));
+                      }
+                    catch (IOException | URISyntaxException e)
+                      {
+                        log.warn("", e);
+                      }
+                  });
+
+                webView.getEngine().loadContent(text);
+              }
+          }
+      }
+
     /***********************************************************************************************************************************************************
      *
      **********************************************************************************************************************************************************/
@@ -71,13 +114,50 @@ public class DialogBindings extends DelegateSupport
             dialog.initOwner(mainWindow);
             dialog.setTitle(notification.getCaption());
             dialog.setResizable(false);
-            dialog.setContentText(notification.getText());
-            node.ifPresent(n -> dialog.getDialogPane().setContent(n));
+            final var dialogPane = dialog.getDialogPane();
+            final var text = notification.getText();
+
+            if (!text.startsWith("<html>"))
+              {
+                dialog.setContentText(text);
+                node.ifPresent(n -> dialogPane.setContent(n));
+              }
+            else
+              {
+                final var webView = new WebView();
+                webView.setPrefSize(600, 300); // FIXME: proportional to screen
+                webView.setContextMenuEnabled(false);
+                final var label = new Label();
+                dialogPane.setContent(label);
+                final var fontFamily = label.getFont().getFamily();
+                // System.err.println("FILL " + label.getTextFill());
+                final var textColor = "white"; // FIXME
+                var backgroundColor = "#252525"; // FIXME
+
+                try
+                  {
+                    // Available in JDK 18+
+                    final var setPageFill = webView.getClass().getDeclaredMethod("setPageFill", Color.class);
+                    setPageFill.invoke(webView, Color.TRANSPARENT);
+                    backgroundColor = "transparent";
+                  }
+                catch (Exception e)
+                  {
+                    log.trace("WebView.setPageFill() not available", e);
+                  }
+
+                // FIXME
+                final var text2 = BundleUtilities.getMessage(getClass(),"htmlTemplate", text, textColor, backgroundColor, fontFamily);
+                // System.err.println(text2);
+                webView.getEngine().loadContent(text2);
+                webView.getEngine().locationProperty().addListener(new UrlOpener(webView, text2));
+                dialogPane.setContent(webView);
+              }
 
             final var feedback = notification.getFeedback();
             final var hasOnCancel = feedback.canCancel();
 
-            final var buttonTypes = dialog.getDialogPane().getButtonTypes();
+            final var buttonTypes = dialogPane.getButtonTypes();
             buttonTypes.clear();
             buttonTypes.add(ButtonType.OK);
 

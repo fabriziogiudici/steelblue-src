@@ -120,6 +120,11 @@
             <artifactId>javafx-fxml</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- TEST DEPENDENCIES -->
         <dependency>
