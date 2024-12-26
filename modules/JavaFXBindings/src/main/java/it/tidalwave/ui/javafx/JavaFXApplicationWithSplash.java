@@ -29,12 +29,15 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.io.IOException;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import javafx.application.Application;
 import javafx.application.Platform;
 import jfxtras.styles.jmetro.JMetro;
@@ -67,9 +70,14 @@ public abstract class JavaFXApplicationWithSplash extends Application
     /** Whether the application should always stay at full screen. */
     public static final Key<Boolean> K_FULL_SCREEN_LOCKED = Key.of(K_BASE_NAME + ".fullScreenLocked", Boolean.class);
 
+    /** The minimum duration of the splash screen. */
+    public static final Key<Duration> K_MIN_SPLASH_DURATION = Key.of(K_BASE_NAME + ".minSplashDuration", Duration.class);
+
     private static final String DEFAULT_APPLICATION_FXML = "Application.fxml";
 
     private static final String DEFAULT_SPLASH_FXML = "Splash.fxml";
+
+    private static final Duration DEFAULT_MIN_SPLASH_DURATION = Duration.seconds(2);
 
     // Don't use Slf4j and its static logger - give Main a chance to initialize things
     private final Logger log = LoggerFactory.getLogger(JavaFXApplicationWithSplash.class);
@@ -122,6 +130,7 @@ public abstract class JavaFXApplicationWithSplash extends Application
             splashStage.centerOnScreen();
           }
 
+        final var splashCreationTime = System.currentTimeMillis();
         splash.show(splashStage);
 
         getExecutor().execute(() -> // FIXME: use JavaFX Worker?
@@ -143,7 +152,11 @@ public abstract class JavaFXApplicationWithSplash extends Application
                     stage.setHeight(scale * screenSize.getHeight());
                     stage.show();
                     splashStage.toFront();
-                    splash.dismiss();
+
+                    final var duration = preferencesHandler.getProperty(K_MIN_SPLASH_DURATION).orElse(DEFAULT_MIN_SPLASH_DURATION);
+                    final var delay = Math.max(0, splashCreationTime + duration.toMillis() - System.currentTimeMillis());
+                    final var dismissSplash = new Timeline(new KeyFrame(Duration.millis(delay), e -> splash.dismiss()));
+                    Platform.runLater(dismissSplash::play);
                   }
                 catch (IOException e)
                   {
