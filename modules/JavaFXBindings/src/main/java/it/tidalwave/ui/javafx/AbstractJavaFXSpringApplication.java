@@ -28,7 +28,9 @@ package it.tidalwave.ui.javafx;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.io.IOException;
 import javafx.stage.Stage;
@@ -37,13 +39,19 @@ import javafx.application.Platform;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import it.tidalwave.message.PowerOffEvent;
+import it.tidalwave.message.PowerOnEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import it.tidalwave.util.Key;
 import it.tidalwave.util.PreferencesHandler;
 import it.tidalwave.util.TypeSafeMap;
+import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.role.ui.javafx.ApplicationPresentationAssembler;
 import it.tidalwave.role.ui.javafx.PresentationAssembler;
+import it.tidalwave.messagebus.MessageBus;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.With;
 import static lombok.AccessLevel.PRIVATE;
@@ -99,10 +107,17 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
           }
       }
 
+    protected static final String APPLICATION_MESSAGE_BUS = "applicationMessageBus";
+
     // Don't use Slf4j and its static logger - give Main a chance to initialize things
     private final Logger log = LoggerFactory.getLogger(AbstractJavaFXSpringApplication.class);
 
     private ConfigurableApplicationContext applicationContext;
+
+    private Optional<MessageBus> messageBus = Optional.empty();
+
+    @Getter(AccessLevel.PACKAGE) @Nonnull
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     /***********************************************************************************************************************************************************
      * Launches the application.
@@ -165,6 +180,11 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
             System.setProperty("it.tidalwave.util.spring.ClassScanner.basePackages", "it");
             applicationContext = createApplicationContext();
             applicationContext.registerShutdownHook(); // this actually seems not working, onClosing() does
+
+            if (applicationContext.getBeanFactory().containsBean(APPLICATION_MESSAGE_BUS))
+              {
+                messageBus = Optional.of(applicationContext.getBeanFactory().getBean(APPLICATION_MESSAGE_BUS, MessageBus.class));
+              }
           }
         catch (Throwable t)
           {
@@ -189,6 +209,15 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
       {
         assert Platform.isFxApplicationThread();
         JavaFXSafeProxyCreator.getJavaFxBinder().setMainWindow(stage);
+        onStageCreated2(applicationNad);
+      }
+
+    /***********************************************************************************************************************************************************
+     * This method is separated to make testing simpler (it does not depend on JavaFX stuff).
+     * @param   applicationNad
+     **********************************************************************************************************************************************************/
+    @VisibleForTesting final void onStageCreated2 (@Nonnull final NodeAndDelegate<?> applicationNad)
+      {
         final var delegate = applicationNad.getDelegate();
 
         if (PresentationAssembler.class.isAssignableFrom(delegate.getClass()))
@@ -197,7 +226,11 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
           }
 
         runApplicationAssemblers(applicationNad);
-        Executors.newSingleThreadExecutor().execute(() -> onStageCreated(applicationContext));
+        executorService.execute(() ->
+          {
+            onStageCreated(applicationContext);
+            messageBus.ifPresent(mb -> mb.publish(new PowerOnEvent()));
+          });
       }
 
     /***********************************************************************************************************************************************************
@@ -217,6 +250,7 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
     @Override
     protected void onClosing()
       {
+        messageBus.ifPresent(mb -> mb.publish(new PowerOffEvent()));
         applicationContext.close();
       }
 

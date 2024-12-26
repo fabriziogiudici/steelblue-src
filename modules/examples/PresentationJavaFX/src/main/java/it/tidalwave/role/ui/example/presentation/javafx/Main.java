@@ -47,6 +47,7 @@ import it.tidalwave.role.ui.example.presentation.MainPanelPresentationControl;
 @EnableSpringConfigured
 @EnableAspectJAutoProxy
 @ComponentScan(basePackages = "it.tidalwave")
+// @EnableMessageBus
 public class Main extends JavaFXSpringAnnotationApplication
 // END SNIPPET: annotations
   {
@@ -80,6 +81,7 @@ public class Main extends JavaFXSpringAnnotationApplication
         applicationContext.getBean(MainPanelPresentationControl.class).populate();
 
         // If one likes pubsub, an alternate approach is to fire an event to notify initialization.
+        // See also EnableMessageBus to simplify implementation.
         // applicationContext.getBean(MessageBus.class).publish(new PowerOnEvent());
       }
     // END SNIPPET: onStageCreated
