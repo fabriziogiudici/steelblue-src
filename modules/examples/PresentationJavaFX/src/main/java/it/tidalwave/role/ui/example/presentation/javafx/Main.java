@@ -26,6 +26,7 @@
 package it.tidalwave.role.ui.example.presentation.javafx;
 
 import javax.annotation.Nonnull;
+import javafx.util.Duration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -69,6 +70,7 @@ public class Main extends JavaFXSpringAnnotationApplication
                        // .withProperty(K_FULL_SCREEN, true)
                        // .withProperty(K_FULL_SCREEN_LOCKED, true)
                        // .withProperty(K_MAXIMIZED, true)
+                       .withProperty(K_MIN_SPLASH_DURATION, Duration.seconds(3))
                        .withProperty(K_INITIAL_SIZE, 0.8));                                 // initial windows size (in percentage)
       }
     // END SNIPPET: main

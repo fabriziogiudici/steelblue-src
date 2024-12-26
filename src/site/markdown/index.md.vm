@@ -349,6 +349,7 @@ Optional properties:
 + `K_FULL_SCREEN`: `true` if the application must start at full screen.
 + `K_FULL_SCREEN_LOCKED`: `true` if the application must stay all the time at full screen.
 + `K_MAXIMIZED`: `true` if the application must start maximized.
++ `K_MIN_SPLASH_DURATION`: the minimum duration of the splash screen.
 
 The method `onStageCreated()` can be used to initialize the control beans.
 > `@PostConstruct` annotated methods should be carefully used because of threading issues (see
