@@ -49,6 +49,10 @@
             <groupId>it.tidalwave.steelblue</groupId>
             <artifactId>it-tidalwave-steelblue-example-model</artifactId>
         </dependency>
+        <dependency> <!-- This is optional, if one wants to use a pubsub architecture. -->
+            <groupId>it.tidalwave.thesefoolishthings</groupId>
+            <artifactId>it-tidalwave-messagebus</artifactId>
+        </dependency>
         <dependency>
             <groupId>it.tidalwave.thesefoolishthings</groupId>
             <artifactId>it-tidalwave-role</artifactId>

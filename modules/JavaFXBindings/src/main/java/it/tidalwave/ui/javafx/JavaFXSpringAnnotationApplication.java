@@ -26,6 +26,8 @@
 package it.tidalwave.ui.javafx;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +36,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import it.tidalwave.util.PreferencesHandler;
 import it.tidalwave.role.ui.ToolBarModel;
+import it.tidalwave.role.ui.annotation.EnableMessageBus;
 import it.tidalwave.role.ui.javafx.StackPaneSelector;
+import it.tidalwave.messagebus.MessageBus;
+import it.tidalwave.messagebus.spi.SimpleMessageBus;
 
 /***************************************************************************************************************************************************************
  *
@@ -73,6 +78,24 @@ public class JavaFXSpringAnnotationApplication extends AbstractJavaFXSpringAppli
           }
       }
 
+    static class MessageBusBeans
+      {
+        @Bean(name = APPLICATION_MESSAGE_BUS_BEAN_NAME)
+        public MessageBus applicationMessageBus()
+          {
+            final var executor = new ThreadPoolTaskExecutor();
+            executor.setWaitForTasksToCompleteOnShutdown(false);
+            executor.setThreadNamePrefix("messageBus-");
+            executor.setCorePoolSize(10);
+            executor.setMaxPoolSize(10);
+            executor.setQueueCapacity(10);
+            executor.afterPropertiesSet();
+            return new SimpleMessageBus(executor);
+          }
+      }
+
+    protected static final String APPLICATION_MESSAGE_BUS_BEAN_NAME = "applicationMessageBus";
+
     // Don't use Slf4j and its static logger - give Main a chance to initialize things
     private final Logger log = LoggerFactory.getLogger(JavaFXSpringApplication.class);
 
@@ -80,7 +103,15 @@ public class JavaFXSpringAnnotationApplication extends AbstractJavaFXSpringAppli
     protected ConfigurableApplicationContext createApplicationContext()
       {
         final var mainClass = getClass();
+        final var componentClasses = new ArrayList<>(List.of(mainClass, Beans.class));
+
+        if (getClass().isAnnotationPresent(EnableMessageBus.class))
+          {
+            log.info("Detected @{}, enabling message bus", EnableMessageBus.class.getSimpleName());
+            componentClasses.add(MessageBusBeans.class);
+          }
+
         log.info("Scanning beans from {}", mainClass);
-        return new AnnotationConfigApplicationContext(mainClass, Beans.class);
+        return new AnnotationConfigApplicationContext(componentClasses.toArray(new Class<?>[0]));
       }
   }

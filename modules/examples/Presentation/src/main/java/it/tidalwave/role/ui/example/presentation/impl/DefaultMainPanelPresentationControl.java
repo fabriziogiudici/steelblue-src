@@ -30,6 +30,7 @@ import javax.annotation.PostConstruct;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.springframework.stereotype.Component;
+import it.tidalwave.message.PowerOnEvent;
 import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.ui.BoundProperty;
@@ -46,6 +47,7 @@ import it.tidalwave.role.ui.example.model.SimpleEntity;
 import it.tidalwave.role.ui.example.presentation.MainPanelPresentation;
 import it.tidalwave.role.ui.example.presentation.MainPanelPresentation.Bindings;
 import it.tidalwave.role.ui.example.presentation.MainPanelPresentationControl;
+import it.tidalwave.messagebus.annotation.ListensTo;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import static it.tidalwave.util.Parameters.r;
@@ -61,6 +63,7 @@ import static it.tidalwave.role.ui.spi.PresentationModelCollectors.toCompositePr
  *
  **************************************************************************************************************************************************************/
 @Component @RequiredArgsConstructor
+// @SimpleMessageSubscriber
 public class DefaultMainPanelPresentationControl implements MainPanelPresentationControl
   {
     private static final Path USER_HOME = Paths.get(System.getProperty("user.home"));
@@ -143,6 +146,18 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
         presentation.populate(pm1, pm2, pm3);
       }
     // END SNIPPET: populate
+
+    /***********************************************************************************************************************************************************
+     * Alternatively to expose methods to a public interface, a pubsub facility can be used. This method is called back at application initialisation.
+     * @param   event   the 'power on' event
+     **********************************************************************************************************************************************************/
+    // START SNIPPET: onPowerOn
+    @VisibleForTesting void onPowerOn (@ListensTo final PowerOnEvent event)
+      {
+        presentation.bind(bindings);
+        populate();
+      }
+    // END SNIPPET: onPowerOn
 
     /***********************************************************************************************************************************************************
      * Factory method for the PresentationModel of SimpleEntity instances.

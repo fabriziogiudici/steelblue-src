@@ -28,10 +28,13 @@ package it.tidalwave.ui.javafx;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import it.tidalwave.util.PreferencesHandler;
 import it.tidalwave.role.ui.ToolBarModel;
+import it.tidalwave.role.ui.annotation.EnableMessageBus;
 import it.tidalwave.role.ui.javafx.StackPaneSelector;
+import it.tidalwave.messagebus.MessageBus;
 import org.testng.annotations.Test;
+import static it.tidalwave.ui.javafx.JavaFXSpringAnnotationApplication.APPLICATION_MESSAGE_BUS_BEAN_NAME;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
 
 /***************************************************************************************************************************************************************
  *
@@ -40,11 +43,21 @@ import static org.hamcrest.Matchers.notNullValue;
  **************************************************************************************************************************************************************/
 public class JavaFXSpringAnnotationApplicationTest
   {
+    static class UnderTest extends JavaFXSpringAnnotationApplication
+      {
+      }
+
+    @EnableMessageBus
+    static class UnderTestWithEnableMessageBus extends UnderTest
+      {
+      }
+
+    /**********************************************************************************************************************************************************/
     @Test
     public void test_ApplicationContext()
       {
         // given
-        final var underTest = new JavaFXSpringAnnotationApplication();
+        final var underTest = new UnderTest();
         PreferencesHandler.setAppName("test");
         // when
         final var applicationContext = underTest.createApplicationContext();
@@ -53,5 +66,23 @@ public class JavaFXSpringAnnotationApplicationTest
         assertThat(applicationContext.getBean("stackPaneSelector", StackPaneSelector.class), notNullValue());
         assertThat(applicationContext.getBean("preferencesHandler", PreferencesHandler.class), notNullValue());
         assertThat(applicationContext.getBean("toolBarModel", ToolBarModel.class), notNullValue());
+        assertThat(applicationContext.containsBean(APPLICATION_MESSAGE_BUS_BEAN_NAME), is(false));
+      }
+
+    /**********************************************************************************************************************************************************/
+    @Test
+    public void test_ApplicationContext_with_EnableMessageBus()
+      {
+        // given
+        final var underTest = new UnderTestWithEnableMessageBus();
+        PreferencesHandler.setAppName("test");
+        // when
+        final var applicationContext = underTest.createApplicationContext();
+        // then
+        assertThat(applicationContext.getBean("javafxBinderExecutor", ThreadPoolTaskExecutor.class), notNullValue());
+        assertThat(applicationContext.getBean("stackPaneSelector", StackPaneSelector.class), notNullValue());
+        assertThat(applicationContext.getBean("preferencesHandler", PreferencesHandler.class), notNullValue());
+        assertThat(applicationContext.getBean("toolBarModel", ToolBarModel.class), notNullValue());
+        assertThat(applicationContext.getBean(APPLICATION_MESSAGE_BUS_BEAN_NAME, MessageBus.class), notNullValue());
       }
   }

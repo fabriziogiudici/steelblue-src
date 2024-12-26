@@ -356,6 +356,8 @@ The method `onStageCreated()` can be used to initialize the control beans.
 
 <!-- MACRO{snippet|id=onStageCreated|file=${project.basedir}/modules/examples/PresentationJavaFX/src/main/java/it/tidalwave/role/ui/example/presentation/javafx/Main.java} -->
 
+An alternate way is by using a pubsub facility, as explained in the next section.
+
 Two `fxml` resources must be provided in the same package of the `Main` class:
 
 + `Application.fxml` describes the layout of the main window
@@ -367,6 +369,30 @@ The proper way to do that is to have the main presentation delegate to implement
 the initialized `ApplicationContext`, so the code can retrieve any other presentation and their related `Node`.
 
 <!-- MACRO{snippet|id=all|file=${project.basedir}/modules/examples/PresentationJavaFX/src/main/java/it/tidalwave/role/ui/example/presentation/impl/javafx/JavaFXApplicationPresentationDelegate.java} -->
+
+
+#[[#####]]# Pubsub architecture
+
+Instead of exposing public method of controllers, they can be interfaceless and react to events. If the main class is annotated with `@EnableMessageBus` the
+following things happen:
+
++ a messagebus implementing `SimpleMessageBus` is instantiated and made available in the Spring application context (so it can be injected);
++ a `PowerOnEvent` is fired when the application is ready to be initialised;
++ a `PowerOffEvent` is fired when the application is going to be closed.
+
+A controller can be notified about events by writing a simple method with an annotated parameter:
+
+<!-- MACRO{snippet|id=onPowerOn|file=${project.basedir}/modules/examples/Presentation/src/main/java/it/tidalwave/role/ui/example/presentation/impl/DefaultMainPanelPresentationControl.java} -->
+
+> The method can be private, but a package visibility is useful for testing.
+
+WIth this approach, a valid implementation of the message bus must be added to the classpath:
+
+<!-- MACRO{snippet|id=messagebus|file=${project.basedir}/modules/examples/PresentationJavaFX/pom.xml} -->
+
+Also, AspectJ and Spring AOP are required to make the listener methods discovered and registered.
+
+> If the Tidalwave SuperPOM is used, all the required dependencies can be added by enabling the profile `it.tidalwave-spring-messagebus-v1`.
 
 
 #[[####]]# Assembling all the code
@@ -386,7 +412,8 @@ specific operating system configuration files are searched for:
 + for macOS, files whose name ends with `AutoMacOSXBeans.xml`
 + for Windows, files whose name ends with `AutoWindowsBeans.xml`
 
-> TODO: required dependencies, profiles, aspects... etc.
+> TODO: required dependencies etc.
+
 
 #[[##]]# Modules
 
