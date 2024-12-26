@@ -45,7 +45,7 @@
     <name>SteelBlue - Examples - JavaFX presentation</name>
 
     <properties>
-        <tft.javafx.modules>javafx.base,javafx.controls,javafx.fxml,javafx.graphics</tft.javafx.modules>
+        <tft.javafx.modules>javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.web</tft.javafx.modules>
         <tft.mainClass>it.tidalwave.role.ui.example.presentation.javafx.Main</tft.mainClass>
     </properties>
 
@@ -126,6 +126,11 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>
