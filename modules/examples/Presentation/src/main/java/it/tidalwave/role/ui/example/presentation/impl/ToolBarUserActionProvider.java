@@ -23,14 +23,13 @@
  *
  * *************************************************************************************************************************************************************
  */
-package it.tidalwave.role.ui.example.presentation.impl.javafx;
+package it.tidalwave.role.ui.example.presentation.impl;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import it.tidalwave.role.ui.ToolBarModel;
 import it.tidalwave.role.ui.UserAction;
-import it.tidalwave.role.ui.example.presentation.impl.DefaultMainPanelPresentationControl;
 import it.tidalwave.role.ui.spi.DefaultUserActionProvider;
 import it.tidalwave.dci.annotation.DciRole;
 import lombok.RequiredArgsConstructor;
