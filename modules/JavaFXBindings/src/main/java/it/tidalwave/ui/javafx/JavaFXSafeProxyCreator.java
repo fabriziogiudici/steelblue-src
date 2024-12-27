@@ -253,8 +253,8 @@ public class JavaFXSafeProxyCreator
      *
      **********************************************************************************************************************************************************/
     @Nonnull
-    public static <T> T createSafeProxy (@Nonnull final T target, final Class<T> interfaceClass)
+    public static <T> T createSafeProxy (@Nonnull final T target, final Class<?>[] interfaces)
       {
-        return (T)Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] { interfaceClass }, new JavaFXSafeProxy<>(target));
+        return (T)Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), interfaces, new JavaFXSafeProxy<>(target));
       }
   }
