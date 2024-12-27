@@ -38,9 +38,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.application.Platform;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import it.tidalwave.role.ui.MenuBarModel;
 import it.tidalwave.role.ui.ToolBarModel;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
 import it.tidalwave.role.ui.javafx.impl.DefaultJavaFXBinder;
+import it.tidalwave.role.ui.javafx.impl.JavaFXMenuBarModel;
 import it.tidalwave.role.ui.javafx.impl.JavaFXToolBarModel;
 import it.tidalwave.role.ui.javafx.impl.util.JavaFXSafeProxy;
 import lombok.Getter;
@@ -143,6 +145,9 @@ public class JavaFXSafeProxyCreator
     @Getter
     private static final ToolBarModel toolBarModel = new JavaFXToolBarModel();
 
+    @Getter
+    private static final MenuBarModel menuBarModel = new JavaFXMenuBarModel();
+
     static
       {
         executor.setWaitForTasksToCompleteOnShutdown(false);
@@ -154,6 +159,7 @@ public class JavaFXSafeProxyCreator
         BEANS.put(JavaFXBinder.class, javaFxBinder);
         BEANS.put(Executor.class, executor);
         BEANS.put(ToolBarModel.class, toolBarModel);
+        BEANS.put(MenuBarModel.class, menuBarModel);
       }
 
     private JavaFXSafeProxyCreator () {}

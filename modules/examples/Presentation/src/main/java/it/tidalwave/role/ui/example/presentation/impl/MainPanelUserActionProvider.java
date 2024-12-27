@@ -28,6 +28,7 @@ package it.tidalwave.role.ui.example.presentation.impl;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
+import it.tidalwave.role.ui.MenuBarModel;
 import it.tidalwave.role.ui.ToolBarModel;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.spi.DefaultUserActionProvider;
@@ -41,8 +42,9 @@ import lombok.RequiredArgsConstructor;
  * @author  Fabrizio Giudici
  *
  **************************************************************************************************************************************************************/
-@RequiredArgsConstructor @DciRole(datumType = ToolBarModel.class)
-public class ToolBarUserActionProvider extends DefaultUserActionProvider
+// START SNIPPET: all
+@RequiredArgsConstructor @DciRole(datumType = {ToolBarModel.class, MenuBarModel.class})
+public class MainPanelUserActionProvider extends DefaultUserActionProvider
   {
     @Nonnull
     private final DefaultMainPanelPresentationControl pc;
@@ -53,3 +55,4 @@ public class ToolBarUserActionProvider extends DefaultUserActionProvider
         return List.of(pc.getActionButton(), pc.getActionDialogOk(), pc.getActionDialogCancelOk(), pc.getActionPickFile(), pc.getActionPickDirectory());
       }
   }
+// END SNIPPET: all

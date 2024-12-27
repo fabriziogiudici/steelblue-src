@@ -126,6 +126,9 @@ Simple interactions with the user are modelled by `UserAction`s. They at least m
 
 <!-- MACRO{snippet|id=userActions|file=${project.basedir}/modules/examples/Presentation/src/main/java/it/tidalwave/role/ui/example/presentation/impl/DefaultMainPanelPresentationControl.java} -->
 
+> As it can be seen in the code, a few actions are also related to a `MenuPlacement` role: this has to do with the creation of the application menu, that will
+> be described below. Anyway, in short, they are declaring under which main menu element they should be placed (`File` or `Tools`).
+
 After all the `UserAction`s have been created, they must be packed together into a `Bindings` object. This is usually an inner class of the presentation (it
 is not a requirement; it can be a standard class as well); it
 is convenient to use the builder pattern for improved code readability (in the code below the `Builder` annotation from Lombok is used).
@@ -220,6 +223,22 @@ instead directly calling the getter methods, they use `Supplier`s.
 > The `_s()` method is a simple utility method that wraps a method whose functional signature is similar to the one of a `Supplier`, but can throw a checked
 > exception: it returns a `Supplier` with no checked exceptions.
 
+
+#[[####]]# Action providers
+
+Sometimes actions do not strictly live inside a presentation/control, but must be bound to global facilities such as toolbars and menu bars. On this purpose,
+one or more `UserActionProvider` roles can be instantiated. They can be associated to `ToolBarModel` or `MenuBarModel` or both (as in the example below).
+
+<!-- MACRO{snippet|id=all|file=${project.basedir}/modules/examples/Presentation/src/main/java/it/tidalwave/role/ui/example/presentation/impl/MainPanelUserActionProvider.java} -->
+
+The purpose of this class is to return a list of `UserAction`s that can be instantiated locally or retrieved elsewhere, if they are already available (as in
+this case). Note that all actions will be made available to a toolbar, while only those associated with a `MenuPlacement` will be attached to a menu bar.
+It is possible to put some logics in the code to decide which actions should be exposed; if the rationale for the toolbar is different than the one for the
+menu bar, two separate `UserActionProvider`s must be provided.
+Multiple `UserActionProvider`s related to the same target (toolbar or menu bar) can be present, and this is indeed a good design approach as each one should
+be related to a different module in the system.
+
+
 #[[###]]# Testing
 
 Given that this module does not depend on UI technology, testing is easy and can be performed with the usual tools. Below some sketches will be illustrated
@@ -249,6 +268,7 @@ At last, an example of testing an interaction involving DAOs and composite entit
 that a lot of things are tested, included interactions.
 
 <!-- MACRO{snippet|id=test_start|file=${project.basedir}/modules/examples/Presentation/src/test/java/it/tidalwave/role/ui/example/presentation/impl/DefaultMainPanelPresentationControlTest.java} -->
+
 
 #[[###]]# JavaFX implementation
 
