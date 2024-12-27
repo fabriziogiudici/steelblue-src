@@ -27,6 +27,7 @@ package it.tidalwave.role.ui.example.presentation.impl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,7 @@ import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.Displayable;
+import it.tidalwave.role.ui.MenuBarModel.MenuPlacement;
 import it.tidalwave.role.ui.PresentationModel;
 import it.tidalwave.role.ui.PresentationModelAggregate;
 import it.tidalwave.role.ui.Selectable;
@@ -87,16 +89,19 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
                                                             Displayable.of("Dialog with ok"));
 
     @Getter
-    private final UserAction actionDialogCancelOk = UserAction.of(this::onButtonDialogOkCancelPressed,
-                                                                  Displayable.of("Dialog with ok/cancel"));
+    private final UserAction actionDialogCancelOk = UserAction.of(this::onButtonDialogOkCancelPressed, List.of(
+                                                                  Displayable.of("Dialog with ok/cancel"),
+                                                                  MenuPlacement.under("Tools")));
 
     @Getter
-    private final UserAction actionPickFile = UserAction.of(this::onButtonPickFilePressed,
-                                                            Displayable.of("Pick file"));
+    private final UserAction actionPickFile = UserAction.of(this::onButtonPickFilePressed, List.of(
+                                                            Displayable.of("Open file..."),
+                                                            MenuPlacement.under("File")));
 
     @Getter
-    private final UserAction actionPickDirectory = UserAction.of(this::onButtonPickDirectoryPressed,
-                                                                 Displayable.of("Pick directory"));
+    private final UserAction actionPickDirectory = UserAction.of(this::onButtonPickDirectoryPressed, List.of(
+                                                            Displayable.of("Open directory..."),
+                                                            MenuPlacement.under("File")));
     // END SNIPPET: userActions
     // START SNIPPET: bindings
     private final Bindings bindings = Bindings.builder()

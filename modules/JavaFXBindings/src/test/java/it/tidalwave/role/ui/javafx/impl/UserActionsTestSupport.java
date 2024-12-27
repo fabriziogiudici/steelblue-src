@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import it.tidalwave.util.Callback;
 import it.tidalwave.role.ui.Displayable;
+import it.tidalwave.role.ui.MenuBarModel;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
 import static org.mockito.Mockito.mock;
@@ -52,9 +53,13 @@ public class UserActionsTestSupport<T, C> extends TestNGApplicationTest
 
     protected UserAction actionFileCloseAll;
 
-    protected UserAction actionSelectAll;
+    protected UserAction actionEditUndo;
 
-    protected UserAction actionSeledtDeselect;
+    protected UserAction actionEditRedo;
+
+    protected UserAction actionSelectSelectAll;
+
+    protected UserAction actionSelectDeselect;
 
     protected void createActions()
       {
@@ -62,13 +67,15 @@ public class UserActionsTestSupport<T, C> extends TestNGApplicationTest
         actionFileOpen = createAction("Open", "File");
         actionFileClose = createAction("Close", "File");
         actionFileCloseAll = createAction("Close all", "File");
-        actionSelectAll = createAction("Select all", "Select");
-        actionSeledtDeselect = createAction("Deselect", "Select");
+        actionEditUndo = createAction("Edit", "Edit");
+        actionEditRedo = createAction("Undo", "Edit");
+        actionSelectSelectAll = createAction("Select all", "Select");
+        actionSelectDeselect = createAction("Deselect", "Select");
       }
 
     @Nonnull
     private static UserAction createAction (@Nonnull final String displayName, @Nonnull final String path)
       {
-        return UserAction.of(mock(Callback.class), List.of(Displayable.of(displayName)));
+        return UserAction.of(mock(Callback.class), List.of(Displayable.of(displayName), MenuBarModel.MenuPlacement.under(path)));
       }
   }

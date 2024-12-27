@@ -27,6 +27,7 @@ package it.tidalwave.ui.javafx;
 
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import it.tidalwave.util.PreferencesHandler;
+import it.tidalwave.role.ui.MenuBarModel;
 import it.tidalwave.role.ui.ToolBarModel;
 import it.tidalwave.role.ui.annotation.EnableMessageBus;
 import it.tidalwave.role.ui.javafx.StackPaneSelector;
@@ -66,6 +67,7 @@ public class JavaFXSpringAnnotationApplicationTest
         assertThat(applicationContext.getBean("stackPaneSelector", StackPaneSelector.class), notNullValue());
         assertThat(applicationContext.getBean("preferencesHandler", PreferencesHandler.class), notNullValue());
         assertThat(applicationContext.getBean("toolBarModel", ToolBarModel.class), notNullValue());
+        assertThat(applicationContext.getBean("menuBarModel", MenuBarModel.class), notNullValue());
         assertThat(applicationContext.containsBean(APPLICATION_MESSAGE_BUS_BEAN_NAME), is(false));
       }
 
@@ -83,6 +85,7 @@ public class JavaFXSpringAnnotationApplicationTest
         assertThat(applicationContext.getBean("stackPaneSelector", StackPaneSelector.class), notNullValue());
         assertThat(applicationContext.getBean("preferencesHandler", PreferencesHandler.class), notNullValue());
         assertThat(applicationContext.getBean("toolBarModel", ToolBarModel.class), notNullValue());
+        assertThat(applicationContext.getBean("menuBarModel", MenuBarModel.class), notNullValue());
         assertThat(applicationContext.getBean(APPLICATION_MESSAGE_BUS_BEAN_NAME, MessageBus.class), notNullValue());
       }
   }

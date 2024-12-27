@@ -28,9 +28,11 @@ package it.tidalwave.role.ui.example.presentation.impl.javafx;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javafx.fxml.FXML;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import org.springframework.context.ApplicationContext;
+import it.tidalwave.role.ui.MenuBarModel;
 import it.tidalwave.role.ui.ToolBarModel;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
 import it.tidalwave.role.ui.javafx.PresentationAssembler;
@@ -51,16 +53,23 @@ public class JavaFXApplicationPresentationDelegate implements PresentationAssemb
     @Inject
     private ToolBarModel toolBarModel;
 
+    @Inject
+    private MenuBarModel menuBarModel;
+
     @FXML
     private BorderPane pnMainPane;
 
     @FXML
     private ToolBar tbToolBar;
 
+    @FXML
+    private MenuBar mbMenuBar;
+
     @Override
     public void assemble (@Nonnull final ApplicationContext applicationContext)
       {
         toolBarModel.populate(binder, tbToolBar);
+        menuBarModel.populate(binder, mbMenuBar);
         final var mainPanelPresentation = applicationContext.getBean(JavaFXMainPanelPresentation.class);
         pnMainPane.setCenter(mainPanelPresentation.getNad().getNode());
       }

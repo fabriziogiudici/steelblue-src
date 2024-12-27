@@ -35,6 +35,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import it.tidalwave.util.PreferencesHandler;
+import it.tidalwave.role.ui.MenuBarModel;
 import it.tidalwave.role.ui.ToolBarModel;
 import it.tidalwave.role.ui.annotation.EnableMessageBus;
 import it.tidalwave.role.ui.javafx.StackPaneSelector;
@@ -75,6 +76,12 @@ public class JavaFXSpringAnnotationApplication extends AbstractJavaFXSpringAppli
         public ToolBarModel toolBarModel()
           {
             return JavaFXSafeProxyCreator.getToolBarModel();
+          }
+
+        @Bean
+        public MenuBarModel menuBarModel()
+          {
+            return JavaFXSafeProxyCreator.getMenuBarModel();
           }
       }
 
