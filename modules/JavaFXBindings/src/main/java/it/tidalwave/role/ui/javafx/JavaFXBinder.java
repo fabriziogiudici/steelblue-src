@@ -43,6 +43,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Window;
+import it.tidalwave.util.ui.UserNotification;
 import it.tidalwave.util.ui.UserNotificationWithFeedback;
 import it.tidalwave.role.ui.BoundProperty;
 import it.tidalwave.role.ui.PresentationModel;
@@ -432,6 +433,19 @@ public interface JavaFXBinder
     public <T> void bindBidirectionally (@Nonnull TextField textField,
                                          @Nonnull BoundProperty<String> textProperty,
                                          @Nonnull BoundProperty<Boolean> validProperty);
+
+    /***********************************************************************************************************************************************************
+     * Shows a modal dialog with the given content and provides feedback by means of the given notification.
+     *
+     * @param   notification  the object notifying whether the operation is confirmed or cancelled
+     * @since   1.1-ALPHA-6
+     **********************************************************************************************************************************************************/
+    public default void showInModalDialog (@Nonnull final UserNotification notification)
+      {
+        showInModalDialog(UserNotificationWithFeedback.notificationWithFeedback()
+                                                      .withCaption(notification.getCaption())
+                                                      .withText(notification.getText()));
+      }
 
     /***********************************************************************************************************************************************************
      * Shows a modal dialog with the given content and provides feedback by means of the given notification.
