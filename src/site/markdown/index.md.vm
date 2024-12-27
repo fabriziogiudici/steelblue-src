@@ -107,11 +107,9 @@ At last, a DAO provides collections of such objects.
 
 ![UML](it-tidalwave-steelblue-modules/it-tidalwave-steelblue-examples/it-tidalwave-steelblue-example-presentation/apidocs/it/tidalwave/role/ui/example/presentation/package.svg)
 
-#[[####]]# DefaultMainPanelPresentation
+#[[####]]# MainPanelPresentation
 
-![UML](it-tidalwave-steelblue-modules/it-tidalwave-steelblue-example-model/apidocs/it/tidalwave/role/ui/example/model/package.svg)
-
-This class is *not implemented* in the backend, but it will in specific implementations related to a UI techology (such as JavaFX). Nevertheless
+This interface is *not implemented* in the backend, but it will in specific implementations related to a UI technology (such as JavaFX). Nevertheless
 it can be mocked and used in tests.
 
 #[[####]]# DefaultMainPanelPresentationControl
@@ -156,17 +154,18 @@ A variant is allowed when the user might cancel the action, providing an alterna
 
 <!-- MACRO{snippet|id=onButtonDialogOkCancelPressed|file=${project.basedir}/modules/examples/Presentation/src/main/java/it/tidalwave/role/ui/example/presentation/impl/DefaultMainPanelPresentationControl.java} -->
 
-TODO
+User interaction that possibly return a value can use instances of `BoundProperty`. In the code below, `selectedFile` is used in a bidirectional fashion: both
+for setting the starting point from which browsing the filesystem and for retrieving the selection.
 
 <!-- MACRO{snippet|id=onButtonPickFilePressed|file=${project.basedir}/modules/examples/Presentation/src/main/java/it/tidalwave/role/ui/example/presentation/impl/DefaultMainPanelPresentationControl.java} -->
-
-TODO
 
 <!-- MACRO{snippet|id=onButtonPickDirectoryPressed|file=${project.basedir}/modules/examples/Presentation/src/main/java/it/tidalwave/role/ui/example/presentation/impl/DefaultMainPanelPresentationControl.java} -->
 
 When the control is initialized, it must call the presentation to pass the bindings, so the presentation implementation can relate them to the actual UI controls.
 
 <!-- MACRO{snippet|id=initialization|file=${project.basedir}/modules/examples/Presentation/src/main/java/it/tidalwave/role/ui/example/presentation/impl/DefaultMainPanelPresentationControl.java} -->
+
+> There are limitations to the use of `@PostConstruct`, that will be explained below.
 
 There must be at least one method to activate the presentation, typically populating it with data. Here we see that `entities1`, `entities2` an `files` are
 first retrieved from the DAOs; then presentation models are created and collected into composite presentation models `pm1`, `pm2` and `pm3` . At last,
@@ -197,6 +196,9 @@ In this second example, an `Aggregate` role is also provided.
 
 <!-- MACRO{snippet|id=pmSimpleDciEntity|file=${project.basedir}/modules/examples/Presentation/src/main/java/it/tidalwave/role/ui/example/presentation/impl/DefaultMainPanelPresentationControl.java} -->
 
+
+#[[####]]# FileEntityPresentable
+
 Presentation models can be created in various way:
 
 1. associated to an entity class already in the model;
@@ -213,15 +215,14 @@ For the entity `FileEntity` the `Presentable` approach has been provided. It use
 in a UI control with columns (such as a table or a tree-table). The aggregate provides multiple presentation model instances, one for each column.
 
 > The `r()` method is a simple utility method that accepts varargs arguments and pack them into a `Collection`, eventually expanding arguments that are
-`Collection`s themselves.
+> `Collection`s themselves.
+> The `_s()` method is a simple utility method that wraps a method whose functional signature is similar to the one of a `Supplier`, but can throw a checked
+> exception: it returns a `Supplier` with no checked exceptions.
 
 <!-- MACRO{snippet|id=all|file=${project.basedir}/modules/examples/Presentation/src/main/java/it/tidalwave/role/ui/example/presentation/impl/FileEntityPresentable.java} -->
 
 Note that since the owner object is mutable (it represents a file, that can change attributes during its life cycle), **deferred** `Displayable`s are used:
 instead directly calling the getter methods, they use `Supplier`s.
-
-> The `_s()` method is a simple utility method that wraps a method whose functional signature is similar to the one of a `Supplier`, but can throw a checked
-> exception: it returns a `Supplier` with no checked exceptions.
 
 
 #[[####]]# Action providers
@@ -268,6 +269,9 @@ At last, an example of testing an interaction involving DAOs and composite entit
 that a lot of things are tested, included interactions.
 
 <!-- MACRO{snippet|id=test_start|file=${project.basedir}/modules/examples/Presentation/src/test/java/it/tidalwave/role/ui/example/presentation/impl/DefaultMainPanelPresentationControlTest.java} -->
+
+> `_c()` is a utility static method that wraps a `Consumer` that can throw a checked exception into a `Consumer` that wraps it into a `RuntimeException`, thus
+> being compatible with the `Stream` API without requiring ugly looking `try / catch` blocks.
 
 
 #[[###]]# JavaFX implementation
