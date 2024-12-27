@@ -71,8 +71,7 @@ public final class NodeAndDelegate<T>
           }
         else
           {
-            final var interfaceClass = (Class<T>)interfaces[0]; // FIXME
-            final var safeDelegate = JavaFXSafeProxyCreator.createSafeProxy(jfxController, interfaceClass);
+            final var safeDelegate = JavaFXSafeProxyCreator.createSafeProxy(jfxController, interfaces);
             log.debug(">>>> load({}, {}) completed", clazz, resource);
             return new NodeAndDelegate<>(node, safeDelegate);
           }
