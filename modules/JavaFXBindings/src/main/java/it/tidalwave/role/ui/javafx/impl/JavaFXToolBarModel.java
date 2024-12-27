@@ -23,16 +23,19 @@
  *
  * *************************************************************************************************************************************************************
  */
-package it.tidalwave.ui.javafx;
+package it.tidalwave.role.ui.javafx.impl;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.function.Supplier;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
+import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.role.ui.spi.ToolBarModelSupport;
-import it.tidalwave.role.ui.Displayable;
 import it.tidalwave.role.ui.UserAction;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
-import static it.tidalwave.role.ui.Displayable._Displayable_;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /***************************************************************************************************************************************************************
  *
@@ -42,18 +45,29 @@ import static it.tidalwave.role.ui.Displayable._Displayable_;
  * @since   1.1-ALPHA-4
  *
  **************************************************************************************************************************************************************/
-public class JavaFXToolBarModel extends ToolBarModelSupport
+@NoArgsConstructor @Slf4j
+public class JavaFXToolBarModel extends ToolBarModelSupport<JavaFXBinder, ToolBar>
   {
+    /***********************************************************************************************************************************************************
+     * @param   userActionsSupplier   the supplier of actions
+     **********************************************************************************************************************************************************/
+    @VisibleForTesting JavaFXToolBarModel (@Nonnull final Supplier<Collection<? extends UserAction>> userActionsSupplier)
+      {
+        super(userActionsSupplier);
+      }
+
     /***********************************************************************************************************************************************************
      * {@inheritDoc}
      **********************************************************************************************************************************************************/
     @Override
-    public void populate (@Nonnull final Object binder, @Nonnull final Object toolBar)
+    public void populateImpl (@Nonnull final JavaFXBinder binder, @Nonnull final ToolBar toolBar)
       {
-        final var buttons = findToolBarUserActions()
-              .map((action) -> createButton((JavaFXBinder)binder, action))
-              .toArray(Button[]::new);
-        ((ToolBar)toolBar).getItems().addAll(buttons);
+        final var actions = userActionsSupplier.get();
+        log.info("Toolbar user actions: {}", actions);
+        final var buttons = actions.stream()
+                                   .map((action) -> createButton(binder, action))
+                                   .toArray(Button[]::new);
+        toolBar.getItems().addAll(buttons);
       }
 
     /***********************************************************************************************************************************************************
@@ -67,8 +81,6 @@ public class JavaFXToolBarModel extends ToolBarModelSupport
     private static Button createButton (@Nonnull final JavaFXBinder binder, @Nonnull final UserAction action)
       {
         final var button = new Button();
-        // FIXME: move to JavaFXBinder
-        button.setText(action.maybeAs(_Displayable_).map(Displayable::getDisplayName).orElse("???"));
         binder.bind(button, action);
         return button;
       }

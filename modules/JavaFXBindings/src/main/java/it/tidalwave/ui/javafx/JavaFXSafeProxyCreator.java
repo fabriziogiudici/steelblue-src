@@ -41,6 +41,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import it.tidalwave.role.ui.ToolBarModel;
 import it.tidalwave.role.ui.javafx.JavaFXBinder;
 import it.tidalwave.role.ui.javafx.impl.DefaultJavaFXBinder;
+import it.tidalwave.role.ui.javafx.impl.JavaFXToolBarModel;
 import it.tidalwave.role.ui.javafx.impl.util.JavaFXSafeProxy;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

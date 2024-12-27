@@ -26,33 +26,59 @@
 package it.tidalwave.role.ui.spi;
 
 import javax.annotation.Nonnull;
-import java.util.stream.Stream;
+import java.util.Collection;
+import java.util.function.Supplier;
 import it.tidalwave.util.As;
 import it.tidalwave.role.ui.ToolBarModel;
 import it.tidalwave.role.ui.UserAction;
+import it.tidalwave.role.ui.UserActionProvider;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
+import static java.util.Collections.emptyList;
 import static it.tidalwave.role.ui.UserActionProvider._UserActionProvider_;
 
 /***************************************************************************************************************************************************************
  *
  * A support implementation for {@link ToolBarModel}.
  *
+ * @param   <B>               the concrete type of the binder
+ * @param   <T>               the concrete type of the toolbar
+ * @since   1.1-ALPHA-6
  * @author  Fabrizio Giudici
  *
  **************************************************************************************************************************************************************/
-public abstract class ToolBarModelSupport implements ToolBarModel
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+public abstract class ToolBarModelSupport<B, T> implements ToolBarModel
   {
     @Delegate
     private final As as = As.forObject(this);
 
-    /***********************************************************************************************************************************************************
-     * Finds the {@link UserAction} instances to be bound to toolbar buttons.
-     *
-     * @return  the user actions
-     **********************************************************************************************************************************************************/
+    /** The default supplier of {@link UserAction}s, can be injected for testing. */
     @Nonnull
-    protected Stream<? extends UserAction> findToolBarUserActions()
+    protected final Supplier<Collection<? extends UserAction>> userActionsSupplier;
+
+    /***********************************************************************************************************************************************************
+     * Default constructor.
+     **********************************************************************************************************************************************************/
+    protected ToolBarModelSupport()
       {
-        return maybeAs(_UserActionProvider_).map(uap -> uap.getActions().stream()).orElse(Stream.empty());
+        userActionsSupplier = () -> maybeAs(_UserActionProvider_).map(UserActionProvider::getActions).orElse(emptyList());
       }
+
+    /***********************************************************************************************************************************************************
+     * {@inheritDoc}
+     **********************************************************************************************************************************************************/
+    @SuppressWarnings("unchecked")
+    public final void populate (@Nonnull final Object binder, @Nonnull final Object toolBar)
+      {
+        populateImpl((B)binder, (T)toolBar);
+      }
+
+    /***********************************************************************************************************************************************************
+     * Populates the menu bar with menus.
+     * @param   binder    the binder
+     * @param   toolBar   the toolbar
+     **********************************************************************************************************************************************************/
+    protected abstract void populateImpl (@Nonnull B binder, @Nonnull T toolBar);
   }
