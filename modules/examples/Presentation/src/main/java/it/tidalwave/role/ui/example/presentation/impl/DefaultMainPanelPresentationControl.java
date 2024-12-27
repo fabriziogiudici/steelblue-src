@@ -138,12 +138,12 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
         final var entities1 = dao.getSimpleEntities();
         final var entities2 = dao.getDciEntities();
         final var files = dao.getFiles();
-        final var pm1 = entities1.stream().map(this::pmFor).collect(toCompositePresentationModel());
-        final var pm2 = entities2.stream().map(this::pmFor).collect(toCompositePresentationModel());
-        final var pm3 = files.stream()
+        final var pmEnt1 = entities1.stream().map(this::pmFor).collect(toCompositePresentationModel());
+        final var pmEnt2 = entities2.stream().map(this::pmFor).collect(toCompositePresentationModel());
+        final var pmFiles = files.stream()
                              .map(item -> item.as(_Presentable_).createPresentationModel())
                              .collect(toCompositePresentationModel(r(Visible.INVISIBLE)));
-        presentation.populate(pm1, pm2, pm3);
+        presentation.populate(pmEnt1, pmEnt2, pmFiles);
       }
     // END SNIPPET: populate
 
