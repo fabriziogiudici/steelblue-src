@@ -66,7 +66,7 @@ class MenuItemMock
     private final String text;
   }
 
-class UnderTest2 extends MenuBarModelSupport<BinderMock, MenuBarMock, MenuMock, MenuItemMock>
+class UnderTest2 extends MenuBarControlSupport<BinderMock, MenuBarMock, MenuMock>
   {
     public UnderTest2 (@Nonnull final Supplier<Collection<? extends UserAction>> userActionsSupplier)
       {
@@ -98,7 +98,7 @@ class UnderTest2 extends MenuBarModelSupport<BinderMock, MenuBarMock, MenuMock, 
  * @author  Fabrizio Giudici
  *
  **************************************************************************************************************************************************************/
-public class MenuBarModelSupportTest
+public class MenuBarControlSupportTest
   {
     private final TestUserActions a = new TestUserActions();
 
@@ -111,7 +111,7 @@ public class MenuBarModelSupportTest
         final var control = new MenuBarMock();
         final var binder = new BinderMock();
         // when
-        underTest.populateImpl(binder, control);
+        underTest.populate(binder, control);
         // then
         final var menus = control.getMenus();
         assertThat(menus.size(), is(3));
