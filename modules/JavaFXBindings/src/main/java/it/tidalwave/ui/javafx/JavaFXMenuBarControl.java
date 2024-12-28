@@ -23,25 +23,19 @@
  *
  * *************************************************************************************************************************************************************
  */
-package it.tidalwave.ui.core;
+package it.tidalwave.ui.javafx;
 
-import javax.annotation.Nonnull;
-import it.tidalwave.util.As;
+import javafx.scene.control.MenuBar;
+import it.tidalwave.ui.core.MenuBarControl;
 
 /***************************************************************************************************************************************************************
  *
- * A model for the application toolbar.
+ * The JavaFX specialisation for {@link MenuBarControl}.
  *
+ * @since   2.0-ALPHA-1
  * @author  Fabrizio Giudici
  *
  **************************************************************************************************************************************************************/
-public interface ToolBarModel extends As
+public interface JavaFXMenuBarControl extends MenuBarControl<JavaFXBinder, MenuBar>
   {
-    /***********************************************************************************************************************************************************
-     * Populates the toolbar with buttons.
-     *
-     * @param   binder    the binder
-     * @param   toolBar   the toolbar
-     **********************************************************************************************************************************************************/
-    public void populate (@Nonnull Object binder, @Nonnull Object toolBar);
   }

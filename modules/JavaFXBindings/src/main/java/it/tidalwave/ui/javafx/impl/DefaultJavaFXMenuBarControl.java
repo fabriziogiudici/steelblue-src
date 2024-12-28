@@ -30,35 +30,38 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import it.tidalwave.role.ui.UserAction;
+import it.tidalwave.ui.core.MenuBarControl;
 import it.tidalwave.ui.javafx.JavaFXBinder;
-import it.tidalwave.ui.core.spi.MenuBarModelSupport;
+import it.tidalwave.ui.core.spi.MenuBarControlSupport;
+import it.tidalwave.ui.javafx.JavaFXMenuBarControl;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /***************************************************************************************************************************************************************
  *
- * The JavaFX implementation for {@link it.tidalwave.ui.core.MenuBarModel}.
+ * The JavaFX implementation for {@link MenuBarControl}.
  *
  * @since   1.1-ALPHA-6
  * @author  Fabrizio Giudici
  *
  **************************************************************************************************************************************************************/
 @NoArgsConstructor @Slf4j
-public class JavaFXMenuBarModel extends MenuBarModelSupport<JavaFXBinder, MenuBar, Menu, MenuItem>
+public class DefaultJavaFXMenuBarControl extends MenuBarControlSupport<JavaFXBinder, MenuBar, Menu> implements JavaFXMenuBarControl
   {
     /***********************************************************************************************************************************************************
      * {@inheritDoc}
      **********************************************************************************************************************************************************/
-    protected void populateImpl (@Nonnull final JavaFXBinder binder, @Nonnull final MenuBar menuBar)
+    @Override
+    public void populate (@Nonnull final JavaFXBinder binder, @Nonnull final MenuBar menuBar)
       {
         menuBar.useSystemMenuBarProperty().set(true); // FIXME: only if macOS?
-        super.populateImpl(binder, menuBar);
+        super.populate(binder, menuBar);
       }
 
     /***********************************************************************************************************************************************************
      * {@inheritDoc}
      **********************************************************************************************************************************************************/
-    @Nonnull
+    @Override @Nonnull
     protected Menu createMenu (@Nonnull final String label)
       {
         return new Menu(label);
@@ -67,6 +70,7 @@ public class JavaFXMenuBarModel extends MenuBarModelSupport<JavaFXBinder, MenuBa
     /***********************************************************************************************************************************************************
      * {@inheritDoc}
      **********************************************************************************************************************************************************/
+    @Override
     protected void addMenuToMenuBar (@Nonnull final MenuBar menuBar, @Nonnull final Menu menu)
       {
         menuBar.getMenus().add(menu);

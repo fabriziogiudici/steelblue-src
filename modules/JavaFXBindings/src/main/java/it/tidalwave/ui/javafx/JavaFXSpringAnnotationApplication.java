@@ -35,8 +35,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import it.tidalwave.util.PreferencesHandler;
-import it.tidalwave.ui.core.MenuBarModel;
-import it.tidalwave.ui.core.ToolBarModel;
 import it.tidalwave.ui.core.annotation.EnableMessageBus;
 import it.tidalwave.messagebus.MessageBus;
 import it.tidalwave.messagebus.spi.SimpleMessageBus;
@@ -72,15 +70,15 @@ public class JavaFXSpringAnnotationApplication extends AbstractJavaFXSpringAppli
           }
 
         @Bean
-        public ToolBarModel toolBarModel()
+        public JavaFXToolBarControl toolBarControl()
           {
-            return JavaFXSafeProxyCreator.getToolBarModel();
+            return JavaFXSafeProxyCreator.getToolBarControl();
           }
 
         @Bean
-        public MenuBarModel menuBarModel()
+        public JavaFXMenuBarControl menuBarControl()
           {
-            return JavaFXSafeProxyCreator.getMenuBarModel();
+            return JavaFXSafeProxyCreator.getMenuBarControl();
           }
       }
 
@@ -100,7 +98,7 @@ public class JavaFXSpringAnnotationApplication extends AbstractJavaFXSpringAppli
           }
       }
 
-    protected static final String APPLICATION_MESSAGE_BUS_BEAN_NAME = "applicationMessageBus";
+    public static final String APPLICATION_MESSAGE_BUS_BEAN_NAME = "applicationMessageBus";
 
     // Don't use Slf4j and its static logger - give Main a chance to initialize things
     private final Logger log = LoggerFactory.getLogger(JavaFXSpringApplication.class);
