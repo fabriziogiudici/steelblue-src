@@ -516,9 +516,9 @@ public interface JavaFXBinder
     /***********************************************************************************************************************************************************
      *
      **********************************************************************************************************************************************************/
-    public <T> void bindBidirectionally (@Nonnull TextField textField,
-                                         @Nonnull BoundProperty<String> textProperty,
-                                         @Nonnull BoundProperty<Boolean> validProperty);
+    public void bindBidirectionally (@Nonnull TextField textField,
+                                     @Nonnull BoundProperty<String> textProperty,
+                                     @Nonnull BoundProperty<Boolean> validProperty);
 
     /***********************************************************************************************************************************************************
      * Shows a modal dialog with the given content and provides feedback by means of the given notification.

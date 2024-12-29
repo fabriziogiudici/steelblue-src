@@ -29,8 +29,8 @@ import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.nio.file.Path;
+import it.tidalwave.util.As;
 import it.tidalwave.util.ui.UserNotificationWithFeedback;
 import it.tidalwave.role.Aggregate;
 import it.tidalwave.role.SimpleComposite;
@@ -48,8 +48,6 @@ import org.testng.annotations.Test;
 import org.mockito.ArgumentMatcher;
 import static it.tidalwave.util.FunctionalCheckedExceptionWrappers.*;
 import static it.tidalwave.util.ui.UserNotificationWithFeedbackTestHelper.*;
-import static it.tidalwave.role.Aggregate._Aggregate_;
-import static it.tidalwave.role.SimpleComposite._SimpleComposite_;
 import static it.tidalwave.ui.core.role.Displayable._Displayable_;
 import static it.tidalwave.ui.core.role.Presentable._Presentable_;
 import static it.tidalwave.ui.core.role.Selectable._Selectable_;
@@ -77,6 +75,10 @@ public class DefaultMainPanelPresentationControlTest
             return true;
           }
       }
+
+    private static final As.Type<Aggregate<PresentationModel>> _PresentationModelAggregate_ = new As.Type<>(Aggregate.class);
+
+    private static final As.Type<SimpleComposite<PresentationModel>> _PresentationModelComposite_ = new As.Type<>(SimpleComposite.class);
 
     // START SNIPPET: mocks
     private Dao dao;
@@ -170,7 +172,7 @@ public class DefaultMainPanelPresentationControlTest
 
     /******************************************************************************************************************/
     // START SNIPPET: test_actionPickFile_confirm
-    @Test
+    @Test @SuppressWarnings("unchecked")
     public void test_actionPickFile_confirm()
       {
         // given
@@ -190,7 +192,7 @@ public class DefaultMainPanelPresentationControlTest
     // END SNIPPET: test_actionPickFile_confirm
 
     /******************************************************************************************************************/
-    @Test
+    @Test @SuppressWarnings("unchecked")
     public void test_actionPickFile_cancel()
       {
         // given
@@ -206,7 +208,7 @@ public class DefaultMainPanelPresentationControlTest
       }
 
     /******************************************************************************************************************/
-    @Test
+    @Test @SuppressWarnings("unchecked")
     public void test_actionPickDirectory_confirm()
       {
         // given
@@ -222,7 +224,7 @@ public class DefaultMainPanelPresentationControlTest
       }
 
     /******************************************************************************************************************/
-    @Test
+    @Test @SuppressWarnings("unchecked")
     public void test_actionPickDirectory_cancel()
       {
         // given
@@ -275,7 +277,7 @@ public class DefaultMainPanelPresentationControlTest
           {
             assertPresentationModel(pm, simpleDciEntity.getName(), simpleDciEntity.toString());
 
-            final Aggregate<PresentationModel> aggregate = pm.as(_Aggregate_);
+            final Aggregate<PresentationModel> aggregate = pm.as(_PresentationModelAggregate_);
             assertThat(aggregate.getNames(), is(Set.of("C1", "C2", "C3")));
             final var pmc1 = aggregate.getByName("C1").orElseThrow();
             final var pmc2 = aggregate.getByName("C2").orElseThrow();
@@ -292,7 +294,7 @@ public class DefaultMainPanelPresentationControlTest
             final var displayable = pm.as(_Displayable_);
             assertThat(displayable.getDisplayName(), is(fe.getDisplayName()));
 
-            final Aggregate<PresentationModel> aggregate = pm.as(_Aggregate_);
+            final var aggregate = pm.as(_PresentationModelAggregate_);
             assertThat(aggregate.getNames(), is(Set.of("name", "size", "creationDate", "latestModificationDate")));
             final var pmc1 = aggregate.getByName("name").orElseThrow();
             final var pmc2 = aggregate.getByName("size").orElseThrow();
@@ -332,10 +334,9 @@ public class DefaultMainPanelPresentationControlTest
       }
 
     @Nonnull
-    private static List<PresentationModel> toPmList (@Nonnull final PresentationModel pm)
+    private static List<? extends PresentationModel> toPmList (@Nonnull final PresentationModel pm)
       {
-        final SimpleComposite<PresentationModel> sc = pm.as(_SimpleComposite_);
-        return sc.stream().collect(Collectors.toList());
+        return pm.as(_PresentationModelComposite_).stream().toList();
       }
     // END SNIPPET: test_start
   }

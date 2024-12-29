@@ -57,7 +57,6 @@ import it.tidalwave.ui.core.role.UserActionProvider;
 import it.tidalwave.ui.javafx.JavaFXBinder;
 import it.tidalwave.ui.javafx.impl.combobox.ComboBoxBindings;
 import it.tidalwave.ui.javafx.impl.common.CellBinder;
-import it.tidalwave.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import it.tidalwave.ui.javafx.impl.common.DefaultCellBinder;
 import it.tidalwave.ui.javafx.impl.common.PropertyAdapter;
 import it.tidalwave.ui.javafx.impl.dialog.DialogBindings;
@@ -66,12 +65,12 @@ import it.tidalwave.ui.javafx.impl.list.ListViewBindings;
 import it.tidalwave.ui.javafx.impl.tableview.TableViewBindings;
 import it.tidalwave.ui.javafx.impl.tree.TreeViewBindings;
 import it.tidalwave.ui.javafx.impl.treetable.TreeTableViewBindings;
+import it.tidalwave.util.As;
 import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.*;
-import static it.tidalwave.role.SimpleComposite._SimpleComposite_;
 import static it.tidalwave.ui.core.role.Displayable._Displayable_;
 import static it.tidalwave.ui.core.role.Styleable._Styleable_;
 import static it.tidalwave.ui.core.role.UserActionProvider._UserActionProvider_;
@@ -84,36 +83,31 @@ import static it.tidalwave.ui.core.role.UserActionProvider._UserActionProvider_;
 @Slf4j
 public class DefaultJavaFXBinder implements JavaFXBinder
   {
+    private static final As.Type<SimpleComposite<PresentationModel>>  _SimpleCompositePresentationModel_ = new As.Type<>(SimpleComposite.class);
+
     private final Executor executor;
 
     private final String invalidTextFieldStyle = "-fx-background-color: pink";
 
-    interface Exclusions
-      {
-        public void setMainWindow (Window window);
-        // duplicated in TableViewBindings and TreeTableViewBindings due to common super class
-        public ChangeListenerSelectableAdapter getSelectionListener();
-      }
-
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final TreeViewBindings treeItemBindings;
 
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final TableViewBindings tableViewBindings;
 
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final TreeTableViewBindings treeTableViewBindings;
 
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final ListViewBindings listViewBindings;
 
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final ComboBoxBindings comboBoxBindings;
 
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final DialogBindings dialogBindings;
 
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final FileChooserBindings fileChooserBindings;
 
     private final CellBinder cellBinder;
@@ -185,7 +179,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     /***********************************************************************************************************************************************************
      * {@inheritDoc}
      **********************************************************************************************************************************************************/
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public <T, S> void bindBidirectionally (@Nonnull final BoundProperty<? super T> property1,
                                             @Nonnull final Property<S> property2,
                                             @Nonnull final Function<? super S, T> adapter,
@@ -200,9 +194,9 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      * {@inheritDoc}
      **********************************************************************************************************************************************************/
     @Override
-    public <T> void bindBidirectionally (@Nonnull final TextField textField,
-                                         @Nonnull final BoundProperty<String> textProperty,
-                                         @Nonnull final BoundProperty<Boolean> validProperty)
+    public void bindBidirectionally (@Nonnull final TextField textField,
+                                     @Nonnull final BoundProperty<String> textProperty,
+                                     @Nonnull final BoundProperty<Boolean> validProperty)
       {
         assertIsFxApplicationThread();
         requireNonNull(textField, "textField");
@@ -225,7 +219,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
         final var group = new ToggleGroup();
         final var children = pane.getChildren();
         final var prototypeStyleClass = children.get(0).getStyleClass();
-        final SimpleComposite<PresentationModel> pmc = pm.as(_SimpleComposite_);
+        final SimpleComposite<PresentationModel> pmc = pm.as(_SimpleCompositePresentationModel_);
         children.setAll(pmc.findChildren().stream().map(cpm -> createToggleButton(cpm, prototypeStyleClass, group)).collect(toList()));
       }
 

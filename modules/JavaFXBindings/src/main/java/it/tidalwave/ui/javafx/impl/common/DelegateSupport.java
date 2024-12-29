@@ -30,7 +30,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import javafx.scene.effect.BoxBlur;
 import javafx.stage.Window;
-import javafx.application.Platform;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
