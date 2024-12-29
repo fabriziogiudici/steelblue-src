@@ -33,9 +33,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.Property;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
@@ -60,7 +57,6 @@ import it.tidalwave.ui.core.role.UserActionProvider;
 import it.tidalwave.ui.javafx.JavaFXBinder;
 import it.tidalwave.ui.javafx.impl.combobox.ComboBoxBindings;
 import it.tidalwave.ui.javafx.impl.common.CellBinder;
-import it.tidalwave.ui.javafx.impl.common.ChangeListenerSelectableAdapter;
 import it.tidalwave.ui.javafx.impl.common.DefaultCellBinder;
 import it.tidalwave.ui.javafx.impl.common.PropertyAdapter;
 import it.tidalwave.ui.javafx.impl.dialog.DialogBindings;
@@ -91,32 +87,25 @@ public class DefaultJavaFXBinder implements JavaFXBinder
 
     private final String invalidTextFieldStyle = "-fx-background-color: pink";
 
-    interface Exclusions
-      {
-        public void setMainWindow (Window window);
-        // duplicated in TableViewBindings and TreeTableViewBindings due to common super class
-        public ChangeListenerSelectableAdapter getSelectionListener();
-      }
-
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final TreeViewBindings treeItemBindings;
 
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final TableViewBindings tableViewBindings;
 
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final TreeTableViewBindings treeTableViewBindings;
 
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final ListViewBindings listViewBindings;
 
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final ComboBoxBindings comboBoxBindings;
 
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final DialogBindings dialogBindings;
 
-    @Delegate(excludes = Exclusions.class)
+    @Delegate
     private final FileChooserBindings fileChooserBindings;
 
     private final CellBinder cellBinder;
