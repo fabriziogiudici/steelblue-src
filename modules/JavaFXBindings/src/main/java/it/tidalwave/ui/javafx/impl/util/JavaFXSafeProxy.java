@@ -27,7 +27,7 @@ package it.tidalwave.ui.javafx.impl.util;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 import javafx.application.Platform;

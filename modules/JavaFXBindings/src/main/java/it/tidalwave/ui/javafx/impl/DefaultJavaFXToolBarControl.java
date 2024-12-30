@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.javafx.impl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;

@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.javafx.impl.util;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javafx.application.Platform;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

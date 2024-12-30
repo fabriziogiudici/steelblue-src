@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.javafx.impl.tree;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TreeItem;

@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.core.spi;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.List;
 import it.tidalwave.ui.core.MenuBarControl;
 import it.tidalwave.util.Callback;

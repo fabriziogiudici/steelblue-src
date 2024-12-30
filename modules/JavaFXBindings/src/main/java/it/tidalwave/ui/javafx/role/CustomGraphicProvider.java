@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.javafx.role;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javafx.scene.Node;
 
 /***************************************************************************************************************************************************************

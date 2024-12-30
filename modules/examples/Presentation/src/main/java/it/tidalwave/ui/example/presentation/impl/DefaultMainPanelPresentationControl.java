@@ -25,8 +25,8 @@
  */
 package it.tidalwave.ui.example.presentation.impl;
 
-import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.PostConstruct;
 import java.util.List;
 import java.nio.file.Path;
 import java.nio.file.Paths;

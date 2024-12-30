@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.javafx.impl.common;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.Executor;

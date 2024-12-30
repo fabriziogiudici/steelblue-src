@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.javafx.impl.util;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import it.tidalwave.util.ReflectionUtils;
 import static it.tidalwave.ui.javafx.impl.util.JavaFXSafeComponentBuilder.builderFor;
 

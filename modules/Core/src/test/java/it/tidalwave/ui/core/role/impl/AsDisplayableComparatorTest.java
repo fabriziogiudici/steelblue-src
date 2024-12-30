@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.core.role.impl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Comparator;
 import java.util.List;
 import it.tidalwave.util.As;

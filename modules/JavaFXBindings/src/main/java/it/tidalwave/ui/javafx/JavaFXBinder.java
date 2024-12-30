@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.javafx;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Optional;
 import java.nio.file.Path;

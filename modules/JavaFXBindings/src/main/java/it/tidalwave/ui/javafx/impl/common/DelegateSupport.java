@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.javafx.impl.common;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import javafx.scene.effect.BoxBlur;

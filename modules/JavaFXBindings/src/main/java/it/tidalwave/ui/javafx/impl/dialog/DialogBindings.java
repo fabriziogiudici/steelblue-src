@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.javafx.impl.dialog;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.io.IOException;

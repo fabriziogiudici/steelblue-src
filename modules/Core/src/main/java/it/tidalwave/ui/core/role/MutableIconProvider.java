@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.core.role;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.beans.PropertyChangeListener;
 import javax.swing.Icon;
 
