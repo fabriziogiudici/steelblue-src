@@ -27,6 +27,7 @@ package it.tidalwave.ui.javafx;
 
 import jakarta.annotation.Nonnull;
 import java.io.IOException;
+import java.net.URL;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.application.Platform;
@@ -58,22 +59,31 @@ public final class NodeAndDelegate<T>
         assert Platform.isFxApplicationThread() : "Not in JavaFX UI Thread";
         final var loader = new FXMLLoader(clazz.getResource(resource), null, null,
                                           type -> ReflectionUtils.instantiateWithDependencies(type, JavaFXSafeProxyCreator.BEANS));
-        final Node node = loader.load();
-        final T jfxController = loader.getController();
-        ReflectionUtils.injectDependencies(jfxController, JavaFXSafeProxyCreator.BEANS);
-        final var interfaces = jfxController.getClass().getInterfaces();
+        try
+          {
+            final Node node = loader.load();
+            final T jfxController = loader.getController();
+            ReflectionUtils.injectDependencies(jfxController, JavaFXSafeProxyCreator.BEANS);
+            final var interfaces = jfxController.getClass().getInterfaces();
 
-        if (interfaces.length == 0)
-          {
-            log.warn("{} has no interface: not creating safe proxy", jfxController.getClass());
-            log.debug(">>>> load({}, {}) completed", clazz, resource);
-            return new NodeAndDelegate<>(node, jfxController);
+            if (interfaces.length == 0)
+              {
+                log.warn("{} has no interface: not creating safe proxy", jfxController.getClass());
+                log.debug(">>>> load({}, {}) completed", clazz, resource);
+                return new NodeAndDelegate<>(node, jfxController);
+              }
+            else
+              {
+                final var safeDelegate = JavaFXSafeProxyCreator.createSafeProxy(jfxController, interfaces);
+                log.debug(">>>> load({}, {}) completed", clazz, resource);
+                return new NodeAndDelegate<>(node, safeDelegate);
+              }
           }
-        else
+        catch (IllegalStateException e)
           {
-            final var safeDelegate = JavaFXSafeProxyCreator.createSafeProxy(jfxController, interfaces);
-            log.debug(">>>> load({}, {}) completed", clazz, resource);
-            return new NodeAndDelegate<>(node, safeDelegate);
+            final var message = String.format("ERROR: Cannot find resource: %s/%s", clazz.getPackageName().replace('.','/'), resource);
+            log.error("ERROR: Cannot find resource: {}", message);
+            throw new IllegalStateException(message);
           }
       }
   }
