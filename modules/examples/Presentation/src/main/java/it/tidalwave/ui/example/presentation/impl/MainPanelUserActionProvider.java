@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.example.presentation.impl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 import it.tidalwave.ui.core.MenuBarControl;

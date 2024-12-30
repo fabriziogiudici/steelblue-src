@@ -26,7 +26,7 @@
 package it.tidalwave.ui.example.model;
 
 import javax.annotation.Nonnegative;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

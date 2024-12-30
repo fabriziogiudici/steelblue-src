@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.example.presentation.impl;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Collection;

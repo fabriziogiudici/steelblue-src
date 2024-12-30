@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.javafx.impl.util;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import it.tidalwave.util.As;
 import it.tidalwave.role.Aggregate;

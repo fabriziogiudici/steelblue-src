@@ -25,8 +25,8 @@
  */
 package it.tidalwave.ui.example.presentation.impl.javafx;
 
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import jakarta.annotation.Nonnull;
+import jakarta.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ToolBar;

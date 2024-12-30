@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.core;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

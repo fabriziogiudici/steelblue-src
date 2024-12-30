@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.example.presentation.impl.javafx;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.nio.file.Path;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

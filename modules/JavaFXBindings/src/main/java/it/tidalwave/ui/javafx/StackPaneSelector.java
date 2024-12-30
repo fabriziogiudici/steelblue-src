@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.javafx;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.WeakHashMap;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;

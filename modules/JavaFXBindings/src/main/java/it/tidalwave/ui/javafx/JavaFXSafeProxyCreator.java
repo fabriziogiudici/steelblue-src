@@ -26,7 +26,7 @@
 package it.tidalwave.ui.javafx;
 
 import java.lang.reflect.Proxy;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;

@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.core.role.spi;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import it.tidalwave.util.NotFoundException;

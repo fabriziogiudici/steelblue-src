@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.function;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import it.tidalwave.ui.core.role.Changeable;
 import it.tidalwave.ui.core.ChangingSource;
 import lombok.extern.slf4j.Slf4j;

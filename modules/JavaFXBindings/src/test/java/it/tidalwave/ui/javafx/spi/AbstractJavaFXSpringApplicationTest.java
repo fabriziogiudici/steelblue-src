@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.javafx.spi;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;

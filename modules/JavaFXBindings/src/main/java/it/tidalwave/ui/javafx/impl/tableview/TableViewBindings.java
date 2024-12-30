@@ -25,7 +25,7 @@
  */
 package it.tidalwave.ui.javafx.impl.tableview;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import javafx.beans.property.ReadOnlyObjectProperty;

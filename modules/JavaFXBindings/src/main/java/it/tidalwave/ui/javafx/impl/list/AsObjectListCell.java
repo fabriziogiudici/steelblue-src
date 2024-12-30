@@ -26,7 +26,7 @@
 package it.tidalwave.ui.javafx.impl.list;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import javafx.scene.control.cell.TextFieldListCell;
 import it.tidalwave.util.As;
 import it.tidalwave.ui.javafx.impl.common.CellBinder;
