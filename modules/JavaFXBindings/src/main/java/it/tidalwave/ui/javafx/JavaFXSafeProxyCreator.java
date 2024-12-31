@@ -42,6 +42,7 @@ import it.tidalwave.ui.javafx.impl.DefaultJavaFXBinder;
 import it.tidalwave.ui.javafx.impl.DefaultJavaFXMenuBarControl;
 import it.tidalwave.ui.javafx.impl.DefaultJavaFXToolBarControl;
 import it.tidalwave.ui.javafx.impl.util.JavaFXSafeProxy;
+import it.tidalwave.util.PreferencesHandler;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -157,6 +158,7 @@ public class JavaFXSafeProxyCreator
         BEANS.put(Executor.class, executor);
         BEANS.put(JavaFXToolBarControl.class, toolBarControl);
         BEANS.put(JavaFXMenuBarControl.class, menuBarControl);
+        BEANS.put(PreferencesHandler.class, PreferencesHandler.getInstance());
       }
 
     private JavaFXSafeProxyCreator () {}
