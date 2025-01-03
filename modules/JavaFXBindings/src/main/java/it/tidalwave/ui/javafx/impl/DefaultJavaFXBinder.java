@@ -153,7 +153,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     public void bind (@Nonnull final ButtonBase button, @Nonnull final UserAction action)
       {
         assertIsFxApplicationThread();
-        button.setText(action.maybeAs(_Displayable_).map(Displayable::getDisplayName).orElse(""));
+        action.maybeAs(_Displayable_).ifPresent(d -> button.setText(d.getDisplayName()));
         button.disableProperty().bind(adaptBoolean(action.enabled()).not());
         button.setOnAction(__ -> executor.execute(action::actionPerformed));
       }
