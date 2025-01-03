@@ -30,8 +30,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
@@ -173,10 +177,26 @@ public class DefaultJavaFXBinder implements JavaFXBinder
      * {@inheritDoc}
      **********************************************************************************************************************************************************/
     @Override
-    public <T> void bindBidirectionally (@Nonnull final Property<T> property1, @Nonnull final BoundProperty<T> property2)
+    public <T, S> void bind (@Nonnull final BoundProperty<? super T> target,
+                             @Nonnull final Property<? extends S> source,
+                             @Nonnull final Function<S, T> adapter)
       {
         assertIsFxApplicationThread();
-        property1.bindBidirectional(new PropertyAdapter<>(executor, property2));
+        source.addListener((_1, _2, newValue) -> executor.execute(() -> target.set(adapter.apply(newValue))));
+      }
+
+    /***********************************************************************************************************************************************************
+     * {@inheritDoc}
+     **********************************************************************************************************************************************************/
+    @Override
+    public <T, S> void bindBidirectionally (@Nonnull final BoundProperty<? super T> property1,
+                                            @Nonnull final Property<S> property2,
+                                            @Nonnull final Function<? super S, T> adapter,
+                                            @Nonnull final Function<? super T, ? extends S> reverseAdapter)
+      {
+        assertIsFxApplicationThread();
+        property2.addListener((_1, _2, newValue) -> executor.execute(() -> property1.set(adapter.apply(newValue))));
+        property1.addPropertyChangeListener(evt -> Platform.runLater(() -> property2.setValue(reverseAdapter.apply((T)evt.getNewValue()))));
       }
 
     /***********************************************************************************************************************************************************
