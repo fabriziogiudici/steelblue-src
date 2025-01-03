@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-import javafx.beans.binding.BooleanExpression;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -148,8 +148,8 @@ public class DefaultJavaFXBinder implements JavaFXBinder
       {
         assertIsFxApplicationThread();
         action.maybeAs(_Displayable_).ifPresent(d -> button.setText(d.getDisplayName()));
-        button.disableProperty().bind(adaptBoolean(action.enabled()).not());
         button.setOnAction(__ -> executor.execute(action::actionPerformed));
+        bindEnableProperty(button.disableProperty(), action.enabled());
       }
 
     /***********************************************************************************************************************************************************
@@ -160,8 +160,8 @@ public class DefaultJavaFXBinder implements JavaFXBinder
       {
         assertIsFxApplicationThread();
         menuItem.setText(action.maybeAs(_Displayable_).map(Displayable::getDisplayName).orElse(""));
-        menuItem.disableProperty().bind(adaptBoolean(action.enabled()).not());
         menuItem.setOnAction(__ -> executor.execute(action::actionPerformed));
+        bindEnableProperty(menuItem.disableProperty(), action.enabled());
       }
 
     /***********************************************************************************************************************************************************
@@ -302,9 +302,10 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     /***********************************************************************************************************************************************************
      *
      **********************************************************************************************************************************************************/
-    @Nonnull
-    private BooleanExpression adaptBoolean (@Nonnull final BoundProperty<Boolean> property)
+    private void bindEnableProperty (@Nonnull final BooleanProperty property1, @Nonnull final BoundProperty<Boolean> property2)
       {
-        return BooleanExpression.booleanExpression(new PropertyAdapter<>(executor, property));
+        property1.setValue(!property2.get());
+        property1.addListener((_1, _2, newValue) -> executor.execute(() -> property2.set(!newValue)));
+        property2.addPropertyChangeListener(evt -> Platform.runLater(() -> property1.setValue(!(boolean)evt.getNewValue())));
       }
   }
