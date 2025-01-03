@@ -28,7 +28,12 @@ package it.tidalwave.ui.javafx;
 import jakarta.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Function;
 import java.nio.file.Path;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.Property;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBase;
@@ -421,13 +426,92 @@ public interface JavaFXBinder
     public void bindButtonsInPane (@Nonnull GridPane gridPane, @Nonnull Collection<UserAction> actions);
 
     /***********************************************************************************************************************************************************
+     * Binds two properties of different types.
+     * @param   <T>             the target property type
+     * @param   <S>             the source property type
+     * @param   target          the target property
+     * @param   source          the source property
+     * @param   adapter         an adapter from one source to the target
+     * @since   2.0-ALPHA-1
+     **********************************************************************************************************************************************************/
+    public <T, S> void bind (@Nonnull final BoundProperty<? super T> target,
+                             @Nonnull final Property<? extends S> source,
+                             @Nonnull final Function<S, T> adapter);
+
+    /***********************************************************************************************************************************************************
+     * Binds two properties of the same type.
+     * @param   <T>             the property type
+     * @param   target          the target property
+     * @param   source          the source property
+     * @since   2.0-ALPHA-1
+     **********************************************************************************************************************************************************/
+    public default <T> void bind (@Nonnull final BoundProperty<? super T> target, @Nonnull final Property<T> source)
+      {
+        bind(target, source, Function.identity());
+      }
+
+    /***********************************************************************************************************************************************************
+     * Bidirectionally binds two properties of different types.
+     * @param   <T>             the former property type
+     * @param   <S>             the latter property type
+     * @param   property1       the former property
+     * @param   property2       the latter property
+     * @param   adapter         an adapter from one type to the other
+     * @param   reverseAdapter  the reverse adapter
+     * @since   2.0-ALPHA-1
+     **********************************************************************************************************************************************************/
+    public <T, S> void bindBidirectionally (@Nonnull final BoundProperty<? super T> property1,
+                                            @Nonnull final Property<S> property2,
+                                            @Nonnull final Function<? super S, T> adapter,
+                                            @Nonnull final Function<? super T, ? extends S> reverseAdapter);
+
+    /***********************************************************************************************************************************************************
+     * {@inheritDoc}
+     **********************************************************************************************************************************************************/
+    public default <T> void bindBidirectionally (@Nonnull final BoundProperty<? super T> property1, @Nonnull final Property<T> property2)
+      {
+        bindBidirectionally(property1, property2, Function.identity(), Function.identity());
+      }
+
+    /***********************************************************************************************************************************************************
      * Bidirectionally binds two properties.
-     *
-     * @param   <T>         the property type
      * @param   property1   the former property
      * @param   property2   the latter property
      **********************************************************************************************************************************************************/
-    public <T> void bindBidirectionally (@Nonnull Property<T> property1, @Nonnull BoundProperty<T> property2);
+    public default void bindBidirectionally (@Nonnull final BoundProperty<? super Boolean> property1, @Nonnull final BooleanProperty property2)
+      {
+        bindBidirectionally(property1, property2, a -> a, a -> a);
+      }
+
+    /***********************************************************************************************************************************************************
+     * Bidirectionally binds two properties.
+     * @param   property1   the former property
+     * @param   property2   the latter property
+     **********************************************************************************************************************************************************/
+    public default void bindBidirectionally (@Nonnull final BoundProperty<? super Integer> property1, @Nonnull final IntegerProperty property2)
+      {
+        bindBidirectionally(property1, property2, Number::intValue, a -> a);
+      }
+
+    /***********************************************************************************************************************************************************
+     * Bidirectionally binds two properties.
+     * @param   property1   the former property
+     * @param   property2   the latter property
+     **********************************************************************************************************************************************************/
+    public default void bindBidirectionally (@Nonnull final BoundProperty<? super Long> property1, @Nonnull final LongProperty property2)
+      {
+        bindBidirectionally(property1, property2, Number::longValue, a -> a);
+      }
+
+    /***********************************************************************************************************************************************************
+     * Bidirectionally binds two properties.
+     * @param   property1   the former property
+     * @param   property2   the latter property
+     **********************************************************************************************************************************************************/
+    public default void bindBidirectionally (@Nonnull final BoundProperty<? super Double> property1, @Nonnull final DoubleProperty property2)
+      {
+        bindBidirectionally(property1, property2, Number::doubleValue, a -> a);
+      }
 
     /***********************************************************************************************************************************************************
      *
