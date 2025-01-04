@@ -28,9 +28,10 @@ package it.tidalwave.ui.core.role.impl;
 import jakarta.annotation.Nonnull;
 import java.text.Collator;
 import java.util.Comparator;
-import java.io.Serial;
 import java.io.Serializable;
 import it.tidalwave.ui.core.role.Displayable;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 /***************************************************************************************************************************************************************
  *
@@ -41,6 +42,7 @@ import it.tidalwave.ui.core.role.Displayable;
  * @it.tidalwave.javadoc.draft Will be removed (FIXME)
  *
  **************************************************************************************************************************************************************/
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DisplayableComparator implements Comparator<Displayable>, Serializable
   {
     private static final long serialVersionUID = 434703962103322234L;
