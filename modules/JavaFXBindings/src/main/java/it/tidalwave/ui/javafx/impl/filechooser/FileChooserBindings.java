@@ -37,6 +37,7 @@ import it.tidalwave.util.ui.UserNotificationWithFeedback;
 import it.tidalwave.ui.core.BoundProperty;
 import it.tidalwave.ui.javafx.impl.common.DelegateSupport;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.ui.javafx.impl.DefaultJavaFXBinder.enforceFxApplicationThread;
 
 /***************************************************************************************************************************************************************
  *
@@ -61,7 +62,7 @@ public class FileChooserBindings extends DelegateSupport
                                     @Nonnull final BoundProperty<Path> selectedFile)
       {
         log.debug("openFileChooserFor({}, {})", notification, selectedFile);
-        assertIsFxApplicationThread();
+        enforceFxApplicationThread();
 
         final var fileChooser = new FileChooser();
         fileChooser.setTitle(notification.getCaption());
@@ -80,7 +81,7 @@ public class FileChooserBindings extends DelegateSupport
                                          @Nonnull final BoundProperty<Path> selectedFolder)
       {
         log.debug("openDirectoryChooserFor({}, {})", notification, selectedFolder);
-        assertIsFxApplicationThread();
+        enforceFxApplicationThread();
 
         final var directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle(notification.getCaption());

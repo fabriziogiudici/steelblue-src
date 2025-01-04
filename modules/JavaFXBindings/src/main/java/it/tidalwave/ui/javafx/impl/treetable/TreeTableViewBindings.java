@@ -38,6 +38,7 @@ import it.tidalwave.ui.javafx.impl.common.CellBinder;
 import it.tidalwave.ui.javafx.impl.common.PresentationModelObservable;
 import it.tidalwave.ui.javafx.impl.common.TreeItemDelegateSupport;
 import lombok.extern.slf4j.Slf4j;
+import static it.tidalwave.ui.javafx.impl.DefaultJavaFXBinder.enforceFxApplicationThread;
 
 /***************************************************************************************************************************************************************
  *
@@ -66,7 +67,7 @@ public class TreeTableViewBindings extends TreeItemDelegateSupport
                       @Nonnull final PresentationModel pm,
                       @Nonnull final Optional<Runnable> callback)
       {
-        assertIsFxApplicationThread();
+        enforceFxApplicationThread();
         log.debug("bind({}, {}, {})", treeTableView, pm, callback);
 
         setRootProperty(pm, treeTableView.rootProperty());

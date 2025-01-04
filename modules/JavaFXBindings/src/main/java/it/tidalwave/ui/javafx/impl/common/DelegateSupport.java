@@ -97,15 +97,4 @@ public abstract class DelegateSupport
       {
         return System.getProperty("os.name").contains("OS X");
       }
-
-    /***********************************************************************************************************************************************************
-     *
-     **********************************************************************************************************************************************************/
-    protected void assertIsFxApplicationThread()
-      {
-        if (!Platform.isFxApplicationThread())
-          {
-            throw new AssertionError("Must run in the JavaFX Application Thread");
-          }
-      }
   }
