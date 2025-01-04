@@ -52,7 +52,8 @@ public final class JavaFXSafeRunner
               }
             catch (Throwable t)
               {
-                log.warn("", t);
+                log.error("", t);
+                throw t;
               }
           };
 
