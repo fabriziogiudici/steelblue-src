@@ -144,7 +144,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     @Override
     public void bind (@Nonnull final ButtonBase button, @Nonnull final UserAction action)
       {
-        assertIsFxApplicationThread();
+        enforceFxApplicationThread();
         action.maybeAs(_Displayable_).ifPresent(d -> button.setText(d.getDisplayName()));
         button.setOnAction(__ -> executor.execute(action::actionPerformed));
         bindEnableProperty(button.disableProperty(), action.enabled());
@@ -156,7 +156,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     @Override
     public void bind (@Nonnull final MenuItem menuItem, @Nonnull final UserAction action)
       {
-        assertIsFxApplicationThread();
+        enforceFxApplicationThread();
         menuItem.setText(action.maybeAs(_Displayable_).map(Displayable::getDisplayName).orElse(""));
         menuItem.setOnAction(__ -> executor.execute(action::actionPerformed));
         bindEnableProperty(menuItem.disableProperty(), action.enabled());
@@ -170,7 +170,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
                              @Nonnull final Property<? extends S> source,
                              @Nonnull final Function<S, T> adapter)
       {
-        assertIsFxApplicationThread();
+        enforceFxApplicationThread();
         source.addListener((_1, _2, newValue) -> executor.execute(() -> target.set(adapter.apply(newValue))));
       }
 
@@ -183,7 +183,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
                                             @Nonnull final Function<? super S, T> adapter,
                                             @Nonnull final Function<? super T, ? extends S> reverseAdapter)
       {
-        assertIsFxApplicationThread();
+        enforceFxApplicationThread();
         property2.addListener((_1, _2, newValue) -> executor.execute(() -> property1.set(adapter.apply(newValue))));
         property1.addPropertyChangeListener(evt -> Platform.runLater(() -> property2.setValue(reverseAdapter.apply((T)evt.getNewValue()))));
       }
@@ -196,7 +196,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
                                          @Nonnull final BoundProperty<String> textProperty,
                                          @Nonnull final BoundProperty<Boolean> validProperty)
       {
-        assertIsFxApplicationThread();
+        enforceFxApplicationThread();
         requireNonNull(textField, "textField");
         requireNonNull(textProperty, "textProperty");
         requireNonNull(validProperty, "validProperty");
@@ -213,7 +213,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     @Override
     public void bindToggleButtons (@Nonnull final Pane pane, @Nonnull final PresentationModel pm)
       {
-        assertIsFxApplicationThread();
+        enforceFxApplicationThread();
         final var group = new ToggleGroup();
         final var children = pane.getChildren();
         final var prototypeStyleClass = children.get(0).getStyleClass();
@@ -227,7 +227,7 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     @Override
     public void bindButtonsInPane (@Nonnull final GridPane gridPane, @Nonnull final Collection<UserAction> actions)
       {
-        assertIsFxApplicationThread();
+        enforceFxApplicationThread();
         final var columnConstraints = gridPane.getColumnConstraints();
         final var children = gridPane.getChildren();
 
@@ -289,11 +289,11 @@ public class DefaultJavaFXBinder implements JavaFXBinder
     /***********************************************************************************************************************************************************
      *
      **********************************************************************************************************************************************************/
-    private void assertIsFxApplicationThread()
+    private void enforceFxApplicationThread()
       {
         if (!Platform.isFxApplicationThread())
           {
-            throw new AssertionError("Must run in the JavaFX Application Thread");
+            throw new IllegalStateException("Must run in the JavaFX Application Thread");
           }
       }
 
