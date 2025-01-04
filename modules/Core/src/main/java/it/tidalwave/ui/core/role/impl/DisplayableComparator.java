@@ -28,6 +28,8 @@ package it.tidalwave.ui.core.role.impl;
 import jakarta.annotation.Nonnull;
 import java.text.Collator;
 import java.util.Comparator;
+import java.io.Serial;
+import java.io.Serializable;
 import it.tidalwave.ui.core.role.Displayable;
 
 /***************************************************************************************************************************************************************
@@ -39,8 +41,10 @@ import it.tidalwave.ui.core.role.Displayable;
  * @it.tidalwave.javadoc.draft Will be removed (FIXME)
  *
  **************************************************************************************************************************************************************/
-public final class DisplayableComparator implements Comparator<Displayable>
+public final class DisplayableComparator implements Comparator<Displayable>, Serializable
   {
+    private static final long serialVersionUID = 434703962103322234L;
+
     private static final DisplayableComparator INSTANCE = new DisplayableComparator();
 
     @Nonnull
