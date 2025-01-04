@@ -23,7 +23,7 @@
  *
  * *************************************************************************************************************************************************************
  */
-package it.tidalwave.ui.javafx;
+package it.tidalwave.ui.javafx.spi;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -39,8 +39,13 @@ import javafx.application.Platform;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import it.tidalwave.message.PowerOffEvent;
-import it.tidalwave.message.PowerOnEvent;
+import it.tidalwave.ui.core.message.PowerOffEvent;
+import it.tidalwave.ui.core.message.PowerOnEvent;
+import it.tidalwave.ui.javafx.ApplicationPresentationAssembler;
+import it.tidalwave.ui.javafx.JavaFXApplicationWithSplash;
+import it.tidalwave.ui.javafx.JavaFXSafeProxyCreator;
+import it.tidalwave.ui.javafx.NodeAndDelegate;
+import it.tidalwave.ui.javafx.PresentationAssembler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import it.tidalwave.util.Key;
@@ -105,7 +110,7 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
           }
       }
 
-    protected static final String APPLICATION_MESSAGE_BUS = "applicationMessageBus";
+    public static final String APPLICATION_MESSAGE_BUS_BEAN_NAME = "applicationMessageBus";
 
     // Don't use Slf4j and its static logger - give Main a chance to initialize things
     private final Logger log = LoggerFactory.getLogger(AbstractJavaFXSpringApplication.class);
@@ -179,9 +184,9 @@ public abstract class AbstractJavaFXSpringApplication extends JavaFXApplicationW
             applicationContext = createApplicationContext();
             applicationContext.registerShutdownHook(); // this actually seems not working, onClosing() does
 
-            if (applicationContext.getBeanFactory().containsBean(APPLICATION_MESSAGE_BUS))
+            if (applicationContext.getBeanFactory().containsBean(APPLICATION_MESSAGE_BUS_BEAN_NAME))
               {
-                messageBus = Optional.of(applicationContext.getBeanFactory().getBean(APPLICATION_MESSAGE_BUS, MessageBus.class));
+                messageBus = Optional.of(applicationContext.getBeanFactory().getBean(APPLICATION_MESSAGE_BUS_BEAN_NAME, MessageBus.class));
               }
           }
         catch (Throwable t)

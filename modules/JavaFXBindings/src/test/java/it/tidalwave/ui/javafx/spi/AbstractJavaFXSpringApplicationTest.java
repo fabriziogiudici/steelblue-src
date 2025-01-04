@@ -23,7 +23,7 @@
  *
  * *************************************************************************************************************************************************************
  */
-package it.tidalwave.ui.javafx;
+package it.tidalwave.ui.javafx.spi;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.ExecutorService;
@@ -31,8 +31,9 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
-import it.tidalwave.message.PowerOffEvent;
-import it.tidalwave.message.PowerOnEvent;
+import it.tidalwave.ui.core.message.PowerOffEvent;
+import it.tidalwave.ui.core.message.PowerOnEvent;
+import it.tidalwave.ui.javafx.NodeAndDelegate;
 import it.tidalwave.messagebus.MessageBus;
 import lombok.RequiredArgsConstructor;
 import org.testng.annotations.BeforeMethod;
