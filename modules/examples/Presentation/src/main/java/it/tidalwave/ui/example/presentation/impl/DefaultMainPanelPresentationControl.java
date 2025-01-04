@@ -31,18 +31,18 @@ import java.util.List;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.springframework.stereotype.Component;
-import it.tidalwave.message.PowerOnEvent;
 import it.tidalwave.util.annotation.VisibleForTesting;
 import it.tidalwave.role.Aggregate;
-import it.tidalwave.role.ui.BoundProperty;
-import it.tidalwave.role.ui.Displayable;
+import it.tidalwave.ui.core.BoundProperty;
+import it.tidalwave.ui.core.message.PowerOnEvent;
+import it.tidalwave.ui.core.role.Displayable;
 import it.tidalwave.ui.core.MenuBarControl.MenuPlacement;
-import it.tidalwave.role.ui.PresentationModel;
-import it.tidalwave.role.ui.PresentationModelAggregate;
-import it.tidalwave.role.ui.Selectable;
-import it.tidalwave.role.ui.UserAction;
-import it.tidalwave.role.ui.UserActionProvider;
-import it.tidalwave.role.ui.Visible;
+import it.tidalwave.ui.core.role.PresentationModel;
+import it.tidalwave.ui.core.role.PresentationModelAggregate;
+import it.tidalwave.ui.core.role.Selectable;
+import it.tidalwave.ui.core.role.UserAction;
+import it.tidalwave.ui.core.role.UserActionProvider;
+import it.tidalwave.ui.core.role.Visibility;
 import it.tidalwave.ui.example.model.Dao;
 import it.tidalwave.ui.example.model.SimpleDciEntity;
 import it.tidalwave.ui.example.model.SimpleEntity;
@@ -54,8 +54,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import static it.tidalwave.util.Parameters.r;
 import static it.tidalwave.util.ui.UserNotificationWithFeedback.*;
-import static it.tidalwave.role.ui.Presentable._Presentable_;
-import static it.tidalwave.role.ui.spi.PresentationModelCollectors.toCompositePresentationModel;
+import static it.tidalwave.ui.core.role.Presentable._Presentable_;
+import static it.tidalwave.ui.core.role.spi.PresentationModelCollectors.toCompositePresentationModel;
 
 /***************************************************************************************************************************************************************
  *
@@ -147,7 +147,7 @@ public class DefaultMainPanelPresentationControl implements MainPanelPresentatio
         final var pmEnt2 = entities2.stream().map(this::pmFor).collect(toCompositePresentationModel());
         final var pmFiles = files.stream()
                              .map(item -> item.as(_Presentable_).createPresentationModel())
-                             .collect(toCompositePresentationModel(r(Visible.INVISIBLE)));
+                             .collect(toCompositePresentationModel(r(Visibility.INVISIBLE)));
         presentation.populate(pmEnt1, pmEnt2, pmFiles);
       }
     // END SNIPPET: populate
