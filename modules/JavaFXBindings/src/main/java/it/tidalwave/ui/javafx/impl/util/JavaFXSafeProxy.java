@@ -74,18 +74,13 @@ public class JavaFXSafeProxy<T> implements InvocationHandler
             catch (Throwable t)
               {
                 throwable.set(t);
-                log.warn("Exception while calling JavaFX", t);
+                log.error("Exception while calling JavaFX", t);
               }
             finally
               {
                 waitForReturn.countDown();
               }
           });
-
-        if (method.getReturnType().equals(void.class))
-          {
-            return null;
-          }
 
         log.trace(">>>> waiting for method completion");
         waitForReturn.await();
@@ -96,7 +91,7 @@ public class JavaFXSafeProxy<T> implements InvocationHandler
             throw throwable.get();
           }
 
-        return result.get();
+        return method.getReturnType().equals(void.class) ? null : result.get();
       }
   }
 
